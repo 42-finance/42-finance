@@ -1,0 +1,27 @@
+{
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "editor.insertSpaces": true,
+  "workbench.editor.closeOnFileDelete": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "explorer.autoReveal": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.prettierPath": "node_modules/prettier/index.cjs",
+  "workbench.editor.enablePreview": false,
+  "files.eol": "\n",
+  "vitest.disableWorkspaceWarning": true,
+  "window.title": "42 Finance"
+}

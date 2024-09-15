@@ -1,0 +1,36 @@
+{
+  "name": "balance-lambda",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "set TZ='UTC' && ts-node -e \"require('./src/index').handler({});\"",
+    "build": "cross-env NODE_ENV=production webpack --mode production && cd dist/balance-lambda && bestzip ../balance-lambda.zip *"
+  },
+  "dependencies": {
+    "database": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
+    "plaid": "^26.0.0",
+    "plaid-helpers": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/copy-webpack-plugin": "^10.1.0",
+    "@types/generate-json-webpack-plugin": "^0.3.7",
+    "@types/glob": "^8.1.0",
+    "@types/lodash": "^4.17.7",
+    "@types/node": "^22.4.2",
+    "@types/webpack-node-externals": "^3.0.4",
+    "bestzip": "^2.2.1",
+    "copy-webpack-plugin": "^12.0.2",
+    "cross-env": "^7.0.3",
+    "generate-json-webpack-plugin": "^2.0.0",
+    "nodemon": "^3.1.4",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "frontend-utils",
+  "version": "1.0.0",
+  "author": "Renty Team <all@rentyapps.com>",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "eventemitter3": "^5.0.1",
+    "shared-types": "^1.0.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "license": "Proprietary"
+}

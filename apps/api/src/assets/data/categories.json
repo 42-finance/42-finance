@@ -1,0 +1,651 @@
+[
+    {
+        "name": "Income",
+        "type": "income",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Interest Earned",
+                "systemCategory": "interestEarned",
+                "icon": "💸"
+            },
+            {
+                "name": "Retirement Pension",
+                "systemCategory": "retirementPension",
+                "icon": "💵"
+            },
+            {
+                "name": "Tax Refund",
+                "systemCategory": "taxRefund",
+                "icon": "💸"
+            },
+            {
+                "name": "Unemployment",
+                "systemCategory": "unemployment",
+                "icon": "💵"
+            },
+            {
+                "name": "Wages",
+                "systemCategory": "wages",
+                "icon": "💵"
+            },
+            {
+                "name": "Other Income",
+                "systemCategory": "otherIncome",
+                "icon": "💰"
+            },
+            {
+                "name": "Dividends",
+                "systemCategory": "dividends",
+                "icon": "💸"
+            },
+            {
+                "name": "Rental Income",
+                "systemCategory": "rentalIncome",
+                "icon": "🏠"
+            }
+        ]
+    },
+    {
+        "name": "Transfer In",
+        "type": "transfer",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Cash Advances And Loans",
+                "systemCategory": "cashAdvancesAndLoans",
+                "icon": "🔁"
+            },
+            {
+                "name": "Deposit",
+                "systemCategory": "deposit",
+                "icon": "🔁"
+            },
+            {
+                "name": "Investment And Retirement Funds",
+                "systemCategory": "investmentAndRetirementFunds",
+                "icon": "🔁"
+            },
+            {
+                "name": "Savings",
+                "systemCategory": "savings",
+                "icon": "🔁"
+            },
+            {
+                "name": "Account Transfer",
+                "systemCategory": "accountTransfer",
+                "icon": "🔁"
+            },
+            {
+                "name": "Other Transfer In",
+                "systemCategory": "otherTransferIn",
+                "icon": "🔁"
+            }
+        ]
+    },
+    {
+        "name": "Transfer Out",
+        "type": "transfer",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Investment And Retirement Funds",
+                "systemCategory": "investmentAndRetirementFunds",
+                "icon": "🔁"
+            },
+            {
+                "name": "Savings",
+                "systemCategory": "savings",
+                "icon": "🔁"
+            },
+            {
+                "name": "Withdrawal",
+                "systemCategory": "withdrawal",
+                "icon": "🔁"
+            },
+            {
+                "name": "Account Transfer",
+                "systemCategory": "accountTransfer",
+                "icon": "🔁"
+            },
+            {
+                "name": "Other Transfer Out",
+                "systemCategory": "otherTransferOut",
+                "icon": "🔁"
+            },
+            {
+                "name": "Credit Card Payment",
+                "systemCategory": "creditCardPayment",
+                "icon": "💳"
+            }
+        ]
+    },
+    {
+        "name": "Loan Payments",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Car Payment",
+                "systemCategory": "carPayment",
+                "icon": "🚘"
+            },
+            {
+                "name": "Personal Loan Payment",
+                "systemCategory": "personalLoanPayment",
+                "icon": "🏦"
+            },
+            {
+                "name": "Mortgage Payment",
+                "systemCategory": "mortgagePayment",
+                "icon": "🏠"
+            },
+            {
+                "name": "Student Loan Payment",
+                "systemCategory": "studentLoanPayment",
+                "icon": "🎓"
+            },
+            {
+                "name": "Other Payment",
+                "systemCategory": "otherPayment",
+                "icon": "💳"
+            }
+        ]
+    },
+    {
+        "name": "Bank Fees",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Atm Fees",
+                "systemCategory": "atmFees",
+                "icon": "🏧"
+            },
+            {
+                "name": "Foreign Transaction Fees",
+                "systemCategory": "foreignTransactionFees",
+                "icon": "🏦"
+            },
+            {
+                "name": "Insufficient Funds",
+                "systemCategory": "insufficientFunds",
+                "icon": "🏦"
+            },
+            {
+                "name": "Interest Charge",
+                "systemCategory": "interestCharge",
+                "icon": "🏦"
+            },
+            {
+                "name": "Overdraft Fees",
+                "systemCategory": "overdraftFees",
+                "icon": "🏦"
+            },
+            {
+                "name": "Other Bank Fees",
+                "systemCategory": "otherBankFees",
+                "icon": "🏦"
+            }
+        ]
+    },
+    {
+        "name": "Entertainment",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Casinos And Gambling",
+                "systemCategory": "casinosAndGambling",
+                "icon": "🎰"
+            },
+            {
+                "name": "Music And Audio",
+                "systemCategory": "musicAndAudio",
+                "icon": "🎵"
+            },
+            {
+                "name": "Sporting Events Amusement Parks And Museums",
+                "systemCategory": "sportingEventsAmusementParksAndMuseums",
+                "icon": "🏟️"
+            },
+            {
+                "name": "TV And Movies",
+                "systemCategory": "tvAndMovies",
+                "icon": "📺"
+            },
+            {
+                "name": "Video Games",
+                "systemCategory": "videoGames",
+                "icon": "🎮"
+            },
+            {
+                "name": "Other Entertainment",
+                "systemCategory": "otherEntertainment",
+                "icon": "🎳"
+            }
+        ]
+    },
+    {
+        "name": "Food And Drink",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Beer Wine And Liquor",
+                "systemCategory": "beerWineAndLiquor",
+                "icon": "🍺"
+            },
+            {
+                "name": "Coffee",
+                "systemCategory": "coffee",
+                "icon": "☕"
+            },
+            {
+                "name": "Fast Food",
+                "systemCategory": "fastFood",
+                "icon": "🍟"
+            },
+            {
+                "name": "Groceries",
+                "systemCategory": "groceries",
+                "icon": "🍅"
+            },
+            {
+                "name": "Restaurant",
+                "systemCategory": "restaurant",
+                "icon": "🍽️"
+            },
+            {
+                "name": "Vending Machines",
+                "systemCategory": "vendingMachines",
+                "icon": "🥤"
+            },
+            {
+                "name": "Other Food And Drink",
+                "systemCategory": "otherFoodAndDrink",
+                "icon": "🍩"
+            }
+        ]
+    },
+    {
+        "name": "General Merchandise",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Bookstores And Newsstands",
+                "systemCategory": "bookstoresAndNewsstands",
+                "icon": "📚"
+            },
+            {
+                "name": "Clothing And Accessories",
+                "systemCategory": "clothingAndAccessories",
+                "icon": "👕"
+            },
+            {
+                "name": "Convenience Stores",
+                "systemCategory": "convenienceStores",
+                "icon": "🏪"
+            },
+            {
+                "name": "Department Stores",
+                "systemCategory": "departmentStores",
+                "icon": "🏬"
+            },
+            {
+                "name": "Discount Stores",
+                "systemCategory": "discountStores",
+                "icon": "🏬"
+            },
+            {
+                "name": "Electronics",
+                "systemCategory": "electronics",
+                "icon": "💻"
+            },
+            {
+                "name": "Gifts And Novelties",
+                "systemCategory": "giftsAndNovelties",
+                "icon": "🎁"
+            },
+            {
+                "name": "Office Supplies",
+                "systemCategory": "officeSupplies",
+                "icon": "✏️"
+            },
+            {
+                "name": "Online Marketplaces",
+                "systemCategory": "onlineMarketplaces",
+                "icon": "🛍️"
+            },
+            {
+                "name": "Pet Supplies",
+                "systemCategory": "petSupplies",
+                "icon": "🐶"
+            },
+            {
+                "name": "Sporting Goods",
+                "systemCategory": "sportingGoods",
+                "icon": "🏈"
+            },
+            {
+                "name": "Superstores",
+                "systemCategory": "superstores",
+                "icon": "🏬"
+            },
+            {
+                "name": "Tobacco And Vape",
+                "systemCategory": "tobaccoAndVape",
+                "icon": "🚬"
+            },
+            {
+                "name": "Other General Merchandise",
+                "systemCategory": "otherGeneralMerchandise",
+                "icon": "🛍️"
+            }
+        ]
+    },
+    {
+        "name": "Home Improvement",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Furniture",
+                "systemCategory": "furniture",
+                "icon": "🛋️"
+            },
+            {
+                "name": "Hardware",
+                "systemCategory": "hardware",
+                "icon": "🔨"
+            },
+            {
+                "name": "Repair And Maintenance",
+                "systemCategory": "repairAndMaintenance",
+                "icon": "🛠️"
+            },
+            {
+                "name": "Security",
+                "systemCategory": "security",
+                "icon": "🔒"
+            },
+            {
+                "name": "Other Home Improvement",
+                "systemCategory": "otherHomeImprovement",
+                "icon": "🛠️"
+            }
+        ]
+    },
+    {
+        "name": "Medical",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Dental Care",
+                "systemCategory": "dentalCare",
+                "icon": "🦷"
+            },
+            {
+                "name": "Eye Care",
+                "systemCategory": "eyeCare",
+                "icon": "👓"
+            },
+            {
+                "name": "Nursing Care",
+                "systemCategory": "nursingCare",
+                "icon": "👩‍⚕️"
+            },
+            {
+                "name": "Pharmacies And Supplements",
+                "systemCategory": "pharmaciesAndSupplements",
+                "icon": "💊"
+            },
+            {
+                "name": "Primary Care",
+                "systemCategory": "primaryCare",
+                "icon": "👩‍⚕️"
+            },
+            {
+                "name": "Veterinary Services",
+                "systemCategory": "veterinaryServices",
+                "icon": "🐶"
+            },
+            {
+                "name": "Other Medical",
+                "systemCategory": "otherMedical",
+                "icon": "👨‍⚕️"
+            }
+        ]
+    },
+    {
+        "name": "Personal Care",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Gyms And Fitness Centers",
+                "systemCategory": "gymsAndFitnessCenters",
+                "icon": "🏋️‍♂️"
+            },
+            {
+                "name": "Hair And Beauty",
+                "systemCategory": "hairAndBeauty",
+                "icon": "💇‍♀️"
+            },
+            {
+                "name": "Laundry And Dry Cleaning",
+                "systemCategory": "laundryAndDryCleaning",
+                "icon": "🧺"
+            },
+            {
+                "name": "Other Personal Care",
+                "systemCategory": "otherPersonalCare",
+                "icon": "💇‍♀️"
+            }
+        ]
+    },
+    {
+        "name": "General Services",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Accounting And Financial Planning",
+                "systemCategory": "accountingAndFinancialPlanning",
+                "icon": "📈"
+            },
+            {
+                "name": "Automotive",
+                "systemCategory": "automotive",
+                "icon": "🚘"
+            },
+            {
+                "name": "Childcare",
+                "systemCategory": "childcare",
+                "icon": "👶"
+            },
+            {
+                "name": "Consulting And Legal",
+                "systemCategory": "consultingAndLegal",
+                "icon": "🏛️"
+            },
+            {
+                "name": "Education",
+                "systemCategory": "education",
+                "icon": "🏫"
+            },
+            {
+                "name": "Insurance",
+                "systemCategory": "insurance",
+                "icon": "🏚️"
+            },
+            {
+                "name": "Postage And Shipping",
+                "systemCategory": "postageAndShipping",
+                "icon": "✉️"
+            },
+            {
+                "name": "Storage",
+                "systemCategory": "storage",
+                "icon": "📦"
+            },
+            {
+                "name": "Other General Services",
+                "systemCategory": "otherGeneralServices",
+                "icon": "🏛️"
+            }
+        ]
+    },
+    {
+        "name": "Government And Non Profit",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Donations",
+                "systemCategory": "donations",
+                "icon": "💵"
+            },
+            {
+                "name": "Government Departments And Agencies",
+                "systemCategory": "governmentDepartmentsAndAgencies",
+                "icon": "🏛️"
+            },
+            {
+                "name": "Tax Payment",
+                "systemCategory": "taxPayment",
+                "icon": "🏦"
+            },
+            {
+                "name": "Other Government And Non Profit",
+                "systemCategory": "otherGovernmentAndNonProfit",
+                "icon": "🏛️"
+            }
+        ]
+    },
+    {
+        "name": "Transportation",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Bikes And Scooters",
+                "systemCategory": "bikesAndScooters",
+                "icon": "🚲"
+            },
+            {
+                "name": "Gas",
+                "systemCategory": "gas",
+                "icon": "⛽"
+            },
+            {
+                "name": "Parking",
+                "systemCategory": "parking",
+                "icon": "🅿️"
+            },
+            {
+                "name": "Public Transit",
+                "systemCategory": "publicTransit",
+                "icon": "🚌"
+            },
+            {
+                "name": "Taxis And Ride Shares",
+                "systemCategory": "taxisAndRideShares",
+                "icon": "🚕"
+            },
+            {
+                "name": "Tolls",
+                "systemCategory": "tolls",
+                "icon": "🅿️"
+            },
+            {
+                "name": "Other Transportation",
+                "systemCategory": "otherTransportation",
+                "icon": "🚌"
+            }
+        ]
+    },
+    {
+        "name": "Travel",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Flights",
+                "systemCategory": "flights",
+                "icon": "✈️"
+            },
+            {
+                "name": "Lodging",
+                "systemCategory": "lodging",
+                "icon": "🏡"
+            },
+            {
+                "name": "Rental Cars",
+                "systemCategory": "rentalCars",
+                "icon": "🚘"
+            },
+            {
+                "name": "Other Travel",
+                "systemCategory": "otherTravel",
+                "icon": "✈️"
+            }
+        ]
+    },
+    {
+        "name": "Rent And Utilities",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Gas And Electricity",
+                "systemCategory": "gasAndElectricity",
+                "icon": "💡"
+            },
+            {
+                "name": "Internet And Cable",
+                "systemCategory": "internetAndCable",
+                "icon": "🌐"
+            },
+            {
+                "name": "Rent",
+                "systemCategory": "rent",
+                "icon": "🏠"
+            },
+            {
+                "name": "Sewage And Waste Management",
+                "systemCategory": "sewageAndWasteManagement",
+                "icon": "🗑️"
+            },
+            {
+                "name": "Telephone",
+                "systemCategory": "telephone",
+                "icon": "📱"
+            },
+            {
+                "name": "Water",
+                "systemCategory": "water",
+                "icon": "💧"
+            },
+            {
+                "name": "Other Utilities",
+                "systemCategory": "otherUtilities",
+                "icon": "⚡"
+            }
+        ]
+    },
+    {
+        "name": "Other",
+        "type": "expense",
+        "icon": "",
+        "categories": [
+            {
+                "name": "Miscellaneous",
+                "systemCategory": "miscellaneous",
+                "icon": "❓"
+            }
+        ]
+    }
+]

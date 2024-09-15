@@ -1,0 +1,78 @@
+{
+  "cli": {
+    "version": ">= 7.3.0"
+  },
+  "build": {
+    "development:simulator": {
+      "android": {
+        "image": "latest"
+      },
+      "channel": "development",
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api-dev.42f.io",
+        "EXPO_PUBLIC_APP_URL": "https://app-dev.42f.io",
+        "APP_VARIANT": "development"
+      },
+      "ios": {
+        "simulator": true,
+        "image": "latest"
+      }
+    },
+    "development": {
+      "android": {
+        "image": "latest"
+      },
+      "channel": "development",
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api-dev.42f.io",
+        "EXPO_PUBLIC_APP_URL": "https://app-dev.42f.io",
+        "APP_VARIANT": "development"
+      },
+      "ios": {
+        "image": "latest"
+      }
+    },
+    "preview": {
+      "android": {
+        "image": "latest"
+      },
+      "channel": "preview",
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api-dev.42f.io",
+        "EXPO_PUBLIC_APP_URL": "https://app-dev.42f.io",
+        "APP_VARIANT": "preview"
+      },
+      "ios": {
+        "image": "latest"
+      }
+    },
+    "production": {
+      "android": {
+        "image": "latest"
+      },
+      "autoIncrement": true,
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.42f.io",
+        "EXPO_PUBLIC_APP_URL": "https://app.42f.io",
+        "APP_VARIANT": "production"
+      },
+      "ios": {
+        "image": "latest"
+      }
+    }
+  },
+  "submit": {
+    "internal": {
+      "android": {
+        "serviceAccountKeyPath": "./finance-421417-3eb6d2189802.json",
+        "track": "internal"
+      }
+    }
+  }
+}

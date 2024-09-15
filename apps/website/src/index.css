@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Barlow;
+  src: url('./assets/fonts/Barlow-Medium.ttf');
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    font-family: Barlow, ui-sans-serif;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+body {
+  @apply text-sm h-screen pb-safe overflow-x-hidden;
+}
+
+* {
+  font-family: 'Barlow';
+}
+
+#features {
+  scroll-margin-top: 100px;
+}
+
+#pricing {
+  scroll-margin-top: 100px;
+}
+
+#roadmap {
+  scroll-margin-top: 100px;
+}

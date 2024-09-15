@@ -1,0 +1,103 @@
+import { randomUUID } from 'crypto'
+import { Account, BalanceHistory, dataSource, getVehicleValue, getWalletBalance } from 'database'
+import { startOfDay } from 'date-fns'
+import { Request, Response } from 'express'
+import { AccountSubType, AccountType, CurrencyCode, WalletType } from 'shared-types'
+
+import { HTTPResponseBody } from '../../models/http/httpResponseBody'
+
+type CreateAccountRequest = {
+  name: string
+  type: AccountType
+  subType: AccountSubType
+  currentBalance: number | null
+  currencyCode: CurrencyCode
+  walletType: WalletType | null
+  walletAddress: string | null
+  walletTokenBalance: number | null
+  vehicleVin: string | null
+  vehicleMileage: number | null
+  propertyAddress: string | null
+}
+
+export const createAccount = async (
+  request: Request<{ id: string }, object, CreateAccountRequest>,
+  response: Response<HTTPResponseBody>
+) => {
+  const { householdId } = request
+  let { currentBalance, walletTokenBalance } = request.body
+  const {
+    name,
+    type,
+    subType,
+    currencyCode = CurrencyCode.USD,
+    walletType,
+    walletAddress,
+    vehicleVin,
+    vehicleMileage,
+    propertyAddress
+  } = request.body
+
+  let vehicleMake: string | null = null
+  let vehicleModel: string | null = null
+  let vehicleYear: number | null = null
+  let vehicleTrim: string | null = null
+  let vehicleState: string | null = null
+
+  if (walletType && walletAddress) {
+    const { currentBalance: balance, walletTokenBalance: tokenBalance } = await getWalletBalance(
+      walletAddress,
+      walletType
+    )
+    currentBalance = balance
+    walletTokenBalance = tokenBalance
+  } else if (vehicleVin && currentBalance === 0) {
+    const { make, model, year, trim, state, value } = await getVehicleValue(vehicleVin, vehicleMileage, null)
+    currentBalance = value
+    vehicleMake = make
+    vehicleModel = model
+    vehicleYear = year
+    vehicleTrim = trim
+    vehicleState = state
+  }
+
+  const account = await dataSource.getRepository(Account).save({
+    id: randomUUID(),
+    name,
+    type,
+    subType,
+    currentBalance: currentBalance ?? 0,
+    currencyCode,
+    walletType,
+    walletAddress,
+    walletTokenBalance,
+    vehicleVin,
+    vehicleMileage,
+    vehicleMake,
+    vehicleModel,
+    vehicleYear,
+    vehicleTrim,
+    vehicleState,
+    propertyAddress,
+    householdId
+  })
+
+  await dataSource
+    .createQueryBuilder()
+    .insert()
+    .into(BalanceHistory)
+    .values({
+      date: startOfDay(new Date()),
+      currentBalance: currentBalance ?? 0,
+      walletTokenBalance,
+      accountId: account.id,
+      householdId
+    })
+    .orIgnore()
+    .execute()
+
+  return response.json({
+    errors: [],
+    payload: account
+  })
+}

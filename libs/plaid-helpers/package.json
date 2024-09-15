@@ -1,0 +1,21 @@
+{
+  "name": "plaid-helpers",
+  "version": "1.0.0",
+  "author": "Renty Team <all@rentyapps.com>",
+  "license": "Proprietary",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "database": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "notifications": "^1.0.0",
+    "plaid": "^26.0.0",
+    "shared-types": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "ts-jest": "^29.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}

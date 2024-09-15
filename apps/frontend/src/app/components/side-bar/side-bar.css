@@ -1,0 +1,25 @@
+#sidebar {
+  @apply -translate-x-full;
+}
+
+#menu-close-icon {
+  @apply hidden;
+}
+
+#menu-open:checked ~ #sidebar {
+  @apply translate-x-0;
+}
+
+#menu-open:checked ~ * #menu-open-icon {
+  @apply hidden;
+}
+
+#menu-open:checked ~ * #menu-close-icon {
+  @apply block;
+}
+
+@media (min-width: 1024px) {
+  #sidebar {
+    @apply translate-x-0;
+  }
+}

@@ -1,0 +1,28 @@
+.tooltip .arrow,
+.tooltip .arrow::before {
+  @apply absolute w-2.5 h-2.5 bg-inherit;
+}
+
+.tooltip .arrow {
+  @apply invisible;
+}
+
+.tooltip .arrow::before {
+  @apply content-[''] rotate-45 visible;
+}
+
+.tooltip[data-placement^='top'] .arrow {
+  @apply -bottom-1;
+}
+
+.tooltip[data-placement^='bottom'] .arrow {
+  @apply -top-1;
+}
+
+.tooltip[data-placement^='left'] .arrow {
+  @apply -right-1;
+}
+
+.tooltip[data-placement^='right'] .arrow {
+  @apply -left-1;
+}

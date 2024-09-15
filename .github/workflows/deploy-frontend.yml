@@ -1,0 +1,53 @@
+name: Deploy - Frontend - Production
+
+env:
+  CI: true
+  VITE_API_URL: 'https://api.42f.io'
+  GENERATE_SOURCEMAP: false
+  S3_BUCKET_NAME: 'app.42f.io'
+  AWS_REGION_NAME: 'ca-central-1'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_frontend:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Load the node_modules folder from cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: |
+            **/node_modules
+            **/.eslintcache
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build the app
+        run: yarn workspace frontend build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+
+      - name: Deploy app to S3
+        run: aws s3 sync ./apps/frontend/dist s3://${{ env.S3_BUCKET_NAME }} --delete

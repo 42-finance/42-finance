@@ -1,0 +1,12 @@
+{
+  "name": "shared-types",
+  "version": "1.0.0",
+  "author": "Renty Team <all@rentyapps.com>",
+  "private": true,
+  "main": "src/index.ts",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  },
+  "license": "Proprietary"
+}

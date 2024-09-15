@@ -1,0 +1,39 @@
+{
+    "applinks": {
+        "details": [
+            {
+                "appIDs": [
+                    "K6252VU4Y9.com.fortytwofinance.app"
+                ],
+                "components": [
+                    {
+                        "/": "/plaid/redirect/*",
+                        "comment": "OAuth redirect from Plaid"
+                    }
+                ]
+            },
+            {
+                "appIDs": [
+                    "K6252VU4Y9.com.fortytwofinance.app.preview"
+                ],
+                "components": [
+                    {
+                        "/": "/plaid-preview/redirect/*",
+                        "comment": "OAuth redirect from Plaid"
+                    }
+                ]
+            },
+            {
+                "appIDs": [
+                    "K6252VU4Y9.com.fortytwofinance.app.development"
+                ],
+                "components": [
+                    {
+                        "/": "/plaid-development/redirect/*",
+                        "comment": "OAuth redirect from Plaid"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,270 @@
+import { Feather, Ionicons } from '@expo/vector-icons'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { ApiQuery, deleteAccount, getAccount, getTransactions, refreshAccount } from 'frontend-api'
+import { formatDateDifference, setMessage } from 'frontend-utils'
+import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
+import { mapAccountSubType } from 'frontend-utils/src/mappers/map-account-sub-type'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import { ScrollView, TouchableOpacity } from 'react-native'
+import { Button, Dialog, Divider, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
+import { AccountSubType } from 'shared-types'
+
+import { View } from '../components/common/View'
+import { TransactionItem } from '../components/list-items/TransactionItem'
+import { AccountBalanceGraph } from '../components/stats/AccountBalanceGraph'
+import { useActionSheet } from '../hooks/use-action-sheet.hook'
+import { usePlaid } from '../hooks/use-plaid.hook'
+import { RootStackScreenProps } from '../types/root-stack-screen-props'
+
+export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Account'>) => {
+  const { accountId } = route.params
+
+  const showActionSheet = useActionSheet()
+  const { colors } = useTheme()
+  const queryClient = useQueryClient()
+  const { createLink, openLink, loading } = usePlaid()
+  const { currencyCode } = useUserTokenContext()
+
+  const [showPlaid, setShowPlaid] = useState(false)
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false)
+
+  const { data: account, isFetching: fetching } = useQuery({
+    queryKey: [ApiQuery.Account, accountId],
+    queryFn: async () => {
+      const res = await getAccount(accountId)
+      if (res.ok && res.parsedBody?.payload) {
+        return res.parsedBody.payload
+      }
+    },
+    placeholderData: keepPreviousData
+  })
+
+  const { data: transactions = [], isFetching: fetchingTransactions } = useQuery({
+    queryKey: [ApiQuery.AccountTransactions, account],
+    queryFn: async () => {
+      const res = await getTransactions({ limit: 4, accountIds: [account!.id] })
+      if (res.ok && res.parsedBody?.payload) {
+        return res.parsedBody.payload
+      }
+      return []
+    },
+    enabled: account != null,
+    placeholderData: keepPreviousData
+  })
+
+  const { mutate: deleteMutation, isPending: loadingDelete } = useMutation({
+    mutationFn: async () => {
+      const res = await deleteAccount(accountId)
+      if (res.ok && res.parsedBody?.payload) {
+        queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
+        navigation.pop()
+      }
+    }
+  })
+
+  const { mutate: refreshMutation, isPending: loadingRefresh } = useMutation({
+    mutationFn: async () => {
+      const res = await refreshAccount(accountId)
+      if (res.ok) {
+        setMessage('Account has been refreshed')
+      }
+      queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
+      queryClient.invalidateQueries({ queryKey: [ApiQuery.Account] })
+      queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountTransactions] })
+      queryClient.invalidateQueries({ queryKey: [ApiQuery.Transactions] })
+      queryClient.invalidateQueries({ queryKey: [ApiQuery.ReviewTransactions] })
+    }
+  })
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            showActionSheet([
+              ...(account?.connection
+                ? [
+                    {
+                      label: 'Refresh account',
+                      onSelected: () => refreshMutation()
+                    }
+                  ]
+                : []),
+              {
+                label: 'Edit account',
+                onSelected: () => navigation.navigate('EditAccount', { accountId })
+              },
+              {
+                label: 'Delete account',
+                onSelected: () => setDeleteDialogVisible(true),
+                isDestructive: true
+              }
+            ])
+          }}
+        >
+          <Ionicons name="ellipsis-horizontal" size={24} color={colors.onSurface} />
+        </TouchableOpacity>
+      ),
+      title: account?.name
+    })
+  }, [account, accountId, colors, navigation, refreshMutation, showActionSheet])
+
+  useEffect(() => {
+    if (!showPlaid && account?.connection?.needsTokenRefresh) {
+      createLink(account.connection.id)
+    }
+  }, [account, createLink, showPlaid])
+
+  if (!account || loadingDelete) {
+    return <ProgressBar indeterminate />
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <ProgressBar indeterminate visible={fetching || fetchingTransactions || loadingRefresh} />
+      <Portal>
+        <Dialog visible={deleteDialogVisible} onDismiss={() => setDeleteDialogVisible(false)}>
+          <Dialog.Title>Delete Account</Dialog.Title>
+          <Dialog.Content>
+            <Text>Are you sure you want to delete this account? All transaction data will be removed.</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setDeleteDialogVisible(false)}>Cancel</Button>
+            <Button onPress={() => deleteMutation()}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <ScrollView>
+        {account.connection?.needsTokenRefresh && (
+          <>
+            <View style={{ flexDirection: 'row', padding: 15 }}>
+              <Feather name="alert-triangle" size={26} color="#ee5a81" style={{ marginEnd: 10 }} />
+              <View style={{ flex: 1 }}>
+                <Text variant="bodyMedium" style={{ color: '#ee5a81', fontWeight: 'bold' }}>
+                  {account.connection.institutionName} is no longer syncing due to outdated credentials. Update the
+                  connection to resume syncing.
+                </Text>
+                <Button
+                  mode="contained"
+                  style={{ width: 100, marginTop: 10 }}
+                  onPress={() => {
+                    setShowPlaid(true)
+                    openLink(
+                      () => {
+                        setShowPlaid(false)
+                      },
+                      () => {
+                        queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
+                        queryClient.invalidateQueries({ queryKey: [ApiQuery.Account] })
+                        queryClient.invalidateQueries({ queryKey: [ApiQuery.Transactions] })
+                        setShowPlaid(false)
+                      },
+                      account.connection?.id
+                    )
+                  }}
+                  loading={showPlaid || loading}
+                  disabled={showPlaid || loading}
+                >
+                  Update
+                </Button>
+              </View>
+            </View>
+            <Divider />
+          </>
+        )}
+        <AccountBalanceGraph account={account} />
+        <View>
+          <Text
+            variant="titleMedium"
+            style={{
+              fontWeight: 'bold',
+              padding: 15,
+              backgroundColor: colors.elevation.level2
+            }}
+          >
+            Recent Transactions
+          </Text>
+        </View>
+        <Divider />
+        {transactions.map((transaction) => (
+          <View key={transaction.id}>
+            <Divider />
+            <View style={{ backgroundColor: colors.elevation.level2 }}>
+              <TransactionItem transaction={transaction} showDate />
+            </View>
+          </View>
+        ))}
+        <View style={{ marginBottom: 20 }} />
+        <Divider />
+        {account.connection && (
+          <>
+            <View style={{ flexDirection: 'row', padding: 15, backgroundColor: colors.elevation.level2 }}>
+              <Text
+                variant="titleMedium"
+                style={{
+                  flex: 1
+                }}
+              >
+                Institution
+              </Text>
+              <Text variant="titleMedium">{account.connection.institutionName}</Text>
+            </View>
+            <Divider />
+          </>
+        )}
+        <View style={{ flexDirection: 'row', padding: 15, backgroundColor: colors.elevation.level2 }}>
+          <Text
+            variant="titleMedium"
+            style={{
+              flex: 1
+            }}
+          >
+            Account type
+          </Text>
+          <Text variant="titleMedium">{mapAccountSubType(account.subType)}</Text>
+        </View>
+        <Divider />
+        <View style={{ flexDirection: 'row', padding: 15, backgroundColor: colors.elevation.level2 }}>
+          <Text
+            variant="titleMedium"
+            style={{
+              flex: 1
+            }}
+          >
+            Currency
+          </Text>
+          <Text variant="titleMedium">
+            {account.subType === AccountSubType.CryptoExchange || account.subType === AccountSubType.Vehicle
+              ? currencyCode
+              : account.currencyCode}
+          </Text>
+        </View>
+        <Divider />
+        <View style={{ flexDirection: 'row', padding: 15, backgroundColor: colors.elevation.level2 }}>
+          <Text
+            variant="titleMedium"
+            style={{
+              flex: 1
+            }}
+          >
+            Total transactions
+          </Text>
+          <Text variant="titleMedium">{account.transactionCount}</Text>
+        </View>
+        <Divider />
+        <View style={{ flexDirection: 'row', padding: 15, backgroundColor: colors.elevation.level2, marginBottom: 20 }}>
+          <Text
+            variant="titleMedium"
+            style={{
+              flex: 1
+            }}
+          >
+            Last update
+          </Text>
+          <Text variant="titleMedium">{formatDateDifference(account.updatedAt)}</Text>
+        </View>
+      </ScrollView>
+    </View>
+  )
+}
