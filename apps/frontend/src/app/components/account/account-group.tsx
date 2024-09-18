@@ -1,4 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { subMonths } from 'date-fns'
 import { ApiQuery, getBalanceHistory } from 'frontend-api'
 import { Account } from 'frontend-types'
 import {
@@ -15,9 +16,9 @@ import {
   useUserTokenContext,
   valueChangeColor
 } from 'frontend-utils'
-import { formatDateDifference } from 'frontend-utils/src/date/date.utils'
+import { formatDateDifference, todayInUtc } from 'frontend-utils/src/date/date.utils'
 import { sumBy } from 'lodash'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { FiArrowDownLeft, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { AccountType } from 'shared-types'
@@ -46,6 +47,10 @@ export const AccountGroup: React.FC<Props> = ({ groupAccounts, allAccounts, onSe
     placeholderData: keepPreviousData
   })
 
+  const [today] = useState(todayInUtc())
+
+  const filterStartDate = useMemo(() => subMonths(today, 1), [])
+
   const type = useMemo(() => groupAccounts[0].type, [groupAccounts])
 
   const groupType = useMemo(() => mapAccountSubTypeToAccountGroupType(groupAccounts[0].subType), [groupAccounts])
@@ -53,7 +58,7 @@ export const AccountGroup: React.FC<Props> = ({ groupAccounts, allAccounts, onSe
   const subTypes = useMemo(() => mapAccountGroupTypeToAccountSubTypes(groupType), [groupType])
 
   const valueChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, subTypes, null, null, true, false),
+    () => getMonthlyValueChange(balanceHistory, subTypes, filterStartDate, today, true, false),
     [balanceHistory, subTypes]
   )
 
