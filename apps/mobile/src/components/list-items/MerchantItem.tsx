@@ -1,5 +1,6 @@
-import { FontAwesome6 } from '@expo/vector-icons'
+import { FontAwesome5, FontAwesome6 } from '@expo/vector-icons'
 import _ from 'lodash'
+import { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Avatar, Divider, Text, useTheme } from 'react-native-paper'
 
@@ -8,10 +9,11 @@ import { Merchant } from '../../../../../libs/frontend-types/src/merchant.type'
 type Props = {
   merchant: Merchant
   onSelected: (merchant: Merchant) => void
-  index?: number
+  isSelected?: boolean
+  isSelecting?: boolean
 }
 
-export const MerchantItem = ({ merchant, onSelected, index }: Props) => {
+const MI = ({ merchant, onSelected, isSelected, isSelecting }: Props) => {
   const { colors } = useTheme()
 
   return (
@@ -26,7 +28,7 @@ export const MerchantItem = ({ merchant, onSelected, index }: Props) => {
       }}
     >
       <>
-        {index != null && index > 0 && <Divider />}
+        <Divider />
         <View
           style={{
             flexDirection: 'row',
@@ -36,6 +38,19 @@ export const MerchantItem = ({ merchant, onSelected, index }: Props) => {
             padding: 15
           }}
         >
+          {isSelecting && (
+            <>
+              {isSelected ? (
+                <Avatar.Icon
+                  size={24}
+                  icon={() => <FontAwesome5 name="check" size={12} color="white" />}
+                  style={{ marginEnd: 15, backgroundColor: colors.primary }}
+                />
+              ) : (
+                <Avatar.Icon size={24} icon={() => null} style={{ marginEnd: 15, backgroundColor: colors.outline }} />
+              )}
+            </>
+          )}
           {_.isEmpty(merchant.icon) ? (
             <Avatar.Icon
               size={36}
@@ -58,3 +73,5 @@ export const MerchantItem = ({ merchant, onSelected, index }: Props) => {
     </TouchableOpacity>
   )
 }
+
+export const MerchantItem = memo(MI)

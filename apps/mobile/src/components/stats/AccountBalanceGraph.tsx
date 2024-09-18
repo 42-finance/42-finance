@@ -142,6 +142,8 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account }) => {
               setSelectedEndDate(netWorthHistory[pointerIndex].date)
             }
           }}
+          curved
+          curveType={1}
         />
       </View>
     </>

@@ -16,7 +16,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import MaskInput from 'react-native-mask-input'
 import { Button, Divider, Text, TextInput, useTheme } from 'react-native-paper'
-import { CategoryType } from 'shared-types'
+import { CategoryType, ReportDateFilter } from 'shared-types'
 
 import { dollarMask } from '../../utils/mask.utils'
 import { ActivityIndicator } from '../common/ActivityIndicator'
@@ -167,7 +167,9 @@ export const BC: React.FC<Props> = ({
           <Button
             mode="contained"
             style={{ marginTop: 8 }}
-            onPress={() => navigation.navigate('Category', { categoryId: category.id })}
+            onPress={() =>
+              navigation.navigate('Category', { categoryId: category.id, dateFilter: ReportDateFilter.Monthly })
+            }
           >
             View Category
           </Button>

@@ -2,7 +2,7 @@
   "expo": {
     "name": "42 Finance",
     "slug": "fortytwofinance",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "fortytwofinance",
@@ -29,7 +29,7 @@
         "webcredentials:42f.io"
       ],
       "bundleIdentifier": "com.fortytwofinance.app",
-      "buildNumber": "26",
+      "buildNumber": "27",
       "config": {
         "usesNonExemptEncryption": false
       },
@@ -69,7 +69,7 @@
       "googleServicesFile": "",
       "icon": "./src/assets/images/icon.png",
       "package": "com.fortytwofinance.app",
-      "versionCode": 26
+      "versionCode": 27
     },
     "extra": {
       "eas": {

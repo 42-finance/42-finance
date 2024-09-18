@@ -146,6 +146,8 @@ export const Spending: React.FC = () => {
             disableScroll
             maxValue={Math.max(maxValue + 1000, 1000)}
             endSpacing={0}
+            curved
+            curveType={1}
           />
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 15 }}>

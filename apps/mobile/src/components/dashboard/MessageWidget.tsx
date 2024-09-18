@@ -32,7 +32,7 @@ export const MessageWidget = () => {
     }
   })
 
-  if (!user || user.hideCommunity) {
+  if (!user || user.hideOpenSource) {
     return null
   }
 

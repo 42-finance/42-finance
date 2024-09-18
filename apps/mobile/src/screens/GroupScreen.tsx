@@ -1,18 +1,26 @@
+import { Entypo } from '@expo/vector-icons'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { endOfMonth, startOfDay, startOfMonth, subMonths } from 'date-fns'
 import { ApiQuery, getBudgets, getGroup, getTransactions } from 'frontend-api'
-import { dateToUtc } from 'frontend-utils'
+import { mapReportDateFilter } from 'frontend-utils'
 import _ from 'lodash'
 import * as React from 'react'
-import { useEffect, useMemo } from 'react'
-import { ProgressBar } from 'react-native-paper'
+import { useEffect, useMemo, useState } from 'react'
+import { TouchableOpacity } from 'react-native'
+import { ProgressBar, useTheme } from 'react-native-paper'
+import { ReportDateFilter } from 'shared-types'
 
 import { CategoryReport } from '../components/category/CategoryReport'
 import { View } from '../components/common/View'
+import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
 export const GroupScreen = ({ navigation, route }: RootStackScreenProps<'Group'>) => {
-  const { groupId, date } = route.params
+  const { groupId, date, dateFilter: dateFilterParam } = route.params
+
+  const showActionSheet = useActionSheet()
+  const { colors } = useTheme()
+
+  const [dateFilter, setDateFilter] = useState(dateFilterParam)
 
   const { data: group } = useQuery({
     queryKey: [ApiQuery.Group, groupId],
@@ -27,10 +35,7 @@ export const GroupScreen = ({ navigation, route }: RootStackScreenProps<'Group'>
   const { data: transactions = [], isFetching: fetchingTransactions } = useQuery({
     queryKey: [ApiQuery.GroupTransactions, groupId],
     queryFn: async () => {
-      const today = dateToUtc(startOfDay(new Date()))
-      const startDate = dateToUtc(subMonths(startOfMonth(today), 5))
-      const endDate = dateToUtc(endOfMonth(today))
-      const res = await getTransactions({ startDate, endDate, groupIds: [groupId] })
+      const res = await getTransactions({ groupIds: [groupId] })
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }
@@ -56,7 +61,21 @@ export const GroupScreen = ({ navigation, route }: RootStackScreenProps<'Group'>
 
   useEffect(() => {
     navigation.setOptions({
-      title: group ? group.name : 'Loading...'
+      title: group ? group.name : 'Loading...',
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() =>
+            showActionSheet(
+              Object.values(ReportDateFilter).map((d) => ({
+                label: mapReportDateFilter(d),
+                onSelected: () => setDateFilter(d)
+              }))
+            )
+          }
+        >
+          <Entypo name="calendar" size={24} color={colors.onSurface} />
+        </TouchableOpacity>
+      )
     })
   }, [group, navigation])
 
@@ -72,6 +91,7 @@ export const GroupScreen = ({ navigation, route }: RootStackScreenProps<'Group'>
         date={date ? new Date(date) : null}
         budgetAmount={budgetAmount}
         type={group.type}
+        dateFilter={dateFilter}
       />
     </View>
   )

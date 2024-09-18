@@ -6,7 +6,7 @@ import { mapCategoryType } from 'frontend-utils/src/mappers/map-category-type'
 import { useEffect, useMemo, useState } from 'react'
 import { SectionList, TouchableOpacity } from 'react-native'
 import { Chip, Divider, ProgressBar, Searchbar, customText, useTheme } from 'react-native-paper'
-import { CategoryType } from 'shared-types'
+import { CategoryType, ReportDateFilter } from 'shared-types'
 
 import { View } from '../components/common/View'
 import { CategoryItem } from '../components/list-items/CategoryItem'
@@ -119,7 +119,7 @@ export const CategoriesScreen = ({ navigation }: RootStackScreenProps<'Categorie
             key={item.id}
             category={item}
             onSelected={(category) => {
-              navigation.navigate('Category', { categoryId: category.id })
+              navigation.navigate('Category', { categoryId: category.id, dateFilter: ReportDateFilter.Monthly })
             }}
           />
         )}

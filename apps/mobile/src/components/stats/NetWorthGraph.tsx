@@ -185,6 +185,7 @@ export const NetWorthGraph: React.FC<Props> = ({
             }
           }}
           curved
+          curveType={1}
         />
       </View>
     </>

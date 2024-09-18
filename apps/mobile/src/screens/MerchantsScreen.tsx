@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { FlatList, StyleSheet } from 'react-native'
 import { ProgressBar, Searchbar, useTheme } from 'react-native-paper'
+import { ReportDateFilter } from 'shared-types'
 
 import { View } from '../components/common/View'
 import { MerchantItem } from '../components/list-items/MerchantItem'
@@ -44,14 +45,13 @@ export const MerchantsScreen = ({ navigation }: RootStackScreenProps<'Merchants'
       />
       <FlatList
         data={merchants}
-        renderItem={({ item, index }) => (
+        renderItem={({ item }) => (
           <MerchantItem
             key={item.id}
             merchant={item}
             onSelected={() => {
-              navigation.navigate('Merchant', { merchantId: item.id, date: null })
+              navigation.navigate('Merchant', { merchantId: item.id, dateFilter: ReportDateFilter.Monthly })
             }}
-            index={index}
           />
         )}
       />
