@@ -42,6 +42,7 @@ import { ReportDateFilter } from 'shared-types'
 
 import { Category } from '../../../../libs/frontend-types/src/category.type'
 import { View } from '../components/common/View'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
@@ -51,6 +52,7 @@ export const TransactionScreen: React.FC<RootStackScreenProps<'Transaction'>> = 
   const showActionSheet = useActionSheet()
   const queryClient = useQueryClient()
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [deleteDialogVisible, setDeleteDialogVisible] = React.useState(false)
@@ -267,7 +269,8 @@ export const TransactionScreen: React.FC<RootStackScreenProps<'Transaction'>> = 
         </Portal>
         <View>
           <Text variant="headlineLarge" style={{ textAlign: 'center', marginVertical: 25, fontWeight: 'bold' }}>
-            {formatDollars(transaction.amount)}
+            {formatDollars(transaction.amount, transaction.account.currencyCode)}
+            {transaction.account.currencyCode === currencyCode ? '' : ` ${transaction.account.currencyCode}`}
           </Text>
         </View>
         <Divider />

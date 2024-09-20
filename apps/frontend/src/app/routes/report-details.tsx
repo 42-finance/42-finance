@@ -11,10 +11,12 @@ import { Avatar } from '../components/common/avatar'
 import { Card } from '../components/common/card/card'
 import { FilterSelect } from '../components/common/filter-select'
 import { Statistic } from '../components/common/statistic'
+import { useUserTokenContext } from '../contexts/user-token.context'
 
 export const ReportDetails: React.FC = () => {
   const { date } = useParams<{ date: string }>()
   const navigate = useNavigate()
+  const { currencyCode } = useUserTokenContext()
 
   const parsedDate = useMemo(() => (date ? parseISO(date) : new Date()), [date])
 
@@ -109,7 +111,7 @@ export const ReportDetails: React.FC = () => {
             </div>
 
             <div className="text-base">
-              {formatDollarsSigned(value)} ({formatPercentage(percentage)})
+              {formatDollarsSigned(value, currencyCode)} ({formatPercentage(percentage)})
             </div>
           </div>
         </div>
@@ -143,15 +145,15 @@ export const ReportDetails: React.FC = () => {
       <Card title={formatDateInUtc(parsedDate, 'MMMM yyyy')}>
         <div className="grid gap-3 mt-3 md:m-3 md:grid-cols-3">
           <Card className="p-4 flex justify-center">
-            <Statistic title="Income" value={formatDollarsSigned(incomeValue)} color="text-income" />
+            <Statistic title="Income" value={formatDollarsSigned(incomeValue, currencyCode)} color="text-income" />
           </Card>
           <Card className="p-4 flex justify-center">
-            <Statistic title="Expenses" value={formatDollarsSigned(expenseValue)} color="text-expense" />
+            <Statistic title="Expenses" value={formatDollarsSigned(expenseValue, currencyCode)} color="text-expense" />
           </Card>
           <Card className="p-4 flex justify-center">
             <Statistic
               title="Cash Flow"
-              value={formatDollarsSigned(cashFlowValue)}
+              value={formatDollarsSigned(cashFlowValue, currencyCode)}
               color={cashFlowValue < 0 ? 'text-expense' : 'text-income'}
             />
           </Card>

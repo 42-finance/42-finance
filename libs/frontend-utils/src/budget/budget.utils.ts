@@ -1,6 +1,7 @@
 import { differenceInMonths } from 'date-fns'
 import { Budget, Transaction } from 'frontend-types'
 import _ from 'lodash'
+import { CurrencyCode } from 'shared-types'
 
 import { todayInUtc } from '../date/date.utils'
 import { formatDollars } from '../invoice/invoice.utils'
@@ -38,10 +39,10 @@ export const calculateBudgetAmount = (budget: Budget, transactions: Transaction[
   return totalAmount - totalSpent
 }
 
-export const formatBudgetAmount = (totalRolloverBudget: number, totalBudget: number) => {
+export const formatBudgetAmount = (totalRolloverBudget: number, totalBudget: number, currencyCode: CurrencyCode) => {
   if (totalRolloverBudget === totalBudget) {
-    return formatDollars(totalBudget, 0)
+    return formatDollars(totalBudget, currencyCode, 0)
   }
 
-  return `${formatDollars(totalRolloverBudget, 0)} (${formatDollars(totalBudget, 0)}/m)`
+  return `${formatDollars(totalRolloverBudget, currencyCode, 0)} (${formatDollars(totalBudget, currencyCode, 0)}/m)`
 }

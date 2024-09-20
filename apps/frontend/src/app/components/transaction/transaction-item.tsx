@@ -59,7 +59,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onSelected, isSe
           }}
         >
           {transaction.amount < 0 ? '+' : ''}
-          {formatDollars(transaction.amount)}
+          {formatDollars(transaction.amount, transaction.account.currencyCode)}
           {transaction.account.currencyCode === currencyCode ? '' : ` ${transaction.account.currencyCode}`}
         </div>
       </div>

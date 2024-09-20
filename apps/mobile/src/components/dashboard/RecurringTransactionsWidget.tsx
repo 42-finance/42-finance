@@ -1,4 +1,3 @@
-import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { startOfMonth } from 'date-fns'
@@ -9,6 +8,7 @@ import { useMemo } from 'react'
 import { Button, Card, Divider, Text, useTheme } from 'react-native-paper'
 
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
+import { NoData } from '../common/NoData'
 import { View } from '../common/View'
 import { RecurringTransactionItem } from '../list-items/RecurringTransactionItem'
 
@@ -75,14 +75,7 @@ export const RecurringTransactionsWidget = () => {
             />
           </View>
         ))}
-        {recurringTransactions.length === 0 && (
-          <View style={{ flex: 1, alignSelf: 'center', alignItems: 'center', padding: 20 }}>
-            <MaterialIcons name="money-off" size={48} color={colors.onSurface} />
-            <Text variant="titleMedium" style={{ marginTop: 5 }}>
-              No recurring transactions
-            </Text>
-          </View>
-        )}
+        {recurringTransactions.length === 0 && <NoData text="No recurring transactions" />}
         <Divider />
         <Button
           mode="outlined"

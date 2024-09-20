@@ -87,18 +87,19 @@ export const getNetWorthHistory = (
   invertLiabilities: boolean,
   startDate: Date | null
 ) => {
-  if (balanceHistory.length === 0) return []
-
   let sortedBalanceHistory = balanceHistory.sort((a, b) => a.date.getTime() - b.date.getTime())
   if (startDate) {
     sortedBalanceHistory = sortedBalanceHistory.filter((b) => b.date.getTime() >= startDate.getTime())
   }
-  let date = sortedBalanceHistory[0].date
-  const today = addDays(todayInUtc(), 1)
+  if (sortedBalanceHistory.length === 0) {
+    return []
+  }
 
+  let date = sortedBalanceHistory[0].date
+  const tomorrow = addDays(todayInUtc(), 1)
   const values: { date: Date; value: number }[] = []
 
-  while (date.getTime() <= today.getTime()) {
+  while (date.getTime() <= tomorrow.getTime()) {
     const value = getNetWorthForDate(balanceHistory, accountTypes, date, convertBalance, invertLiabilities)
     values.push({ date, value })
     date = addDays(date, 1)
@@ -169,7 +170,8 @@ export const formatAccountBalance = (account: Account, currencyCode: CurrencyCod
   let balance = formatDollars(
     account.subType === AccountSubType.CryptoExchange || account.subType === AccountSubType.Vehicle
       ? account.convertedBalance
-      : account.currentBalance
+      : account.currentBalance,
+    account.currencyCode
   )
   if (
     account.currencyCode !== currencyCode &&

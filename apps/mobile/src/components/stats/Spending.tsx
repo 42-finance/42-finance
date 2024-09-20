@@ -10,11 +10,13 @@ import { Dimensions } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Card, Divider, Text, useTheme } from 'react-native-paper'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
 import { View } from '../common/View'
 
 export const Spending: React.FC = () => {
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const today = new Date()
   const startOflastMonth = dateToUtc(startOfMonth(subMonths(today, 1)))
@@ -69,12 +71,12 @@ export const Spending: React.FC = () => {
       data.push(data[0])
     }
     const lastValue = data.length > 0 ? data[data.length - 1] : null
-    const lastValueText = formatDollars(lastValue)
+    const lastValueText = formatDollars(lastValue, currencyCode)
     const lastValueTextLength = lastValueText.length
 
     return data.map((value, index) => ({
       value,
-      dataPointText: index === data.length - 1 ? formatDollars(value) : undefined,
+      dataPointText: index === data.length - 1 ? formatDollars(value, currencyCode) : undefined,
       hideDataPoint: index !== data.length - 1,
       textColor: colors.primary,
       textShiftY: -10,
@@ -111,9 +113,9 @@ export const Spending: React.FC = () => {
   const formatYLabel = (value: string) => {
     const num = Number(value)
     if (num < 1000) {
-      return `${formatDollarsSigned(num, 0)}`
+      return `${formatDollarsSigned(num, currencyCode, 0)}`
     }
-    return `${formatDollarsSigned(num / 1000, 0)}K`
+    return `${formatDollarsSigned(num / 1000, currencyCode, 0)}K`
   }
 
   return (

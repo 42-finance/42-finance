@@ -50,7 +50,10 @@ export const PropertyForm: React.FC<Props> = ({ onSubmit, propertyInfo }) => {
   })
 
   const currencyItems = useMemo(
-    () => [CurrencyCode.CAD, CurrencyCode.USD].sort().map((c) => ({ label: c, value: c })),
+    () =>
+      Object.values(CurrencyCode)
+        .sort()
+        .map((c) => ({ label: c, value: c })),
     []
   )
 

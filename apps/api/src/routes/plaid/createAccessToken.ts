@@ -2,7 +2,7 @@ import { Boom } from '@hapi/boom'
 import { Account, Connection, dataSource } from 'database'
 import { Request, Response } from 'express'
 import { CountryCode } from 'plaid'
-import { plaidClient, updateTransactions } from 'plaid-helpers'
+import { plaidClient, updateLiabilities, updateTransactions } from 'plaid-helpers'
 import { ConnectionType } from 'shared-types'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
@@ -82,4 +82,5 @@ export const createAccessToken = async (
   })
 
   await updateTransactions(connection.id)
+  await updateLiabilities(connection.id)
 }

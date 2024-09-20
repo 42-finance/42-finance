@@ -1,31 +1,35 @@
 import { Feather } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
 import { ApiQuery, getBalanceHistory } from 'frontend-api'
+import { mapDateRangeFilterFull, mapDateRangeToDate } from 'frontend-utils'
 import { getMonthlyValueChange, getNetWorth, getNetWorthHistory } from 'frontend-utils/src/account/account.utils'
 import { valueChangeColor, valueChangeIcon } from 'frontend-utils/src/color/color.utils'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import { formatDateInUtc, todayInUtc } from 'frontend-utils/src/date/date.utils'
 import { formatDollars, formatPercentage } from 'frontend-utils/src/invoice/invoice.utils'
 import { useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Text, useTheme } from 'react-native-paper'
-import { AccountSubType } from 'shared-types'
+import { AccountSubType, DateRangeFilter } from 'shared-types'
 
 import { Account } from '../../../../../libs/frontend-types/src/account.type'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 
 type Props = {
   account: Account
+  dateRangeFilter?: DateRangeFilter
 }
 
-export const AccountBalanceGraph: React.FC<Props> = ({ account }) => {
+export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter = DateRangeFilter.AllTime }) => {
   const { dark, colors } = useTheme()
   const { currencyCode } = useUserTokenContext()
 
   const [today] = useState(todayInUtc())
   const [netWorthOverride, setNetWorthOverride] = useState<number | null>(null)
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null)
+
+  const filterStartDate = useMemo(() => mapDateRangeToDate(dateRangeFilter), [dateRangeFilter])
 
   const { data: balanceHistory = [] } = useQuery({
     queryKey: [ApiQuery.AccountBalanceHistory, account],
@@ -51,12 +55,15 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account }) => {
   )
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, convertBalance, false, null)
+    const history = getNetWorthHistory(balanceHistory, accountTypes, convertBalance, false, filterStartDate)
+    if (history.length === 0) {
+      history.push({ date: today, value: netWorth })
+    }
     if (history.length === 1) {
       history.push(history[0])
     }
     return history
-  }, [balanceHistory, accountTypes, convertBalance])
+  }, [balanceHistory, accountTypes, convertBalance, filterStartDate])
 
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
@@ -78,7 +85,7 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account }) => {
   return (
     <>
       <Text variant="headlineMedium" style={{ textAlign: 'center', marginLeft: 15, marginTop: 10 }}>
-        {formatDollars(netWorthOverride ?? netWorth)}
+        {formatDollars(netWorthOverride ?? netWorth, account.currencyCode)}
         {account.currencyCode === currencyCode || convertBalance ? '' : ` ${account.currencyCode}`}
       </Text>
       <View
@@ -101,11 +108,11 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account }) => {
           style={{ color: valueChangeColor(netWorthChange.value, account.type) }}
           numberOfLines={1}
         >
-          {formatDollars(netWorthChange.value)} ({formatPercentage(netWorthChange.percentage)})
+          {formatDollars(netWorthChange.value, account.currencyCode)} ({formatPercentage(netWorthChange.percentage)})
         </Text>
         <Text variant="bodyMedium" style={{ marginLeft: 5, color: colors.outline }}>
           {selectedEndDate == null
-            ? 'This Month'
+            ? mapDateRangeFilterFull(dateRangeFilter)
             : `${formatDateInUtc(startDate, 'MMM d, yyyy')} - ${formatDateInUtc(selectedEndDate, 'MMM d, yyyy')}`}
         </Text>
       </View>

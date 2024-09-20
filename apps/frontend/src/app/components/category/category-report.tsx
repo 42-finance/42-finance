@@ -15,6 +15,7 @@ import _ from 'lodash'
 import { useMemo, useState } from 'react'
 import { CategoryType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { Card } from '../common/card/card'
 import { ProgressBar } from '../common/progress-bar/progress-bar'
 import { Statistic } from '../common/statistic'
@@ -30,6 +31,7 @@ type Props = {
 
 export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmount, type }) => {
   const [selectedDate, setSelectedDate] = useState(date ? dateToUtc(startOfMonth(dateToLocal(date))) : null)
+  const { currencyCode } = useUserTokenContext()
 
   const filteredTransactions = useMemo(
     () => transactions.filter((t) => !selectedDate || t.date.getUTCMonth() === selectedDate.getUTCMonth()),
@@ -107,7 +109,7 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
             <div className="text-base" style={{ flex: 1 }}>
               Remaining budget
             </div>
-            <div className="text-base">{formatDollarsSigned(budgetAmount - totalValue)}</div>
+            <div className="text-base">{formatDollarsSigned(budgetAmount - totalValue, currencyCode)}</div>
           </div>
           <ProgressBar
             percentage={calculateBudgetProgress(totalValue, budgetAmount)}
@@ -115,16 +117,20 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
             trackColor="bg-outline"
           />
           <div className="mt-2" style={{ color: lightColors.outline }}>
-            {formatDollars(budgetAmount, 0)} budget
+            {formatDollars(budgetAmount, currencyCode, 0)} budget
           </div>
         </div>
       )}
       <div className="grid md:gap-3 md:m-3 md:grid-cols-3">
         <Card className="p-4 flex justify-center">
-          <Statistic title="Total amount" value={formatDollarsSigned(totalValue)} className="border-b" />
+          <Statistic title="Total amount" value={formatDollarsSigned(totalValue, currencyCode)} className="border-b" />
         </Card>
         <Card className="p-4 flex justify-center">
-          <Statistic title="Average transaction" value={formatDollarsSigned(averageTransaction)} className="border-b" />
+          <Statistic
+            title="Average transaction"
+            value={formatDollarsSigned(averageTransaction, currencyCode)}
+            className="border-b"
+          />
         </Card>
         <Card className="p-4 flex justify-center">
           <Statistic title="Transactions" value={filteredTransactions.length} className="border-b" />

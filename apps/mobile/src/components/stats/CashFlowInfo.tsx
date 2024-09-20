@@ -27,6 +27,7 @@ import { Divider, Text, useTheme } from 'react-native-paper'
 import { ReportDateFilter } from 'shared-types'
 
 import { expenseColor, incomeColor } from '../../constants/theme'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 
 const getCurrentTransactions = (transactions: Transaction[], dateFilter: ReportDateFilter) => {
@@ -103,6 +104,7 @@ type Props = {
 
 export const CashFlowInfo: React.FC<Props> = ({ groupedTransactions, dateFilter, isExpense }) => {
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const transactions = useMemo(
     () =>
@@ -151,7 +153,7 @@ export const CashFlowInfo: React.FC<Props> = ({ groupedTransactions, dateFilter,
           This {mapReportDateFilterShort(dateFilter)}
         </Text>
         <Text variant="titleMedium" style={{ color: getColor(currentValue) }}>
-          {formatDollarsSigned(currentValue)}
+          {formatDollarsSigned(currentValue, currencyCode)}
         </Text>
       </View>
       <Divider />
@@ -167,7 +169,7 @@ export const CashFlowInfo: React.FC<Props> = ({ groupedTransactions, dateFilter,
           Last {mapReportDateFilterShort(dateFilter)}
         </Text>
         <Text variant="titleMedium" style={{ color: getColor(lastValue) }}>
-          {formatDollarsSigned(lastValue)}
+          {formatDollarsSigned(lastValue, currencyCode)}
         </Text>
       </View>
       <Divider />
@@ -183,7 +185,7 @@ export const CashFlowInfo: React.FC<Props> = ({ groupedTransactions, dateFilter,
           {mapReportDateFilter(dateFilter)} average
         </Text>
         <Text variant="titleMedium" style={{ color: getColor(average) }}>
-          {formatDollarsSigned(average)}
+          {formatDollarsSigned(average, currencyCode)}
         </Text>
       </View>
     </>

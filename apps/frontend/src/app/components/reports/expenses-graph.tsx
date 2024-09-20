@@ -7,12 +7,14 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CategoryType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { Card } from '../common/card/card'
 import { Statistic } from '../common/statistic'
 import { MonthlyBarChart } from './monthly-bar-chart'
 
 export const ExpensesGraph = () => {
   const navigate = useNavigate()
+  const { currencyCode } = useUserTokenContext()
 
   const thisMonth = useMemo(() => dateToUtc(startOfMonth(new Date())), [])
   const lastMonth = useMemo(() => dateToUtc(startOfMonth(subMonths(new Date(), 1))), [])
@@ -86,21 +88,21 @@ export const ExpensesGraph = () => {
         <Card className="p-4 flex justify-center">
           <Statistic
             title="This Month"
-            value={formatDollarsSigned(thisMonthValue)}
+            value={formatDollarsSigned(thisMonthValue, currencyCode)}
             color={thisMonthValue < 0 ? 'text-expense' : 'text-income'}
           />
         </Card>
         <Card className="p-4 flex justify-center">
           <Statistic
             title="Last Month"
-            value={formatDollarsSigned(lastMonthValue)}
+            value={formatDollarsSigned(lastMonthValue, currencyCode)}
             color={lastMonthValue < 0 ? 'text-expense' : 'text-income'}
           />
         </Card>
         <Card className="p-4 flex justify-center">
           <Statistic
             title="6 month average"
-            value={formatDollarsSigned(monthlyAverage)}
+            value={formatDollarsSigned(monthlyAverage, currencyCode)}
             color={monthlyAverage < 0 ? 'text-expense' : 'text-income'}
           />
         </Card>

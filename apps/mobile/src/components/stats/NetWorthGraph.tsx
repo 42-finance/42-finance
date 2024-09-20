@@ -13,6 +13,7 @@ import { LineChart } from 'react-native-gifted-charts'
 import { customText, useTheme } from 'react-native-paper'
 import { AccountGroupType, AccountType, DateRangeFilter } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
 import { View } from '../common/View'
 
@@ -28,6 +29,7 @@ export const NetWorthGraph: React.FC<Props> = ({
   widthReduction = 0
 }) => {
   const { dark, colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const [today] = useState(todayInUtc())
   const [netWorthOverride, setNetWorthOverride] = useState<number | null>(null)
@@ -109,7 +111,7 @@ export const NetWorthGraph: React.FC<Props> = ({
   return (
     <>
       <Text variant="headlineMedium" style={{ textAlign: 'center', marginTop: 15 }}>
-        {formatDollarsSigned(netWorthValue)}
+        {formatDollarsSigned(netWorthValue, currencyCode)}
       </Text>
       <View
         style={{
@@ -143,7 +145,7 @@ export const NetWorthGraph: React.FC<Props> = ({
           }}
           numberOfLines={1}
         >
-          {formatDollars(netWorthChange.value)} ({formatPercentage(netWorthChange.percentage)})
+          {formatDollars(netWorthChange.value, currencyCode)} ({formatPercentage(netWorthChange.percentage)})
         </Text>
         <Text variant="bodyMedium" style={{ marginLeft: 5, color: colors.outline }}>
           {selectedEndDate == null

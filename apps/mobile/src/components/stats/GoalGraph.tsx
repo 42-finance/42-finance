@@ -13,6 +13,7 @@ import { LineChart } from 'react-native-gifted-charts'
 import { ProgressBar, Text, useTheme } from 'react-native-paper'
 import { AccountSubType, AccountType, GoalType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
 
 export const GoalGraph: React.FC<Props> = ({ goal }) => {
   const { dark, colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const [today] = useState(todayInUtc())
   const [netWorthOverride, setNetWorthOverride] = useState<number | null>(null)
@@ -94,7 +96,7 @@ export const GoalGraph: React.FC<Props> = ({ goal }) => {
           }}
           numberOfLines={1}
         >
-          {formatDollars(netWorthChange.value)} ({formatPercentage(netWorthChange.percentage)})
+          {formatDollars(netWorthChange.value, currencyCode)} ({formatPercentage(netWorthChange.percentage)})
         </Text>
         <Text variant="bodyMedium" style={{ marginLeft: 5, color: colors.outline }}>
           {selectedEndDate == null
@@ -114,9 +116,9 @@ export const GoalGraph: React.FC<Props> = ({ goal }) => {
           color="#19d2a5"
         />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text variant="titleMedium">{formatDollars(netWorthOverride ?? netWorth)}</Text>
+          <Text variant="titleMedium">{formatDollars(netWorthOverride ?? netWorth, currencyCode)}</Text>
           <Text variant="titleMedium">
-            {goal.type === GoalType.Savings ? formatDollars(goal.amount) : formatDollars(0)}
+            {goal.type === GoalType.Savings ? formatDollars(goal.amount, currencyCode) : formatDollars(0, currencyCode)}
           </Text>
         </View>
       </View>

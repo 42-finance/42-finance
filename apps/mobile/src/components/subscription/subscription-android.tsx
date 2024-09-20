@@ -2,14 +2,15 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { ApiQuery, getSubscription } from 'frontend-api'
-import { formatDollars, mapSubscriptionType, useUserTokenContext } from 'frontend-utils'
+import { formatDollars, mapSubscriptionType } from 'frontend-utils'
 import * as React from 'react'
 import { useState } from 'react'
 import { Linking, ScrollView } from 'react-native'
 import { Avatar, Button, Card, Divider, ProgressBar, Text, useTheme } from 'react-native-paper'
-import { SubscriptionType } from 'shared-types'
+import { CurrencyCode, SubscriptionType } from 'shared-types'
 
 import { config } from '../../common/config'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 
 export const SubscriptionAndroid = () => {
@@ -57,8 +58,9 @@ export const SubscriptionAndroid = () => {
                 Next Payment
               </Text>
               <Text variant="titleMedium" style={{ marginTop: 5 }}>
-                {subscription.invoice.currency.toUpperCase()} {formatDollars(Math.max(0, subscription.invoice.amount))}{' '}
-                on {format(subscription.invoice.date, 'MMMM dd, yyyy')}
+                {subscription.invoice.currency.toUpperCase()}{' '}
+                {formatDollars(Math.max(0, subscription.invoice.amount), CurrencyCode.USD)} on{' '}
+                {format(subscription.invoice.date, 'MMMM dd, yyyy')}
               </Text>
             </View>
           )}

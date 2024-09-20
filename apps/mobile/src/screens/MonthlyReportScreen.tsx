@@ -20,6 +20,7 @@ import { Avatar, Chip, Divider, ProgressBar, Text, useTheme } from 'react-native
 import { CashFlowFilter, CategoryType, ReportDateFilter } from 'shared-types'
 
 import { View } from '../components/common/View'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { useRefetchOnFocus } from '../hooks/use-refetch-on-focus.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
@@ -29,6 +30,7 @@ export const MonthlyReportScreen = ({ navigation, route }: RootStackScreenProps<
 
   const { colors } = useTheme()
   const showActionSheet = useActionSheet()
+  const { currencyCode } = useUserTokenContext()
 
   const parsedDate = useMemo(() => parseISO(date), [date])
 
@@ -162,7 +164,7 @@ export const MonthlyReportScreen = ({ navigation, route }: RootStackScreenProps<
             {category.name}
           </Text>
           <Text variant="titleMedium">
-            {formatDollarsSigned(value)} ({formatPercentage(percentage)})
+            {formatDollarsSigned(value, currencyCode)} ({formatPercentage(percentage)})
           </Text>
         </TouchableOpacity>
       </View>
@@ -196,7 +198,7 @@ export const MonthlyReportScreen = ({ navigation, route }: RootStackScreenProps<
             Income
           </Text>
           <Text variant="titleMedium" style={{ color: '#19d2a5' }}>
-            {formatDollarsSigned(incomeValue)}
+            {formatDollarsSigned(incomeValue, currencyCode)}
           </Text>
         </View>
         <Divider />
@@ -213,7 +215,7 @@ export const MonthlyReportScreen = ({ navigation, route }: RootStackScreenProps<
             Expenses
           </Text>
           <Text variant="titleMedium" style={{ color: '#f0648c' }}>
-            {formatDollarsSigned(expenseValue)}
+            {formatDollarsSigned(expenseValue, currencyCode)}
           </Text>
         </View>
         <Divider />
@@ -231,7 +233,7 @@ export const MonthlyReportScreen = ({ navigation, route }: RootStackScreenProps<
             Cash Flow
           </Text>
           <Text variant="titleMedium" style={{ color: cashFlowValue < 0 ? '#f0648c' : '#19d2a5' }}>
-            {formatDollarsSigned(cashFlowValue)}
+            {formatDollarsSigned(cashFlowValue, currencyCode)}
           </Text>
         </View>
         <View

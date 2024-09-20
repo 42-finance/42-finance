@@ -5,6 +5,7 @@ import { Dimensions } from 'react-native'
 import { BarChart, barDataItem } from 'react-native-gifted-charts'
 import { useTheme } from 'react-native-paper'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { ActivityIndicator } from '../common/ActivityIndicator'
 
 type Props = {
@@ -15,19 +16,20 @@ type Props = {
 
 export const MonthlyBarChart: React.FC<Props> = ({ data, onSelected, loading }) => {
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const formatYLabel = (value: string) => {
     const num = Number(value)
     if (num < 0) {
       if (num > -1000) {
-        return `-${formatDollars(num, 0)}`
+        return `-${formatDollars(num, currencyCode, 0)}`
       }
-      return `-${formatDollars(num / 1000, 0)}K`
+      return `-${formatDollars(num / 1000, currencyCode, 0)}K`
     } else {
       if (num < 1000) {
-        return `${formatDollars(num, 0)}`
+        return `${formatDollars(num, currencyCode, 0)}`
       }
-      return `${formatDollars(num / 1000, 0)}K`
+      return `${formatDollars(num / 1000, currencyCode, 0)}K`
     }
   }
 

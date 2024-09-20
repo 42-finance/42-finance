@@ -8,6 +8,7 @@ import { FaChevronDown } from 'react-icons/fa6'
 import { IoEyeOutline } from 'react-icons/io5'
 import { CategoryType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { BudgetCategory } from './budget-category'
 
 type Props = {
@@ -28,6 +29,7 @@ export const BudgetGroup: React.FC<Props> = ({
   editingCategoryId
 }) => {
   const queryClient = useQueryClient()
+  const { currencyCode } = useUserTokenContext()
 
   const [collapsed, setCollapsed] = useState(false)
   const [showUnbudgeted, setShowUnbudgeted] = useState(false)
@@ -108,10 +110,10 @@ export const BudgetGroup: React.FC<Props> = ({
           {group.name}
         </div>
         <div className="" style={{ width: 90, textAlign: 'right' }}>
-          {formatDollars(totalBudget, 0)}
+          {formatDollars(totalBudget, currencyCode, 0)}
         </div>
         <div className="" style={{ width: 90, textAlign: 'right' }}>
-          {formatDollarsSigned(totalBudget - totalSpent, 0)}
+          {formatDollarsSigned(totalBudget - totalSpent, currencyCode, 0)}
         </div>
       </div>
       {!collapsed && (
@@ -153,7 +155,7 @@ export const BudgetGroup: React.FC<Props> = ({
               <div className="" style={{ flex: 1, marginLeft: 10, color: lightColors.outline }}>
                 {showUnbudgeted ? 'Hide' : 'Show'} {unbudgetedCategories.length} unbudgeted
               </div>
-              <div className="">{formatDollarsSigned(0 - unbudgetedAmount, 0)}</div>
+              <div className="">{formatDollarsSigned(0 - unbudgetedAmount, currencyCode, 0)}</div>
             </div>
           )}
         </>

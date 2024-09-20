@@ -15,6 +15,7 @@ import { useMemo } from 'react'
 import { ProgressBar, Text, useTheme } from 'react-native-paper'
 import { CategoryType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 
 type Props = {
@@ -24,6 +25,7 @@ type Props = {
 
 export const BudgetProgress: React.FC<Props> = ({ type, backgroundColor }) => {
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const { data: budgets = [] } = useQuery({
     queryKey: [ApiQuery.Budgets],
@@ -105,9 +107,9 @@ export const BudgetProgress: React.FC<Props> = ({ type, backgroundColor }) => {
       />
       <View style={{ flexDirection: 'row' }}>
         <Text variant="titleMedium" style={{ flex: 1 }}>
-          {formatDollarsSigned(total, 0)}
+          {formatDollarsSigned(total, currencyCode, 0)}
         </Text>
-        <Text variant="titleMedium">{formatDollars(totalBudget, 0)}</Text>
+        <Text variant="titleMedium">{formatDollars(totalBudget, currencyCode, 0)}</Text>
       </View>
     </View>
   )

@@ -152,7 +152,9 @@ export const SplitTransaction: React.FC<Props> = ({ transactionId, onClose }) =>
 
           <div className="flex items-center my-3 mx-5">
             <div className="font-bold grow text-outline">LEFT TO SPLIT</div>
-            <div className="text-base font-bold">{formatDollarsSigned(leftToSplit)}</div>
+            <div className="text-base font-bold">
+              {formatDollarsSigned(leftToSplit, transaction.account.currencyCode)}
+            </div>
           </div>
         </div>
       ) : (

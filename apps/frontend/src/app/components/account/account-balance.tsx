@@ -16,9 +16,9 @@ import {
 } from 'frontend-utils'
 import { useMemo, useState } from 'react'
 import { FiArrowDownLeft, FiArrowUpRight } from 'react-icons/fi'
-import { AccountSubType, CurrencyCode } from 'shared-types'
+import { AccountSubType } from 'shared-types'
 
-import { useLocalStorage } from '../../hooks/use-local-storage.hook'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { Avatar } from '../common/avatar'
 import { NetWorthGraph } from '../common/chart/net-worth-graph'
 
@@ -27,7 +27,7 @@ type Props = {
 }
 
 export const AccountBalance: React.FC<Props> = ({ account }) => {
-  const [currencyCode] = useLocalStorage<CurrencyCode>('currencyCode', CurrencyCode.USD)
+  const { currencyCode } = useUserTokenContext()
 
   const [today] = useState(todayInUtc())
   const [filterDate, setFilterDate] = useState<Date | null>(null)
@@ -80,13 +80,13 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
   return (
     <div>
       <div className="text-xl text-center mt-4">
-        {formatDollarsSigned(netWorth)}
+        {formatDollarsSigned(netWorth, account.currencyCode)}
         {account.currencyCode === currencyCode || convertBalance ? '' : ` ${account.currencyCode}`}
       </div>
       <div className="flex items-center justify-center mt-1 mb-4">
         <Avatar>{changeIcon === 'arrow-up-right' ? <FiArrowUpRight /> : <FiArrowDownLeft />}</Avatar>
         <div className="" style={{ color: valueChangeColor(netWorthChange.value, account.type) }}>
-          {formatDollars(netWorthChange.value)} ({formatPercentage(netWorthChange.percentage)})
+          {formatDollars(netWorthChange.value, account.currencyCode)} ({formatPercentage(netWorthChange.percentage)})
         </div>
         <div className="text-outline ml-1">
           {filterDate == null

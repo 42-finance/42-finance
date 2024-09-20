@@ -21,6 +21,7 @@ export const getMerchants = async (query: MerchantsQuery = {}) => {
   url.search = searchParams.toString()
   return get<HTTPResponseBody<Merchant[]>>(url.toString())
 }
+
 export type EditMerchantRequest = {
   name?: string
 }

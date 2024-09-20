@@ -1,18 +1,20 @@
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ApiQuery, deleteAccount, getAccount, getTransactions, refreshAccount } from 'frontend-api'
-import { formatDateDifference, setMessage } from 'frontend-utils'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
+import { ApiQuery, deleteAccount, getAccount, getBills, getTransactions, refreshAccount } from 'frontend-api'
+import { formatDateDifference, setMessage, useTransactionsFilterContext } from 'frontend-utils'
 import { mapAccountSubType } from 'frontend-utils/src/mappers/map-account-sub-type'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { Button, Dialog, Divider, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
-import { AccountSubType } from 'shared-types'
+import { AccountSubType, DateRangeFilter } from 'shared-types'
 
+import { DateRangePicker } from '../components/common/DateRangePicker'
 import { View } from '../components/common/View'
+import { BillItem } from '../components/list-items/BillItem'
 import { TransactionItem } from '../components/list-items/TransactionItem'
 import { AccountBalanceGraph } from '../components/stats/AccountBalanceGraph'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { usePlaid } from '../hooks/use-plaid.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
@@ -25,9 +27,11 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
   const queryClient = useQueryClient()
   const { createLink, openLink, loading } = usePlaid()
   const { currencyCode } = useUserTokenContext()
+  const { setAccounts, reset } = useTransactionsFilterContext()
 
   const [showPlaid, setShowPlaid] = useState(false)
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false)
+  const [selectedDateRangeFilter, setSelectedDateRangeFilter] = useState<DateRangeFilter>(DateRangeFilter.OneMonth)
 
   const { data: account, isFetching: fetching } = useQuery({
     queryKey: [ApiQuery.Account, accountId],
@@ -48,6 +52,19 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
         return res.parsedBody.payload
       }
       return []
+    },
+    enabled: account != null,
+    placeholderData: keepPreviousData
+  })
+
+  const { data: bill } = useQuery({
+    queryKey: [ApiQuery.AccountBills, account],
+    queryFn: async () => {
+      const res = await getBills({ accountId: account!.id })
+      if (res.ok && res.parsedBody?.payload) {
+        return res.parsedBody.payload[0] ?? null
+      }
+      return null
     },
     enabled: account != null,
     placeholderData: keepPreviousData
@@ -74,6 +91,7 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
       queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountTransactions] })
       queryClient.invalidateQueries({ queryKey: [ApiQuery.Transactions] })
       queryClient.invalidateQueries({ queryKey: [ApiQuery.ReviewTransactions] })
+      queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountBills] })
     }
   })
 
@@ -173,29 +191,72 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
             <Divider />
           </>
         )}
-        <AccountBalanceGraph account={account} />
-        <View>
+        <AccountBalanceGraph account={account} dateRangeFilter={selectedDateRangeFilter} />
+        <DateRangePicker
+          selectedDateRangeFilter={selectedDateRangeFilter}
+          onSelected={(type) => setSelectedDateRangeFilter(type)}
+        />
+        <View
+          style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.elevation.level2, padding: 10 }}
+        >
           <Text
             variant="titleMedium"
             style={{
               fontWeight: 'bold',
-              padding: 15,
-              backgroundColor: colors.elevation.level2
+              flex: 1
             }}
           >
             Recent Transactions
           </Text>
+          <Button
+            mode="text"
+            style={{}}
+            onPress={() => {
+              reset()
+              setAccounts([account])
+              navigation.navigate('TransactionsTab')
+            }}
+          >
+            View all
+          </Button>
         </View>
         <Divider />
         {transactions.map((transaction) => (
           <View key={transaction.id}>
             <Divider />
             <View style={{ backgroundColor: colors.elevation.level2 }}>
-              <TransactionItem transaction={transaction} showDate />
+              <TransactionItem
+                transaction={transaction}
+                showDate
+                onSelected={() => navigation.navigate('Transaction', { transactionId: transaction.id })}
+              />
             </View>
           </View>
         ))}
-        <View style={{ marginBottom: 20 }} />
+        {bill ? (
+          <View style={{ marginVertical: 20 }}>
+            <View>
+              <Text
+                variant="titleMedium"
+                style={{
+                  fontWeight: 'bold',
+                  padding: 15,
+                  backgroundColor: colors.elevation.level2
+                }}
+              >
+                Upcoming Bill
+              </Text>
+            </View>
+            <BillItem
+              bill={bill}
+              onSelected={() => navigation.navigate('Bill', { billId: bill.id })}
+              backgroundColor={colors.elevation.level2}
+            />
+            <Divider />
+          </View>
+        ) : (
+          <View style={{ marginBottom: 20 }} />
+        )}
         <Divider />
         {account.connection && (
           <>

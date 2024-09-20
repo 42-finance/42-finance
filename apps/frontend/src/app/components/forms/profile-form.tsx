@@ -42,7 +42,7 @@ export const ProfileForm: React.FC<Props> = ({ onSubmit, profileInfo }) => {
     }
   })
 
-  const currencyItems = useMemo(() => [CurrencyCode.CAD, CurrencyCode.USD].map((c) => ({ label: c, value: c })), [])
+  const currencyItems = useMemo(() => Object.values(CurrencyCode).map((c) => ({ label: c, value: c })), [])
 
   return (
     <form id="profile-form" data-testid="profile-form" autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>

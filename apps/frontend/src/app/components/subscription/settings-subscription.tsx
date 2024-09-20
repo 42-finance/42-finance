@@ -5,7 +5,7 @@ import { formatDollars, mapSubscriptionType, mapSubscriptionTypeToPrice } from '
 import { useEffect, useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 import { toast } from 'react-toastify'
-import { SubscriptionType } from 'shared-types'
+import { CurrencyCode, SubscriptionType } from 'shared-types'
 import { useQueryParam } from 'use-query-params'
 
 import { Button } from '../common/button/button'
@@ -101,7 +101,7 @@ export const SettingsSubscription = () => {
                   <div className="text-base mt-6 mb-2 mx-6 text-outline">Next Payment</div>
                   <div className="pb-6 px-6 border-b">
                     {subscription.invoice.currency.toUpperCase()}{' '}
-                    {formatDollars(Math.max(0, subscription.invoice.amount))} on{' '}
+                    {formatDollars(Math.max(0, subscription.invoice.amount), CurrencyCode.USD)} on{' '}
                     {format(subscription.invoice.date, 'MMMM dd, yyyy')}
                   </div>
                 </>
@@ -109,8 +109,12 @@ export const SettingsSubscription = () => {
                 <>
                   <div className="text-base mt-6 mb-2 mx-6 text-outline">Next Payment</div>
                   <div className="pb-6 px-6 border-b">
-                    USD {formatDollars(Math.max(0, mapSubscriptionTypeToPrice(subscription.subscriptionType)))} on{' '}
-                    {format(subscription.renewalDate, 'MMMM dd, yyyy')}
+                    USD{' '}
+                    {formatDollars(
+                      Math.max(0, mapSubscriptionTypeToPrice(subscription.subscriptionType)),
+                      CurrencyCode.USD
+                    )}{' '}
+                    on {format(subscription.renewalDate, 'MMMM dd, yyyy')}
                   </div>
                 </>
               ) : null}

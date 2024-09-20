@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { useTheme } from 'react-native-paper'
 
+import { BillsWidget } from '../components/dashboard/BillsWidget'
 import { BudgetWidget } from '../components/dashboard/BudgetWidget'
 import { CommunityWidget } from '../components/dashboard/CommunityWidget'
 import { GettingStartedWidget } from '../components/dashboard/GettingStartedWidget'
@@ -37,6 +38,7 @@ export const DashboardScreen = ({ navigation }: RootStackScreenProps<'Dashboard'
       <NetWorthWidget />
       <ReviewTransactions />
       <RecentTransactions />
+      <BillsWidget />
       <BudgetWidget />
       <Spending />
       <RecurringTransactionsWidget />

@@ -50,6 +50,8 @@ export type RootStackParamList = {
     amountValue: number | null
     amountValue2: number | null
   }
+  Bill: { billId: number }
+  Bills: undefined
   Budget: undefined
   Category: { categoryId: number; date?: string; dateFilter: ReportDateFilter }
   CategoryRule: { eventName: string }

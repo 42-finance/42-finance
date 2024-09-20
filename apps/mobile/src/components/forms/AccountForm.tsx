@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import { mapAccountSubType } from 'frontend-utils/src/mappers/map-account-sub-type'
 import { mapAccountType } from 'frontend-utils/src/mappers/map-account-type'
 import React, { useMemo } from 'react'
@@ -9,6 +8,7 @@ import { Button } from 'react-native-paper'
 import { AccountSubType, AccountType, CurrencyCode } from 'shared-types'
 import * as Yup from 'yup'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/CurrencyInput'
 import { PaperPickerField } from '../common/PaperPickerField'
 import { TextInput } from '../common/TextInput'
@@ -67,7 +67,10 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
   )
 
   const currencyCodes = useMemo(
-    () => [CurrencyCode.CAD, CurrencyCode.USD].sort().map((c) => ({ label: c, value: c })),
+    () =>
+      Object.values(CurrencyCode)
+        .sort()
+        .map((c) => ({ label: c, value: c })),
     []
   )
 

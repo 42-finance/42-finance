@@ -5,6 +5,7 @@ import React, { useMemo } from 'react'
 import { Chart } from 'react-chartjs-2'
 import { ChartJSOrUndefined } from 'react-chartjs-2/dist/types'
 
+import { useUserTokenContext } from '../../../contexts/user-token.context'
 import { Loader } from '../loader/loader'
 
 export type DataPoint = {
@@ -20,6 +21,7 @@ type Props = {
 
 export const SpendingGraph: React.FC<Props> = ({ lastMonthData, thisMonthData, isLoading }) => {
   const chartRef = React.useRef<ChartJSOrUndefined>(null)
+  const { currencyCode } = useUserTokenContext()
 
   const [chartData, setChartData] = React.useState<ChartData<'line', (number | null)[], unknown>>({
     datasets: []
@@ -83,7 +85,7 @@ export const SpendingGraph: React.FC<Props> = ({ lastMonthData, thisMonthData, i
         return ''
       },
       label: (data: any) => {
-        return formatDollarsSigned(data.raw.y)
+        return formatDollarsSigned(data.raw.y, currencyCode)
       }
     },
     footerFont: {
@@ -165,7 +167,7 @@ export const SpendingGraph: React.FC<Props> = ({ lastMonthData, thisMonthData, i
                 minRotation: 0,
                 maxRotation: 0,
                 maxTicksLimit: 6,
-                callback: (tickValue: string | number) => `${formatDollarsSigned(Number(tickValue))}`,
+                callback: (tickValue: string | number) => `${formatDollarsSigned(Number(tickValue), currencyCode)}`,
                 font: {
                   family: 'Barlow'
                 }
