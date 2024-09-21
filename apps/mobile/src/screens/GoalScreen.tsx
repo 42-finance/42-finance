@@ -119,7 +119,7 @@ export const GoalScreen = ({ route, navigation }: RootStackScreenProps<'Goal'>) 
       </Portal>
       <ScrollView>
         <GoalGraph goal={goal} />
-        {targetDate && (
+        {targetDate != null ? (
           <>
             <View
               style={{
@@ -136,8 +136,8 @@ export const GoalScreen = ({ route, navigation }: RootStackScreenProps<'Goal'>) 
             </View>
             <Divider />
           </>
-        )}
-        {budgetAmount && (
+        ) : null}
+        {budgetAmount != null ? (
           <>
             <View
               style={{
@@ -154,7 +154,7 @@ export const GoalScreen = ({ route, navigation }: RootStackScreenProps<'Goal'>) 
             </View>
             <Divider />
           </>
-        )}
+        ) : null}
         <View>
           <Text
             variant="titleMedium"

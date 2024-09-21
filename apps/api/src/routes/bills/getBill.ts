@@ -37,7 +37,7 @@ export const getBill = async (request: Request<{ id: number }, {}, {}, {}>, resp
 
   const billPayment = allBillPayments.find((p) => p.date.getTime() >= bill.issueDate.getTime())
   const today = startOfDay(new Date())
-  const isPaid = billPayment != null
+  const isPaid = billPayment != null || bill.balance === 0
   const isOverdue = !isPaid && bill.dueDate && today.getTime() > bill.dueDate.getTime()
   const billPayments = allBillPayments.filter(
     (p) => p.date.getTime() >= bill.issueDate.getTime() && (!bill.dueDate || p.date.getTime() <= bill.dueDate.getTime())

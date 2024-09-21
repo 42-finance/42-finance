@@ -61,4 +61,86 @@ export const updateLiabilities = async (connectionId: string) => {
       }
     }
   }
+
+  if (liabilities.mortgage) {
+    for (const mortgage of liabilities.mortgage) {
+      if (mortgage.account_id == null) {
+        continue
+      }
+
+      if (mortgage.next_payment_due_date != null) {
+        await dataSource
+          .createQueryBuilder()
+          .insert()
+          .into(Bill)
+          .values({
+            balance: mortgage.next_monthly_payment,
+            issueDate: mortgage.next_payment_due_date,
+            dueDate: mortgage.next_payment_due_date,
+            minimumPaymentAmount: null,
+            isOverdue: false,
+            accountId: mortgage.account_id,
+            householdId: connection.householdId
+          })
+          .orIgnore()
+          .execute()
+      }
+
+      if (mortgage.last_payment_amount != null && mortgage.last_payment_date != null) {
+        await dataSource
+          .createQueryBuilder()
+          .insert()
+          .into(BillPayment)
+          .values({
+            amount: mortgage.last_payment_amount,
+            date: mortgage.last_payment_date,
+            accountId: mortgage.account_id,
+            householdId: connection.householdId
+          })
+          .orIgnore()
+          .execute()
+      }
+    }
+  }
+
+  if (liabilities.student) {
+    for (const student of liabilities.student) {
+      if (student.account_id == null) {
+        continue
+      }
+
+      if (student.next_payment_due_date != null) {
+        await dataSource
+          .createQueryBuilder()
+          .insert()
+          .into(Bill)
+          .values({
+            balance: student.minimum_payment_amount,
+            issueDate: student.last_statement_issue_date ?? student.next_payment_due_date,
+            dueDate: student.next_payment_due_date,
+            minimumPaymentAmount: student.minimum_payment_amount,
+            isOverdue: student.is_overdue,
+            accountId: student.account_id,
+            householdId: connection.householdId
+          })
+          .orIgnore()
+          .execute()
+      }
+
+      if (student.last_payment_amount != null && student.last_payment_date != null) {
+        await dataSource
+          .createQueryBuilder()
+          .insert()
+          .into(BillPayment)
+          .values({
+            amount: student.last_payment_amount,
+            date: student.last_payment_date,
+            accountId: student.account_id,
+            householdId: connection.householdId
+          })
+          .orIgnore()
+          .execute()
+      }
+    }
+  }
 }
