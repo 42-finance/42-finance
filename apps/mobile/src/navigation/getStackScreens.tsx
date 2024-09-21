@@ -49,6 +49,7 @@ import { MerchantRuleScreen } from '../screens/MerchantRuleScreen'
 import { MerchantScreen } from '../screens/MerchantScreen'
 import { MerchantsScreen } from '../screens/MerchantsScreen'
 import { MonthlyReportScreen } from '../screens/MonthlyReportScreen'
+import { NotificationSettingScreen } from '../screens/NotificationSettingScreen'
 import { NotificationSettingsScreen } from '../screens/NotificationSettingsScreen'
 import { PhotoScreen } from '../screens/PhotoScreen'
 import { ProfileScreen } from '../screens/ProfileScreen'
@@ -222,6 +223,12 @@ export const getStackScreens = (
       name="MonthlyReport"
       component={MonthlyReportScreen}
       options={{ title: 'Reports' }}
+    />,
+    <Stack.Screen
+      key="NotificationSetting"
+      name="NotificationSetting"
+      component={NotificationSettingScreen}
+      options={{ title: 'Notifications' }}
     />,
     <Stack.Screen
       key="NotificationSettings"

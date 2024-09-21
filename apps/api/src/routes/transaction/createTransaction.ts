@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto'
 import { Account, Category, Transaction, dataSource, getOrCreateMerchant } from 'database'
 import { parseISO, startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
-import { CurrencyCode, TransactionType } from 'shared-types'
+import { TransactionType } from 'shared-types'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
@@ -12,7 +12,6 @@ type CreateTransactionRequest = {
   accountId: string
   categoryId: number
   merchantName: string
-  currencyCode: CurrencyCode
 }
 
 export const createTransaction = async (
@@ -20,7 +19,7 @@ export const createTransaction = async (
   response: Response<HTTPResponseBody>
 ) => {
   const { householdId } = request
-  const { date, amount, accountId, categoryId, merchantName, currencyCode = CurrencyCode.USD } = request.body
+  const { date, amount, accountId, categoryId, merchantName } = request.body
 
   const parsedDate = startOfDay(parseISO(date))
   const merchant = await getOrCreateMerchant(merchantName, merchantName, null, householdId)
@@ -32,7 +31,7 @@ export const createTransaction = async (
     name: merchant.name,
     date: parsedDate,
     amount,
-    currencyCode,
+    currencyCode: account.currencyCode,
     pending: false,
     type: TransactionType.Manual,
     needsReview: false,

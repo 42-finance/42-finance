@@ -41,7 +41,8 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
   const {
     control,
     formState: { errors },
-    handleSubmit
+    handleSubmit,
+    watch
   } = useForm<AccountFormFields>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -73,6 +74,8 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
         .map((c) => ({ label: c, value: c })),
     []
   )
+
+  const currencyCurrencyCode = watch('currencyCode')
 
   return (
     <View>
@@ -118,6 +121,7 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
           marginHorizontal: 5
         }}
         error={errors.currentBalance}
+        currencyCode={currencyCurrencyCode}
       />
       <PaperPickerField
         label="Currency"

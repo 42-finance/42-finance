@@ -113,9 +113,8 @@ export const BC: React.FC<Props> = ({ group, category, budgets, transactions, on
                       onClick={() => {
                         onEdit(category, Number(amount))
                       }}
-                      edge="end"
                     >
-                      <FaCheck size={20} className="mr-2" />
+                      <FaCheck size={20} />
                     </IconButton>
                   </InputAdornment>
                 )

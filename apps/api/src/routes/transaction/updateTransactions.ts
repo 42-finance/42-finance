@@ -2,7 +2,6 @@ import { Boom } from '@hapi/boom'
 import { Category, Merchant, RecurringTransaction, Tag, Transaction, dataSource } from 'database'
 import { parseISO, startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
-import { CurrencyCode } from 'shared-types'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
@@ -13,7 +12,6 @@ type UpdateTransactionsRequest = {
   needsReview?: boolean
   categoryId?: number
   merchantId?: number
-  currencyCode?: CurrencyCode
   tagIds?: number[]
   recurringTransactionId: number
 }
@@ -23,17 +21,8 @@ export default async (
   response: Response<HTTPResponseBody>
 ) => {
   const { householdId } = request
-  const {
-    transactionIds,
-    date,
-    hidden,
-    needsReview,
-    categoryId,
-    merchantId,
-    currencyCode,
-    tagIds,
-    recurringTransactionId
-  } = request.body
+  const { transactionIds, date, hidden, needsReview, categoryId, merchantId, tagIds, recurringTransactionId } =
+    request.body
 
   if (transactionIds.length) {
     const transactionCount = await dataSource
@@ -115,7 +104,6 @@ export default async (
         needsReview,
         categoryId,
         merchantId,
-        currencyCode,
         recurringTransactionId
       })
 
@@ -138,8 +126,7 @@ export default async (
         hidden,
         needsReview,
         categoryId,
-        merchantId,
-        currencyCode
+        merchantId
       })
       .where({ householdId })
       .execute()

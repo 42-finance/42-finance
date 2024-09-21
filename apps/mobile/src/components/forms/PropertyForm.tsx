@@ -69,7 +69,8 @@ export const PropertyForm: React.FC<Props> = ({ propertyInfo, onSubmit, submitti
     control,
     formState: { errors },
     handleSubmit,
-    setValue
+    setValue,
+    watch
   } = useForm<PropertyFormFields>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -87,6 +88,8 @@ export const PropertyForm: React.FC<Props> = ({ propertyInfo, onSubmit, submitti
         .map((c) => ({ label: c, value: c })),
     []
   )
+
+  const currentCurrencyCode = watch('currencyCode')
 
   return (
     <View>
@@ -152,6 +155,7 @@ export const PropertyForm: React.FC<Props> = ({ propertyInfo, onSubmit, submitti
         forwardRef={balanceInput}
         style={styles.input}
         error={errors.currentBalance}
+        currencyCode={currentCurrencyCode}
       />
       <PaperPickerField
         label="Currency"

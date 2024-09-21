@@ -35,8 +35,7 @@ export const AddTransactionScreen: React.FC<RootStackScreenProps<'AddTransaction
       amount: values.type === 'debit' ? values.amount : -values.amount,
       accountId: values.account?.id ?? '',
       categoryId: values.category?.id ?? 0,
-      merchantName: values.merchantName,
-      currencyCode: values.currencyCode
+      merchantName: values.merchantName
     })
   }
 

@@ -2,7 +2,6 @@ import { Boom } from '@hapi/boom'
 import { Category, RecurringTransaction, Tag, Transaction, dataSource } from 'database'
 import { parseISO, startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
-import { CurrencyCode } from 'shared-types'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
@@ -11,7 +10,6 @@ type UpdateTransactionRequest = {
   categoryId?: number
   hidden?: boolean
   needsReview?: boolean
-  currencyCode?: CurrencyCode
   notes?: string
   tagIds?: number[]
   recurringTransactionId?: number | null
@@ -23,7 +21,7 @@ export const updateTransaction = async (
 ) => {
   const { householdId } = request
   const { id } = request.params
-  const { date, categoryId, hidden, needsReview, currencyCode, notes, tagIds, recurringTransactionId } = request.body
+  const { date, categoryId, hidden, needsReview, notes, tagIds, recurringTransactionId } = request.body
 
   const transaction = await dataSource
     .getRepository(Transaction)
@@ -71,7 +69,6 @@ export const updateTransaction = async (
     categoryId,
     hidden,
     needsReview,
-    currencyCode,
     notes,
     tags: tags ? tags.map((t) => ({ id: t.id })) : undefined,
     recurringTransactionId

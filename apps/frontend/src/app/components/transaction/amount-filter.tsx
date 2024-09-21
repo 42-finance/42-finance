@@ -3,6 +3,7 @@ import React from 'react'
 import Select, { createFilter } from 'react-select'
 import { AmountFilter, TransactionAmountType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/currency-input'
 
 type AmountTypeSelectOption = {
@@ -35,6 +36,8 @@ export const TransactionAmountFilter: React.FC<Props> = ({
   amountValue2,
   onChange
 }) => {
+  const { currencyCode } = useUserTokenContext()
+
   const amountTypeOptions = Object.values(TransactionAmountType).map((a) => ({
     value: a,
     label: mapTransactionAmountType(a)
@@ -80,6 +83,7 @@ export const TransactionAmountFilter: React.FC<Props> = ({
         placeholder={amountFilter === AmountFilter.Between ? 'Minimum' : 'Amount'}
         className={`${amountFilter === AmountFilter.Between ? '' : 'rounded-r-sm'} border text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30`}
         value={amountValue?.toString() ?? ''}
+        currencyCode={currencyCode}
       />
       {amountFilter === AmountFilter.Between && (
         <CurrencyInput
@@ -87,6 +91,7 @@ export const TransactionAmountFilter: React.FC<Props> = ({
           placeholder="Maximum"
           className={`rounded-r-sm border border-l-0 focus:border-l focus:-ml-[1px] text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30`}
           value={amountValue2?.toString() ?? ''}
+          currencyCode={currencyCode}
         />
       )}
     </div>

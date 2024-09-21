@@ -39,7 +39,8 @@ export const VehicleForm: React.FC<Props> = ({ vehicleInfo, onSubmit, submitting
   const {
     control,
     formState: { errors },
-    handleSubmit
+    handleSubmit,
+    watch
   } = useForm<VehicleFormFields>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -58,6 +59,8 @@ export const VehicleForm: React.FC<Props> = ({ vehicleInfo, onSubmit, submitting
         .map((c) => ({ label: c, value: c })),
     []
   )
+
+  const currentCurrencyCode = watch('currencyCode')
 
   return (
     <View>
@@ -104,6 +107,7 @@ export const VehicleForm: React.FC<Props> = ({ vehicleInfo, onSubmit, submitting
           marginHorizontal: 5
         }}
         error={errors.currentBalance}
+        currencyCode={currentCurrencyCode}
       />
       <PaperPickerField
         label="Currency"

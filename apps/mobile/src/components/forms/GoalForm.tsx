@@ -11,6 +11,7 @@ import { Button, SegmentedButtons, Text, useTheme } from 'react-native-paper'
 import { AccountType, GoalType } from 'shared-types'
 import * as Yup from 'yup'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { AccountFilterSelection } from '../account/AccountFilterSelection'
 import { CurrencyInput } from '../common/CurrencyInput'
 import { DateField } from '../common/DateField'
@@ -42,6 +43,7 @@ type Props = {
 export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) => {
   const { colors } = useTheme()
   const navigation = useNavigation()
+  const { currencyCode } = useUserTokenContext()
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -155,6 +157,7 @@ export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) =>
           }}
           error={errors.amount}
           disabled={type === GoalType.Debt}
+          currencyCode={currencyCode}
         />
         <SegmentedButtons
           value={targetType ?? TargetType.None}
@@ -202,6 +205,7 @@ export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) =>
               marginHorizontal: 5
             }}
             error={errors.budgetAmount}
+            currencyCode={currencyCode}
           />
         ) : null}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>

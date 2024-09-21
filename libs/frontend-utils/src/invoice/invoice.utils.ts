@@ -43,3 +43,7 @@ export const formatPercentage = (value: number | null, decimals: number = 1) => 
     }) + '%'
   )
 }
+
+export const getCurrencySymbol = (currencyCode: CurrencyCode) => {
+  return getSymbolFromCurrency(currencyCode) ?? '$'
+}
