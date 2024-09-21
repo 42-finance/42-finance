@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import _ from 'lodash'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
+import { createDefaultDashboardWidgets } from '../../utils/dashboard.utils'
 import { createHousehold } from '../../utils/household.utils'
 import { createDefaultNotifications } from '../../utils/notification.utils'
 import { verifyJwt } from '../../utils/token.utils'
@@ -36,6 +37,7 @@ export const confirmEmail = async (
     await entityManager.getRepository(User).update(user.id, { emailConfirmed: true })
 
     await createDefaultNotifications(user.id, entityManager)
+    await createDefaultDashboardWidgets(user.id, entityManager)
 
     const household = await createHousehold(user, entityManager)
 

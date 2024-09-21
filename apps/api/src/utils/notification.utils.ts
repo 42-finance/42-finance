@@ -10,7 +10,11 @@ export const createDefaultNotifications = async (userId: number, entityManager: 
       type: notificationType,
       userId,
       sendPushNotification: true,
-      sendEmail: true
+      sendEmail: true,
+      minimumAmount:
+        notificationType === NotificationType.NewExpense || notificationType === NotificationType.NewDeposit
+          ? 500
+          : null
     })
   }
 }
