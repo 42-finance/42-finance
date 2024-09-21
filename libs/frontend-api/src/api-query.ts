@@ -20,6 +20,7 @@ export enum ApiQuery {
   CategoryTransactions = 'categoryTransactions',
   Connections = 'connections',
   DashboardTransactions = 'dashboardTransactions',
+  DashboardWidgets = 'dashboardWidgets',
   ExchangeRates = 'exchangeRates',
   Expense = 'expense',
   Expenses = 'expenses',

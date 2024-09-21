@@ -12,6 +12,7 @@ import { categoryRouter } from './category'
 import { changePasswordRouter } from './changePassword'
 import { confirmEmailRouter } from './confirmEmail'
 import { connectionRouter } from './connection'
+import { dashboardWidgetsRouter } from './dashboardWidget'
 import { exchangeRateRouter } from './exchangeRate'
 import expenseRouter from './expense/expenseRoutes'
 import { finicityRouter } from './finicity'
@@ -65,6 +66,7 @@ router.use('/categories', authenticateToken, categoryRouter)
 router.use('/change-password', authenticateToken, changePasswordRouter)
 router.use('/connections', authenticateToken, connectionRouter)
 router.use('/confirm-email', confirmEmailRouter)
+router.use('/dashboard-widgets', authenticateToken, dashboardWidgetsRouter)
 router.use('/exchange-rates', authenticateToken, exchangeRateRouter)
 router.use('/expenses', authenticateToken, expenseRouter)
 router.use('/forgot-password', forgotPasswordRouter)

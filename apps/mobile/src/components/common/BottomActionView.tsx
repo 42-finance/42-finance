@@ -15,11 +15,6 @@ export const BottomActionView: React.FC<Props> = ({ applyText, onClear, onApply,
   return (
     <View
       style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',

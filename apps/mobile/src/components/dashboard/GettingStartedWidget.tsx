@@ -1,18 +1,16 @@
 import { AntDesign, FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ApiQuery, EditUserRequest, editUser, getUser } from 'frontend-api'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { ApiQuery, getUser } from 'frontend-api'
 import { getFirstName } from 'frontend-utils'
-import { Button, Card, Divider, Text, useTheme } from 'react-native-paper'
+import { Card, Divider, Text, useTheme } from 'react-native-paper'
 
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
-import { View } from '../common/View'
 import { GettingStartedItem } from './GettingStartedItem'
 
 export const GettingStartedWidget = () => {
   const navigation = useNavigation()
   const { colors } = useTheme()
-  const queryClient = useQueryClient()
 
   const { data: user, refetch } = useQuery({
     queryKey: [ApiQuery.User],
@@ -27,25 +25,7 @@ export const GettingStartedWidget = () => {
 
   useRefetchOnFocus(refetch)
 
-  const { mutate, isPending: submitting } = useMutation({
-    mutationFn: async (request: EditUserRequest) => {
-      const res = await editUser(request)
-      if (res.ok && res.parsedBody?.payload) {
-        await queryClient.invalidateQueries({ queryKey: [ApiQuery.User] })
-      }
-    }
-  })
-
-  if (!user?.accountSetup || user.hideGettingStarted) {
-    return null
-  }
-
-  if (
-    user.accountSetup.accounts &&
-    user.accountSetup.categories &&
-    user.accountSetup.budget &&
-    user.accountSetup.currency
-  ) {
+  if (!user) {
     return null
   }
 
@@ -90,22 +70,6 @@ export const GettingStartedWidget = () => {
           complete={user.accountSetup.currency}
           onPress={() => navigation.navigate('Profile')}
         />
-        <Divider />
-        <View style={{ alignSelf: 'flex-end' }}>
-          <Button
-            mode="text"
-            style={{ paddingVertical: 5 }}
-            onPress={() => {
-              mutate({
-                hideGettingStarted: true
-              })
-            }}
-            disabled={submitting}
-            loading={submitting}
-          >
-            Hide Widget
-          </Button>
-        </View>
       </Card.Content>
     </Card>
   )

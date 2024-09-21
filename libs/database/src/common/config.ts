@@ -7,6 +7,7 @@ import { BillPayment } from '../models/bill-payment'
 import { Budget } from '../models/budget'
 import { Category } from '../models/category'
 import { Connection } from '../models/connection'
+import { DashboardWidget } from '../models/dashboard-widget'
 import { ExchangeRate } from '../models/exchange-rate'
 import { Expense } from '../models/expense'
 import { Goal } from '../models/goal'
@@ -60,6 +61,7 @@ export const config = {
     Budget,
     Category,
     Connection,
+    DashboardWidget,
     ExchangeRate,
     Expense,
     Goal,
