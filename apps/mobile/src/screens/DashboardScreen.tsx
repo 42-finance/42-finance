@@ -6,6 +6,7 @@ import { useTheme } from 'react-native-paper'
 
 import { BillsWidget } from '../components/dashboard/BillsWidget'
 import { BudgetWidget } from '../components/dashboard/BudgetWidget'
+import { CategorySpendingWidget } from '../components/dashboard/CategorySpendingWidget'
 import { CommunityWidget } from '../components/dashboard/CommunityWidget'
 import { GettingStartedWidget } from '../components/dashboard/GettingStartedWidget'
 import { GoalsWidget } from '../components/dashboard/GoalsWidget'
@@ -23,7 +24,7 @@ export const DashboardScreen = ({ navigation }: RootStackScreenProps<'Dashboard'
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={{ marginRight: 15 }}>
           <Feather name="settings" size={24} color={colors.onSurface} />
         </TouchableOpacity>
       )
@@ -40,6 +41,7 @@ export const DashboardScreen = ({ navigation }: RootStackScreenProps<'Dashboard'
       <RecentTransactions />
       <BillsWidget />
       <BudgetWidget />
+      <CategorySpendingWidget />
       <Spending />
       <RecurringTransactionsWidget />
       <GoalsWidget />

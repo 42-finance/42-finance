@@ -60,7 +60,7 @@ export const RecurringTransactionsWidget = () => {
     <Card mode="elevated" theme={{ roundness: 5 }} style={{ marginBottom: 15, marginHorizontal: 10 }}>
       <Card.Content style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Text variant="titleLarge" style={{ marginLeft: 15, marginTop: 5 }}>
-          Recurring
+          Recurring Transactions
         </Text>
         <View style={{ marginTop: 15 }} />
         {recurringTransactions.map((transaction) => (
@@ -82,7 +82,7 @@ export const RecurringTransactionsWidget = () => {
           style={{ marginHorizontal: 15, marginTop: 10 }}
           onPress={() => navigation.navigate('RecurringTransactionsTab')}
         >
-          View all recurring
+          View all recurring transactions
         </Button>
       </Card.Content>
     </Card>
