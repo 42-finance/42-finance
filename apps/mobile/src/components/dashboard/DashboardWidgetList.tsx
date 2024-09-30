@@ -8,6 +8,7 @@ import { BillsWidget } from './BillsWidget'
 import { BudgetWidget } from './BudgetWidget'
 import { CategorySpendingWidget } from './CategorySpendingWidget'
 import { CommunityWidget } from './CommunityWidget'
+import { DateSpendingWidget } from './DateSpendingWidget'
 import { GettingStartedWidget } from './GettingStartedWidget'
 import { GoalsWidget } from './GoalsWidget'
 import { MonthlySpendingWidget } from './MonthlySpendingWidget'
@@ -28,6 +29,7 @@ export const WL: React.FC<Props> = ({ widgets }) => {
       [DashboardWidgetType.Community]: CommunityWidget,
       [DashboardWidgetType.GettingStarted]: GettingStartedWidget,
       [DashboardWidgetType.NetWorth]: NetWorthWidget,
+      [DashboardWidgetType.DateSpending]: DateSpendingWidget,
       [DashboardWidgetType.ReviewTransactions]: ReviewTransactions,
       [DashboardWidgetType.RecentTransactions]: RecentTransactions,
       [DashboardWidgetType.Bills]: BillsWidget,
