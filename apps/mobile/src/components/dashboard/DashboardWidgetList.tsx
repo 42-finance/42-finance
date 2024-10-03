@@ -23,8 +23,8 @@ type Props = {
 }
 
 export const WL: React.FC<Props> = ({ widgets }) => {
-  const widgetMap = useMemo(() => {
-    return {
+  const widgetMap = useMemo(
+    () => ({
       [DashboardWidgetType.News]: NewsWidget,
       [DashboardWidgetType.Community]: CommunityWidget,
       [DashboardWidgetType.GettingStarted]: GettingStartedWidget,
@@ -38,8 +38,9 @@ export const WL: React.FC<Props> = ({ widgets }) => {
       [DashboardWidgetType.MonthlySpending]: MonthlySpendingWidget,
       [DashboardWidgetType.RecurringTransactions]: RecurringTransactionsWidget,
       [DashboardWidgetType.Goals]: GoalsWidget
-    }
-  }, [])
+    }),
+    []
+  )
 
   return (
     <ScrollView style={{ marginTop: 10 }}>

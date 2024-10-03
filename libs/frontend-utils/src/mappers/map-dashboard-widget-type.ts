@@ -26,5 +26,7 @@ export const mapDashboardWidgetType = (dashboardWidgetType: DashboardWidgetType)
       return 'Recurring Transactions'
     case DashboardWidgetType.Goals:
       return 'Goals'
+    case DashboardWidgetType.DateSpending:
+      return 'Spending By Date'
   }
 }

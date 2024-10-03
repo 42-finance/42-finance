@@ -1,7 +1,7 @@
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ApiQuery, deleteAccount, getAccount, getBills, getTransactions, refreshAccount } from 'frontend-api'
-import { formatDateDifference, setMessage, useTransactionsFilterContext } from 'frontend-utils'
+import { formatDateDifference, setMessage } from 'frontend-utils'
 import { mapAccountSubType } from 'frontend-utils/src/mappers/map-account-sub-type'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ import { View } from '../components/common/View'
 import { BillItem } from '../components/list-items/BillItem'
 import { TransactionItem } from '../components/list-items/TransactionItem'
 import { AccountBalanceGraph } from '../components/stats/AccountBalanceGraph'
+import { useTransactionsFilterContext } from '../contexts/transactions-filter.context'
 import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { usePlaid } from '../hooks/use-plaid.hook'
@@ -214,7 +215,7 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
             style={{}}
             onPress={() => {
               reset()
-              setAccounts([account])
+              setAccounts([account.id])
               navigation.navigate('TransactionsTab')
             }}
           >

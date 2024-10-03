@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/native'
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ApiQuery, EditTransactionsRequest, editTransactions, getTransactions } from 'frontend-api'
-import { useTransactionsFilterContext } from 'frontend-utils'
 import { Button, Card, Divider, Text } from 'react-native-paper'
 
+import { useTransactionsFilterContext } from '../../contexts/transactions-filter.context'
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
 import { NoData } from '../common/NoData'
 import { View } from '../common/View'

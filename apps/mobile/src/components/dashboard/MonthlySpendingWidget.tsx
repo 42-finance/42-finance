@@ -24,7 +24,7 @@ export const MonthlySpendingWidget: React.FC = () => {
   const startOfThisMonth = dateToUtc(startOfMonth(today))
 
   const { data: transactions = [], refetch } = useQuery({
-    queryKey: [ApiQuery.SpendingTransactions],
+    queryKey: [ApiQuery.SpendingTransactions, startOflastMonth],
     queryFn: async () => {
       const res = await getTransactions({ startDate: startOflastMonth })
       if (res.ok && res.parsedBody?.payload) {

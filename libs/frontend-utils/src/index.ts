@@ -1,7 +1,6 @@
 export * from './account/account.utils'
 export * from './budget/budget.utils'
 export * from './color/color.utils'
-export * from './contexts/transactions-filter.context'
 export * from './date/date.utils'
 export * from './event/event-emitter'
 export * from './event/messages'

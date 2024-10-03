@@ -1,20 +1,25 @@
 import * as SecureStore from 'expo-secure-store'
 import { useState } from 'react'
 
-export function useLocalStorage(key: string): [string | null, (value: string | null) => void] {
-  const [storedValue, setStoredValue] = useState<string | null>(null)
+export const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T) => void] => {
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    try {
+      const item = SecureStore.getItem(key)
+      return item != null ? JSON.parse(item) : initialValue
+    } catch (err) {
+      console.error(err)
+      return initialValue
+    }
+  })
 
-  const setValue = async (value: string | null) => {
+  const setValue = (value: T) => {
     try {
       setStoredValue(value)
-      if (value) {
-        await SecureStore.setItemAsync(key, value)
-      } else {
-        await SecureStore.deleteItemAsync(key)
-      }
+      SecureStore.setItem(key, JSON.stringify(value))
     } catch (err) {
       console.error(err)
     }
   }
+
   return [storedValue, setValue]
 }

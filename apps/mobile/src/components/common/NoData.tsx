@@ -11,14 +11,12 @@ export const NoData: React.FC<Props> = ({ text }) => {
   const { colors } = useTheme()
 
   return (
-    <View style={{ flex: 1, alignSelf: 'center', alignItems: 'center', padding: 20 }}>
+    <View style={{ alignItems: 'center', padding: 20 }}>
       <Avatar.Icon
         size={60}
         icon={() => <FontAwesome6 name="dollar" size={32} color={colors.onSurface} />}
         style={{
-          marginEnd: 15,
-          backgroundColor: colors.background,
-          alignSelf: 'center'
+          backgroundColor: colors.background
         }}
       />
       <Text variant="titleMedium" style={{ marginTop: 10 }}>

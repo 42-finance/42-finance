@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { endOfDay, startOfDay } from 'date-fns'
-import { Transaction } from 'frontend-types'
-import { dateToUtc, useTransactionsFilterContext } from 'frontend-utils'
+import { Account, Category, Merchant, Transaction } from 'frontend-types'
+import { dateToUtc } from 'frontend-utils'
 import _ from 'lodash'
 import { AmountFilter, CurrencyCode, NameFilter, TransactionAmountType } from 'shared-types'
 
@@ -111,21 +111,21 @@ export const getTransactionsStats = async (query: TransactionQuery = {}) => {
   return get<HTTPResponseBody<TransactionsStats>>(url)
 }
 
-export const useTransactions = (limit: number | null, search: string | null) => {
-  const {
-    amountType,
-    amountFilter,
-    amountValue,
-    amountValue2,
-    accounts,
-    startDate,
-    endDate,
-    categories,
-    merchants,
-    hidden,
-    needsReview
-  } = useTransactionsFilterContext()
-
+export const useTransactions = (
+  amountType: TransactionAmountType | null,
+  amountFilter: AmountFilter | null,
+  amountValue: number | null,
+  amountValue2: number | null,
+  accounts: Account[],
+  startDate: Date | null,
+  endDate: Date | null,
+  categories: Category[],
+  merchants: Merchant[],
+  hidden: boolean | null,
+  needsReview: boolean | null,
+  limit: number | null,
+  search: string | null
+) => {
   return useQuery({
     queryKey: [
       ApiQuery.Transactions,

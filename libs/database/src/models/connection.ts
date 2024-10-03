@@ -31,6 +31,9 @@ export class Connection extends BaseEntity {
   @Column({ type: 'enum', enum: ConnectionType })
   type: ConnectionType = ConnectionType.Plaid
 
+  @Column({ default: true })
+  isValid: boolean = true
+
   @Index()
   @Column({ nullable: false })
   householdId: number = 0
