@@ -20,10 +20,16 @@ export class Goal extends BaseEntity {
   type: GoalType = GoalType.Savings
 
   @Column({ type: Date, nullable: true })
+  startDate: Date | null = null
+
+  @Column({ type: Date, nullable: true })
   targetDate: Date | null = null
 
   @Column({ type: Number, nullable: true })
   budgetAmount: number | null = null
+
+  @Column({ default: false })
+  resetOnTargetDate: boolean = false
 
   @ManyToMany(() => Account, (account) => account.goals, { cascade: true, onDelete: 'CASCADE' })
   @JoinTable({

@@ -27,6 +27,7 @@ export enum ApiQuery {
   Goal = 'goal',
   Goals = 'goals',
   GoalBalanceHistory = 'goalBalanceHistory',
+  GoalTransactions = 'goalTransactions',
   Group = 'group',
   Groups = 'groups',
   GroupsList = 'groupsList',

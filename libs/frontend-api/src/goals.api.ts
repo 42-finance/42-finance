@@ -14,6 +14,7 @@ export type AddGoalRequest = {
   amount: number
   accountIds: string[]
   type: GoalType
+  startDate: Date | null
   targetDate: Date | null
   budgetAmount: number | null
 }
@@ -25,6 +26,7 @@ export type EditGoalRequest = {
   amount?: number
   accountIds?: string[]
   type?: GoalType
+  startDate?: Date | null
   targetDate?: Date | null
   budgetAmount?: number | null
 }

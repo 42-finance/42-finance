@@ -8,6 +8,7 @@ export type Goal = {
   amount: number
   accounts: Account[]
   type: GoalType
+  startDate: Date | null
   targetDate: Date | null
   budgetAmount: number | null
 }

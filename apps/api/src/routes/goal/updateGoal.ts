@@ -10,6 +10,7 @@ type UpdateGoalRequest = {
   amount?: number
   accountIds?: string[]
   type?: GoalType
+  startDate?: Date | null
   targetDate?: Date | null
   budgetAmount?: number | null
 }
@@ -20,7 +21,7 @@ export const updateGoal = async (
 ) => {
   const { householdId } = request
   const { id } = request.params
-  const { name, amount, accountIds, type, targetDate, budgetAmount } = request.body
+  const { name, amount, accountIds, type, startDate, targetDate, budgetAmount } = request.body
 
   const goal = await dataSource
     .getRepository(Goal)
@@ -53,6 +54,7 @@ export const updateGoal = async (
     name,
     amount,
     type,
+    startDate,
     targetDate,
     budgetAmount,
     accounts: accounts ? accounts.map((a) => ({ id: a.id })) : undefined

@@ -80,7 +80,7 @@ export const TextInput = <FormFields extends FieldValues>({
             secureTextEntry={secureTextEntry}
             textContentType={textContentType}
           />
-          <ErrorText visible={error != null} message={error?.message} marginBottom={0} marginTop={-8} />
+          <ErrorText visible={error != null} message={error?.message} marginBottom={0} marginTop={-5} />
         </>
       )}
     />
