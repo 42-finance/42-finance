@@ -1,10 +1,14 @@
-import { subMonths } from 'date-fns'
+import { subMonths, subWeeks } from 'date-fns'
 import { DateRangeFilter } from 'shared-types'
 
 import { todayInUtc } from '../date/date.utils'
 
 export const mapDateRangeFilter = (dateFilter: DateRangeFilter) => {
   switch (dateFilter) {
+    case DateRangeFilter.OneWeek:
+      return '1W'
+    case DateRangeFilter.TwoWeek:
+      return '2W'
     case DateRangeFilter.OneMonth:
       return '1M'
     case DateRangeFilter.ThreeMonth:
@@ -20,6 +24,10 @@ export const mapDateRangeFilter = (dateFilter: DateRangeFilter) => {
 
 export const mapDateRangeFilterFull = (dateFilter: DateRangeFilter) => {
   switch (dateFilter) {
+    case DateRangeFilter.OneWeek:
+      return '1 week'
+    case DateRangeFilter.TwoWeek:
+      return '2 weeks'
     case DateRangeFilter.OneMonth:
       return '1 month'
     case DateRangeFilter.ThreeMonth:
@@ -37,6 +45,10 @@ export const mapDateRangeToDate = (dateFilter: DateRangeFilter) => {
   const today = todayInUtc()
 
   switch (dateFilter) {
+    case DateRangeFilter.OneWeek:
+      return subWeeks(today, 1)
+    case DateRangeFilter.TwoWeek:
+      return subWeeks(today, 2)
     case DateRangeFilter.OneMonth:
       return subMonths(today, 1)
     case DateRangeFilter.ThreeMonth:

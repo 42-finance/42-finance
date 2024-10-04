@@ -54,7 +54,7 @@ export const GoalItem = ({ goal, onSelected, index, backgroundColor }: Props) =>
         : goal.accounts.reduce((acc, account) => {
             return acc + account.convertedBalance
           }, 0),
-    [goal]
+    [goal, spendingTotal]
   )
 
   return (

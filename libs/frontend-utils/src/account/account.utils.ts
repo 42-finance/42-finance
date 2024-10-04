@@ -148,12 +148,15 @@ export const getMonthlyValueChange = (
 
 export const getDailySpending = (transactions: Transaction[], startDate: Date, endDate: Date) => {
   let currentDate = startDate
-  const spending: number[] = []
+  const spending: { value: number; date: Date; dailyValue: number }[] = []
+  let lastValue = 0
   while (currentDate.getTime() <= endDate.getTime()) {
     const transactionsToDate = transactions
       .filter((t) => t.category.group.type === CategoryType.Expense)
       .filter((t) => t.date.getTime() <= currentDate.getTime())
-    spending.push(_.sumBy(transactionsToDate, 'amount'))
+    const toDateValue = _.sumBy(transactionsToDate, 'convertedAmount')
+    spending.push({ value: toDateValue, date: currentDate, dailyValue: toDateValue - lastValue })
+    lastValue = toDateValue
     currentDate = addDays(currentDate, 1)
   }
   return spending

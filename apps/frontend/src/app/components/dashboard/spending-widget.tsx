@@ -46,7 +46,7 @@ export const SpendingWidget: React.FC = () => {
   )
 
   const lastMonthSpendingData = useMemo(() => {
-    const data = lastMonthSpending.map((v) => Math.max(0, v))
+    const data = lastMonthSpending.map(({ value }) => Math.max(0, value))
     if (data.length === 1) {
       data.push(data[0])
     }
@@ -54,7 +54,7 @@ export const SpendingWidget: React.FC = () => {
   }, [lastMonthSpending])
 
   const thisMonthSpendingData = useMemo(() => {
-    const data = thisMonthSpending.map((v) => Math.max(0, v))
+    const data = thisMonthSpending.map(({ value }) => Math.max(0, value))
     if (data.length === 1) {
       data.push(data[0])
     }
