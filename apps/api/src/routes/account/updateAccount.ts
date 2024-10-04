@@ -49,7 +49,7 @@ export const updateAccount = async (
         accountId: account.id,
         householdId
       })
-      .orIgnore()
+      .orUpdate(['currentBalance', 'availableBalance', 'limit'], ['date', 'accountId'])
       .execute()
   }
 
