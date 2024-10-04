@@ -45,7 +45,7 @@ export const WL: React.FC<Props> = ({ widgets }) => {
   return (
     <ScrollView style={{ marginTop: 10 }}>
       {widgets
-        .filter((w) => w.isSelected)
+        .filter((w) => w.isSelected && widgetMap[w.type])
         .map((widget) => (
           <View key={widget.type}>{React.createElement(widgetMap[widget.type])}</View>
         ))}

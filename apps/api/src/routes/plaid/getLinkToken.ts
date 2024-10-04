@@ -18,7 +18,7 @@ export const getLinkToken = async (
   request: Request<object, object, object, LinkTokenQuery>,
   response: Response<HTTPResponseBody>
 ) => {
-  const appVersion = request.headers['x-app-version'] as string
+  const { appVersion } = request
   if (appVersion == null || semver.lt(appVersion, '1.0.5')) {
     throw new Boom('Update to the latest version of the app to add a new account', { statusCode: 403 })
   }

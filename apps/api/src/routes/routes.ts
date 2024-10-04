@@ -51,6 +51,7 @@ function authenticateToken(request: Request, response: Response, next: NextFunct
     if (err) return response.sendStatus(401)
     request.userId = payload.userId
     request.householdId = payload.householdId
+    request.appVersion = request.headers['x-app-version'] as string
     next()
   })
 }

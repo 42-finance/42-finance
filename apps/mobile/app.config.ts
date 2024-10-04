@@ -35,7 +35,7 @@ export default (): ExpoConfig => {
   return {
     name: appName,
     slug: 'fortytwofinance',
-    version: '1.1.0',
+    version: '1.1.1',
     orientation: 'portrait',
     icon: './src/assets/images/icon.png',
     scheme: 'fortytwofinance',
