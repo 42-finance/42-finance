@@ -5,6 +5,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { Keyboard, TouchableOpacity } from 'react-native'
 import { Button, Dialog, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
+import { GoalType } from 'shared-types'
 
 import { GoalForm, GoalFormFields, TargetType } from '../components/forms/GoalForm'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
@@ -57,7 +58,8 @@ export const EditGoalScreen = ({ route, navigation }: RootStackScreenProps<'Edit
       amount: values.amount,
       accountIds: values.accounts.map((a) => a.id),
       type: values.type,
-      targetDate: values.targetType === TargetType.Date ? values.targetDate : null,
+      startDate: values.startDate,
+      targetDate: values.type === GoalType.Spending || values.targetType === TargetType.Date ? values.targetDate : null,
       budgetAmount: values.targetType === TargetType.Amount ? values.budgetAmount : null
     })
   }

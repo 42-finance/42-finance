@@ -5,7 +5,7 @@ import { GoalType } from 'shared-types'
 import { dateToUtc, todayInUtc } from '../date/date.utils'
 
 export const calculateGoalProgress = (total: number, target: number, type: GoalType) => {
-  if (type === GoalType.Savings) {
+  if (type === GoalType.Savings || type === GoalType.Spending) {
     if (target === 0) {
       return 0
     }
@@ -32,8 +32,10 @@ export const calculateGoalBudgetAmount = (
   if (type === GoalType.Savings) {
     const accountsValue = accounts.reduce((acc, account) => acc + account.convertedBalance, 0)
     return (amount - accountsValue) / numberOfMonths
-  } else {
+  } else if (type === GoalType.Debt) {
     return amount / numberOfMonths
+  } else {
+    return amount
   }
 }
 

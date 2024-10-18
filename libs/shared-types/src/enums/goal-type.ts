@@ -1,4 +1,5 @@
 export enum GoalType {
+  Debt = 'debt',
   Savings = 'savings',
-  Debt = 'debt'
+  Spending = 'spending'
 }

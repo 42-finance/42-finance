@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigation } from '@react-navigation/native'
 import { startOfDay } from 'date-fns'
 import { Account } from 'frontend-types'
-import { calculateGoalBudgetAmount, eventEmitter, mapGoalType } from 'frontend-utils'
+import { calculateGoalBudgetAmount, eventEmitter, mapGoalType, todayInUtc } from 'frontend-utils'
 import React, { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
@@ -30,6 +30,7 @@ export type GoalFormFields = {
   accounts: Account[]
   type: GoalType
   targetType?: TargetType
+  startDate: Date | null
   targetDate: Date | null
   budgetAmount: number | null
 }
@@ -51,7 +52,20 @@ export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) =>
     accounts: Yup.array<Account[]>().defined(),
     type: Yup.mixed<GoalType>().required('Type is required'),
     targetType: Yup.mixed<TargetType>(),
-    targetDate: Yup.date().defined().nullable(),
+    startDate: Yup.date()
+      .defined()
+      .nullable()
+      .when('type', {
+        is: (val: GoalType) => val === GoalType.Spending,
+        then: (schema) => schema.required('Start date is required')
+      }),
+    targetDate: Yup.date()
+      .defined()
+      .nullable()
+      .when('type', {
+        is: (val: GoalType) => val === GoalType.Spending,
+        then: (schema) => schema.required('End date is required')
+      }),
     budgetAmount: Yup.number().nullable().defined()
   })
 
@@ -74,6 +88,7 @@ export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) =>
           : goalInfo?.targetDate != null
             ? TargetType.Date
             : TargetType.None,
+      startDate: goalInfo?.startDate ?? todayInUtc(),
       targetDate: goalInfo?.targetDate ?? null,
       budgetAmount: goalInfo?.budgetAmount ?? 0
     }
@@ -121,6 +136,17 @@ export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) =>
     }
   }, [accounts, setValue, type])
 
+  const mapGoalTypeToAccountTypes = (goalType: GoalType) => {
+    switch (goalType) {
+      case GoalType.Debt:
+        return [AccountType.Liability]
+      case GoalType.Savings:
+        return [AccountType.Asset]
+      case GoalType.Spending:
+        return [AccountType.Asset, AccountType.Liability]
+    }
+  }
+
   return (
     <ScrollView>
       <View>
@@ -159,55 +185,90 @@ export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) =>
           disabled={type === GoalType.Debt}
           currencyCode={currencyCode}
         />
-        <SegmentedButtons
-          value={targetType ?? TargetType.None}
-          onValueChange={(value) => setValue('targetType', value as TargetType)}
-          buttons={[
-            {
-              value: TargetType.None,
-              label: 'No target'
-            },
-            {
-              value: TargetType.Date,
-              label: 'Target date'
-            },
-            {
-              value: TargetType.Amount,
-              label: 'Monthly amount'
-            }
-          ]}
-          style={{ marginHorizontal: 5, marginTop: 5 }}
-        />
-        {targetType === TargetType.Date ? (
-          <DateField
-            label="Target date"
-            name="targetDate"
-            control={control}
-            value={targetDate ?? undefined}
-            setValue={(value) => {
-              setValue('targetDate', startOfDay(value))
-            }}
-            error={errors.targetDate}
-            style={{
-              marginTop: 5,
-              marginHorizontal: 5
-            }}
-            clearable
-            onClear={() => setValue('targetDate', null)}
-          />
-        ) : targetType === TargetType.Amount ? (
-          <CurrencyInput
-            label="Monthly amount"
-            name="budgetAmount"
-            control={control}
-            style={{
-              marginTop: 5,
-              marginHorizontal: 5
-            }}
-            error={errors.budgetAmount}
-            currencyCode={currencyCode}
-          />
-        ) : null}
+        {type === GoalType.Spending ? (
+          <>
+            <DateField
+              label="Start date"
+              name="startDate"
+              control={control}
+              value={targetDate ?? undefined}
+              setValue={(value) => {
+                setValue('startDate', startOfDay(value))
+              }}
+              error={errors.startDate}
+              style={{
+                marginTop: 5,
+                marginHorizontal: 5
+              }}
+            />
+            <DateField
+              label="End date"
+              name="targetDate"
+              control={control}
+              value={targetDate ?? undefined}
+              setValue={(value) => {
+                setValue('targetDate', startOfDay(value))
+              }}
+              error={errors.targetDate}
+              style={{
+                marginTop: 5,
+                marginHorizontal: 5
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <SegmentedButtons
+              value={targetType ?? TargetType.None}
+              onValueChange={(value) => setValue('targetType', value as TargetType)}
+              buttons={[
+                {
+                  value: TargetType.None,
+                  label: 'No target'
+                },
+                {
+                  value: TargetType.Date,
+                  label: 'Target date'
+                },
+                {
+                  value: TargetType.Amount,
+                  label: 'Monthly amount'
+                }
+              ]}
+              style={{ marginHorizontal: 5, marginTop: 5 }}
+            />
+            {targetType === TargetType.Date ? (
+              <DateField
+                label="Target date"
+                name="targetDate"
+                control={control}
+                value={targetDate ?? undefined}
+                setValue={(value) => {
+                  setValue('targetDate', startOfDay(value))
+                }}
+                error={errors.targetDate}
+                style={{
+                  marginTop: 5,
+                  marginHorizontal: 5
+                }}
+                clearable
+                onClear={() => setValue('targetDate', null)}
+              />
+            ) : targetType === TargetType.Amount ? (
+              <CurrencyInput
+                label="Monthly amount"
+                name="budgetAmount"
+                control={control}
+                style={{
+                  marginTop: 5,
+                  marginHorizontal: 5
+                }}
+                error={errors.budgetAmount}
+                currencyCode={currencyCode}
+              />
+            ) : null}
+          </>
+        )}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>
           <Text variant="bodyMedium" style={{ flex: 1 }}>
             ACCOUNTS
@@ -218,7 +279,7 @@ export const GoalForm: React.FC<Props> = ({ goalInfo, onSubmit, submitting }) =>
                 accountIds: accounts.map((a) => a.id),
                 eventName: 'onGoalAccountSelected',
                 multiple: true,
-                accountTypes: type === GoalType.Savings ? [AccountType.Asset] : [AccountType.Liability]
+                accountTypes: mapGoalTypeToAccountTypes(type)
               })
             }
           >

@@ -10,6 +10,7 @@ type CreateGoalRequest = {
   amount: number
   accountIds: string[]
   type: GoalType
+  startDate: Date | null
   targetDate: Date | null
   budgetAmount: number | null
 }
@@ -19,7 +20,7 @@ export const createGoal = async (
   response: Response<HTTPResponseBody>
 ) => {
   const { householdId } = request
-  const { name, amount, accountIds, type, targetDate, budgetAmount } = request.body
+  const { name, amount, accountIds, type, startDate, targetDate, budgetAmount } = request.body
 
   let accounts: Account[] = []
 
@@ -40,6 +41,7 @@ export const createGoal = async (
     name,
     amount,
     type,
+    startDate,
     targetDate,
     budgetAmount,
     accounts: accounts ? accounts.map((a) => ({ id: a.id })) : undefined,

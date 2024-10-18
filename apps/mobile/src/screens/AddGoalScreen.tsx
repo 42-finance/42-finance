@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AddGoalRequest, ApiQuery, addGoal } from 'frontend-api'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
+import { GoalType } from 'shared-types'
 
 import { GoalForm, GoalFormFields, TargetType } from '../components/forms/GoalForm'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
@@ -26,7 +27,8 @@ export const AddGoalScreen = ({ navigation }: RootStackScreenProps<'AddGoal'>) =
       amount: values.amount,
       accountIds: values.accounts.map((a) => a.id),
       type: values.type,
-      targetDate: values.targetType === TargetType.Date ? values.targetDate : null,
+      startDate: values.startDate,
+      targetDate: values.type === GoalType.Spending || values.targetType === TargetType.Date ? values.targetDate : null,
       budgetAmount: values.targetType === TargetType.Amount ? values.budgetAmount : null
     })
   }
