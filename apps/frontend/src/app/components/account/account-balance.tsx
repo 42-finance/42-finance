@@ -10,6 +10,7 @@ import {
   getMonthlyValueChange,
   getNetWorth,
   getNetWorthHistory,
+  todayInUtc,
   valueChangeColor,
   valueChangeIcon
 } from 'frontend-utils'
@@ -28,6 +29,7 @@ type Props = {
 export const AccountBalance: React.FC<Props> = ({ account }) => {
   const [currencyCode] = useLocalStorage<CurrencyCode>('currencyCode', CurrencyCode.USD)
 
+  const [today] = useState(todayInUtc())
   const [filterDate, setFilterDate] = useState<Date | null>(null)
 
   const { data: balanceHistory = [], isFetching: isFetchingBalanceHistory } = useQuery({
@@ -54,7 +56,7 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
   )
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, convertBalance, false)
+    const history = getNetWorthHistory(balanceHistory, accountTypes, convertBalance, false, null)
     if (history.length === 1) {
       history.push(history[0])
     }
@@ -64,15 +66,7 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
   const netWorthChange = useMemo(
-    () =>
-      getMonthlyValueChange(
-        balanceHistory,
-        accountTypes,
-        filterDate == null ? null : startDate,
-        filterDate,
-        convertBalance,
-        false
-      ),
+    () => getMonthlyValueChange(balanceHistory, accountTypes, startDate, filterDate ?? today, convertBalance, false),
     [balanceHistory, accountTypes, filterDate, startDate, convertBalance]
   )
 

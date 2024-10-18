@@ -10,6 +10,7 @@ import {
   getNetWorth,
   getNetWorthHistory,
   mapAccountGroupTypeToAccountSubTypes,
+  todayInUtc,
   valueChangeColor,
   valueChangeIcon
 } from 'frontend-utils'
@@ -26,6 +27,7 @@ type Props = {
 }
 
 export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
+  const [today] = useState(todayInUtc())
   const [netWorthOverride, setNetWorthOverride] = useState<number | null>(null)
   const [filterDate, setFilterDate] = useState<Date | null>(null)
 
@@ -61,7 +63,7 @@ export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
   )
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, true, accountGroupType == null)
+    const history = getNetWorthHistory(balanceHistory, accountTypes, true, accountGroupType == null, null)
     if (history.length === 1) {
       history.push(history[0])
     }
@@ -75,8 +77,8 @@ export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
       getMonthlyValueChange(
         balanceHistory,
         accountTypes,
-        filterDate == null ? null : startDate,
-        filterDate,
+        startDate,
+        filterDate ?? today,
         true,
         accountGroupType == null
       ),

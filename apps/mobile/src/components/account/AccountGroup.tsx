@@ -59,6 +59,7 @@ export const AccountGroup: React.FC<Props> = ({
   })
 
   const [today] = useState(todayInUtc())
+
   const filterStartDate = useMemo(() => mapDateRangeToDate(dateRangeFilter), [dateRangeFilter])
 
   const type = useMemo(() => groupAccounts[0].type, [groupAccounts])
