@@ -13,7 +13,6 @@ import {
   mapAccountSubType,
   mapAccountSubTypeToAccountGroupType,
   mapAccountTypeToAccountSubTypes,
-  useUserTokenContext,
   valueChangeColor
 } from 'frontend-utils'
 import { formatDateDifference, todayInUtc } from 'frontend-utils/src/date/date.utils'
@@ -23,6 +22,7 @@ import { FiArrowDownLeft, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { AccountType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { AccountIcon } from './account-icon'
 
 type Props = {
@@ -85,13 +85,13 @@ export const AccountGroup: React.FC<Props> = ({ groupAccounts, allAccounts, onSe
               <FiArrowDownLeft size={14} color={valueChangeColor(valueChange.value, type)} className="mt-[3px]" />
             )}
             <div style={{ color: valueChangeColor(valueChange.value, type) }} className="text-xs mt-1">
-              {formatDollars(valueChange.value)} ({formatPercentage(valueChange.percentage)}){' '}
+              {formatDollars(valueChange.value, currencyCode)} ({formatPercentage(valueChange.percentage)}){' '}
               <span className="text-gray-500">This Month</span>
             </div>
           </div>
         </div>
         <div className="">
-          <div className="text-right">{formatDollars(balance)}</div>
+          <div className="text-right">{formatDollars(balance, currencyCode)}</div>
           <div className="text-xs text-right mt-1">
             {formatPercentage(Math.abs(balance / totalValue) * 100, 0)} of {isAsset ? 'assets' : 'liabilities'}
           </div>

@@ -54,7 +54,14 @@ export const ProfileForm: React.FC<Props> = ({ profileInfo, onSubmit, submitting
     }
   })
 
-  const currencyItems = useMemo(() => [CurrencyCode.CAD, CurrencyCode.USD].map((c) => ({ label: c, value: c })), [])
+  const currencyItems = useMemo(
+    () =>
+      Object.values(CurrencyCode).map((c) => ({
+        label: c,
+        value: c
+      })),
+    []
+  )
 
   return (
     <View>

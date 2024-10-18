@@ -18,6 +18,7 @@ import { useMemo, useState } from 'react'
 import { FiArrowDownLeft, FiArrowUpRight } from 'react-icons/fi'
 import { AccountGroupType, AccountType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { Avatar } from '../common/avatar'
 import { Card } from '../common/card/card'
 import { NetWorthGraph } from '../common/chart/net-worth-graph'
@@ -30,6 +31,7 @@ export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
   const [today] = useState(todayInUtc())
   const [netWorthOverride, setNetWorthOverride] = useState<number | null>(null)
   const [filterDate, setFilterDate] = useState<Date | null>(null)
+  const { currencyCode } = useUserTokenContext()
 
   const { data: accounts = [], isFetching: isFetchingAccounts } = useQuery({
     queryKey: [ApiQuery.Accounts],
@@ -97,7 +99,7 @@ export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
   return (
     <Card title="Net Worth">
       <div>
-        <div className="text-xl text-center mt-4">{formatDollarsSigned(netWorthValue)}</div>
+        <div className="text-xl text-center mt-4">{formatDollarsSigned(netWorthValue, currencyCode)}</div>
         <div className="flex items-center justify-center mt-1 mb-4">
           <Avatar>{changeIcon === 'arrow-up-right' ? <FiArrowUpRight /> : <FiArrowDownLeft />}</Avatar>
           <div
@@ -111,7 +113,7 @@ export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
               )
             }}
           >
-            {formatDollars(netWorthChange.value)} ({formatPercentage(netWorthChange.percentage)})
+            {formatDollars(netWorthChange.value, currencyCode)} ({formatPercentage(netWorthChange.percentage)})
           </div>
           <div className="text-outline ml-1">
             {filterDate == null

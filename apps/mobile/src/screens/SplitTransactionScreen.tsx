@@ -195,7 +195,7 @@ export const SplitTransactionScreen: React.FC<RootStackScreenProps<'SplitTransac
             LEFT TO SPLIT
           </Text>
           <Text variant="titleLarge" style={{ fontWeight: 'bold' }}>
-            {formatDollarsSigned(leftToSplit)}
+            {formatDollarsSigned(leftToSplit, transaction.account.currencyCode)}
           </Text>
         </View>
         <Button

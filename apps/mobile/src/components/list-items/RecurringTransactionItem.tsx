@@ -7,11 +7,12 @@ import {
   formatRecurringTransaction,
   getNextRecurringDate
 } from 'frontend-utils'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Avatar, Divider, Text, useTheme } from 'react-native-paper'
+
+import { useUserTokenContext } from '../../contexts/user-token.context'
 
 type Props = {
   transaction: RecurringTransaction
@@ -98,7 +99,7 @@ export const RecurringTransactionItem = ({
             }}
           >
             {transaction.amount < 0 ? '+' : ''}
-            {formatDollars(transaction.amount)}
+            {formatDollars(transaction.amount, transaction.account.currencyCode)}
             {transaction.account.currencyCode === currencyCode ? '' : ` ${transaction.account.currencyCode}`}
           </Text>
           {nextRecurringDate && (

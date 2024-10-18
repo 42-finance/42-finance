@@ -9,6 +9,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { FaCheck } from 'react-icons/fa'
 import { CategoryType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/currency-input'
 
 type Props = {
@@ -22,6 +23,8 @@ type Props = {
 }
 
 export const BC: React.FC<Props> = ({ group, category, budgets, transactions, onPress, onEdit, isEditing }) => {
+  const { currencyCode } = useUserTokenContext()
+
   const [amount, setAmount] = useState('')
 
   const isIncome = useMemo(() => group.type === CategoryType.Income, [group])
@@ -88,10 +91,10 @@ export const BC: React.FC<Props> = ({ group, category, budgets, transactions, on
             {category.name}
           </div>
           <div className="" style={{ width: 90, textAlign: 'right' }}>
-            {formatDollars(budgetAmount, 0)}
+            {formatDollars(budgetAmount, currencyCode, 0)}
           </div>
           <div className="" style={{ width: 90, textAlign: 'right' }}>
-            {formatDollarsSigned(budgetAmount - totalSpent, 0)}
+            {formatDollarsSigned(budgetAmount - totalSpent, currencyCode, 0)}
           </div>
         </div>
       </div>
@@ -124,10 +127,10 @@ export const BC: React.FC<Props> = ({ group, category, budgets, transactions, on
 
           <div className="flex mt-1">
             <div className="bodySmall" style={{ color: lightColors.outline, marginTop: 5, flex: 1 }}>
-              Monthly average {formatDollars(monthlyAverage, 0)}
+              Monthly average {formatDollars(monthlyAverage, currencyCode, 0)}
             </div>
             <div className="bodySmall" style={{ color: lightColors.outline, marginTop: 5 }}>
-              Last month {formatDollars(lastMonthAmount, 0)}
+              Last month {formatDollars(lastMonthAmount, currencyCode, 0)}
             </div>
           </div>
         </div>

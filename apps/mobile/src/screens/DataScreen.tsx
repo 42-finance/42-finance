@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query'
 import * as SecureStore from 'expo-secure-store'
 import { deleteUser } from 'frontend-api'
 import { setMessage } from 'frontend-utils'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import * as React from 'react'
 import { useState } from 'react'
 import { ScrollView } from 'react-native'
@@ -11,6 +10,7 @@ import { Button, Dialog, Portal, Text, useTheme } from 'react-native-paper'
 
 import { View } from '../components/common/View'
 import { SettingsItem } from '../components/settings/SettingsItems'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
 export const DataScreen: React.FC<RootStackScreenProps<'Data'>> = ({ navigation }) => {

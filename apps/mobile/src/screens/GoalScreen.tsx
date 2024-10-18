@@ -8,8 +8,7 @@ import {
   formatDateDifference,
   formatDateInUtc,
   formatDollars,
-  mapAccountSubType,
-  useUserTokenContext
+  mapAccountSubType
 } from 'frontend-utils'
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
@@ -19,6 +18,7 @@ import { Button, Dialog, Divider, Portal, ProgressBar, Text, useTheme } from 're
 import { AccountIcon } from '../components/account/AccountIcon'
 import { View } from '../components/common/View'
 import { GoalGraph } from '../components/stats/GoalGraph'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
@@ -150,7 +150,7 @@ export const GoalScreen = ({ route, navigation }: RootStackScreenProps<'Goal'>) 
               <Text variant="titleMedium" style={{ flex: 1 }}>
                 Monthly amount
               </Text>
-              <Text variant="titleMedium">{formatDollars(budgetAmount)}</Text>
+              <Text variant="titleMedium">{formatDollars(budgetAmount, currencyCode)}</Text>
             </View>
             <Divider />
           </>

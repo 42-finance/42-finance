@@ -1,7 +1,6 @@
 import { Feather, FontAwesome5 } from '@expo/vector-icons'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getAccounts } from 'frontend-api'
-import { mapDateRangeFilter } from 'frontend-utils'
 import {
   mapAccountGroupType,
   mapAccountSubTypeToAccountGroupType
@@ -14,6 +13,7 @@ import { Chip, ProgressBar, useTheme } from 'react-native-paper'
 import { AccountGroupType, DateRangeFilter } from 'shared-types'
 
 import { AccountGroup } from '../components/account/AccountGroup'
+import { DateRangePicker } from '../components/common/DateRangePicker'
 import { View } from '../components/common/View'
 import { NetWorthGraph } from '../components/stats/NetWorthGraph'
 import { useRefetchOnFocus } from '../hooks/use-refetch-on-focus.hook'
@@ -93,30 +93,10 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
           </View>
         </ScrollView>
         <NetWorthGraph accountGroupType={selectedFilter} dateRangeFilter={selectedDateRangeFilter} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 15,
-            marginTop: -5,
-            marginHorizontal: 10
-          }}
-        >
-          {Object.values(DateRangeFilter).map((type) => (
-            <Chip
-              key={type}
-              onPress={() => setSelectedDateRangeFilter(type)}
-              theme={{ roundness: 20 }}
-              style={{
-                padding: 2,
-                ...(selectedDateRangeFilter === type ? {} : { backgroundColor: 'transparent' })
-              }}
-              textStyle={{ fontWeight: 'bold', fontSize: 12 }}
-            >
-              {mapDateRangeFilter(type).toUpperCase()}
-            </Chip>
-          ))}
-        </View>
+        <DateRangePicker
+          selectedDateRangeFilter={selectedDateRangeFilter}
+          onSelected={(type) => setSelectedDateRangeFilter(type)}
+        />
         {accountGroups.map((accountGroup) => (
           <AccountGroup
             key={accountGroup.groupType}

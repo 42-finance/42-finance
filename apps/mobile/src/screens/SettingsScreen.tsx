@@ -10,13 +10,13 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import * as SecureStore from 'expo-secure-store'
 import { deleteNotificationToken } from 'frontend-api'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { Divider, Text, useTheme } from 'react-native-paper'
 import Purchases from 'react-native-purchases'
 
 import { SettingsItem } from '../components/settings/SettingsItems'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 import { getPushToken } from '../utils/notification.utils'
 

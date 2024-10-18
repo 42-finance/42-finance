@@ -1,4 +1,4 @@
-import { AmountFilter, TransactionAmountType } from 'shared-types'
+import { AmountFilter, CurrencyCode, TransactionAmountType } from 'shared-types'
 
 import { formatDollars } from '../invoice/invoice.utils'
 
@@ -7,7 +7,8 @@ export const mapAmount = (
   amountFilterType: AmountFilter | null,
   amountValue: number | null,
   amountValue2: number | null,
-  defaultValue: string = ''
+  defaultValue: string,
+  currencyCode: CurrencyCode
 ) => {
   if (amountType == null || amountFilterType == null) {
     return defaultValue
@@ -17,10 +18,10 @@ export const mapAmount = (
   const filter = mapAmountFilter(amountFilterType)
 
   if (amountFilterType === AmountFilter.Between) {
-    return `${type} ${filter.toLowerCase()} ${formatDollars(amountValue)} and ${formatDollars(amountValue2)}`
+    return `${type} ${filter.toLowerCase()} ${formatDollars(amountValue, currencyCode)} and ${formatDollars(amountValue2, currencyCode)}`
   }
 
-  return `${type} ${filter.toLowerCase()} ${formatDollars(amountValue)}`
+  return `${type} ${filter.toLowerCase()} ${formatDollars(amountValue, currencyCode)}`
 }
 
 export const mapAmountFilter = (amountFilter: AmountFilter) => {

@@ -5,6 +5,8 @@ import { TouchableOpacity, View } from 'react-native'
 import { Divider, ProgressBar, Text, useTheme } from 'react-native-paper'
 import { GoalType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
+
 type Props = {
   goal: Goal
   onSelected: (goal: Goal) => void
@@ -14,6 +16,7 @@ type Props = {
 
 export const GoalItem = ({ goal, onSelected, index, backgroundColor }: Props) => {
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const total = useMemo(
     () =>
@@ -49,9 +52,11 @@ export const GoalItem = ({ goal, onSelected, index, backgroundColor }: Props) =>
             color="#19d2a5"
           />
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text variant="titleMedium">{formatDollars(total)}</Text>
+            <Text variant="titleMedium">{formatDollars(total, currencyCode)}</Text>
             <Text variant="titleMedium">
-              {goal.type === GoalType.Savings ? formatDollars(goal.amount) : formatDollars(0)}
+              {goal.type === GoalType.Savings
+                ? formatDollars(goal.amount, currencyCode)
+                : formatDollars(0, currencyCode)}
             </Text>
           </View>
         </View>

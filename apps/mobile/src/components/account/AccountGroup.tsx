@@ -17,7 +17,6 @@ import {
   mapDateRangeFilterFull,
   mapDateRangeToDate,
   todayInUtc,
-  useUserTokenContext,
   valueChangeColor,
   valueChangeIcon
 } from 'frontend-utils'
@@ -28,6 +27,7 @@ import { Card, Divider, Text, useTheme } from 'react-native-paper'
 import { AccountType, DateRangeFilter } from 'shared-types'
 
 import { Account } from '../../../../../libs/frontend-types/src/account.type'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 import { AccountIcon } from './AccountIcon'
 
@@ -120,7 +120,7 @@ export const AccountGroup: React.FC<Props> = ({
                   style={{ marginTop: 1, marginRight: 2 }}
                 />
                 <Text variant="bodySmall" style={{ color: valueChangeColor(valueChange.value, type) }}>
-                  {formatDollars(valueChange.value)} ({formatPercentage(valueChange.percentage)})
+                  {formatDollars(valueChange.value, currencyCode)} ({formatPercentage(valueChange.percentage)})
                 </Text>
                 <Text variant="bodySmall" style={{ marginLeft: 5, color: colors.outline }}>
                   {mapDateRangeFilterFull(dateRangeFilter)}
@@ -134,7 +134,7 @@ export const AccountGroup: React.FC<Props> = ({
                 alignItems: 'flex-end'
               }}
             >
-              <Text variant="titleMedium">{formatDollars(balance)}</Text>
+              <Text variant="titleMedium">{formatDollars(balance, currencyCode)}</Text>
               <Text variant="bodySmall" style={{ marginTop: 5 }}>
                 {formatPercentage(Math.abs(balance / totalValue) * 100, 0)} of {isAsset ? 'assets' : 'liabilities'}
               </Text>

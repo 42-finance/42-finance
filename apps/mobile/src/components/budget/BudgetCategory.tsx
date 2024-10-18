@@ -18,6 +18,7 @@ import MaskInput from 'react-native-mask-input'
 import { Button, Divider, Text, TextInput, useTheme } from 'react-native-paper'
 import { CategoryType, ReportDateFilter } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { dollarMask } from '../../utils/mask.utils'
 import { ActivityIndicator } from '../common/ActivityIndicator'
 import { View } from '../common/View'
@@ -45,6 +46,7 @@ export const BC: React.FC<Props> = ({
 }) => {
   const { colors } = useTheme()
   const navigation = useNavigation()
+  const { currencyCode } = useUserTokenContext()
 
   const [amount, setAmount] = useState('')
 
@@ -125,10 +127,10 @@ export const BC: React.FC<Props> = ({
             {category.name}
           </Text>
           <Text variant="titleSmall" style={{ width: 90, textAlign: 'right' }}>
-            {formatBudgetAmount(rolloverBudgetAmount, budgetAmount)}
+            {formatBudgetAmount(rolloverBudgetAmount, budgetAmount, currencyCode)}
           </Text>
           <Text variant="titleSmall" style={{ width: 90, textAlign: 'right' }}>
-            {formatDollarsSigned(rolloverBudgetAmount - totalSpent, 0)}
+            {formatDollarsSigned(rolloverBudgetAmount - totalSpent, currencyCode, 0)}
           </Text>
         </View>
       </TouchableOpacity>
@@ -158,10 +160,10 @@ export const BC: React.FC<Props> = ({
           </View>
           <View style={{ flexDirection: 'row' }}>
             <Text variant="bodySmall" style={{ color: colors.outline, marginTop: 5, flex: 1 }}>
-              Monthly average {formatDollars(monthlyAverage, 0)}
+              Monthly average {formatDollars(monthlyAverage, currencyCode, 0)}
             </Text>
             <Text variant="bodySmall" style={{ color: colors.outline, marginTop: 5 }}>
-              Last month {formatDollars(lastMonthAmount, 0)}
+              Last month {formatDollars(lastMonthAmount, currencyCode, 0)}
             </Text>
           </View>
           <Button

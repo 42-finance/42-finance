@@ -8,6 +8,7 @@ import { useMemo, useState } from 'react'
 import { Linking, ScrollView } from 'react-native'
 import { Avatar, Button, Card, Divider, ProgressBar, Text, useTheme } from 'react-native-paper'
 import Purchases, { PurchasesPackage } from 'react-native-purchases'
+import { CurrencyCode } from 'shared-types'
 
 import { View } from '../common/View'
 
@@ -62,7 +63,7 @@ export const SubscriptionIos = () => {
 
   const formatNextPayment = () => {
     if (!subscription || !subscribedPackage) return ''
-    let str = formatDollars(Math.max(0, subscribedPackage.product.price))
+    let str = formatDollars(Math.max(0, subscribedPackage.product.price), CurrencyCode.USD)
     if (subscription.renewalDate) {
       str += ` on ${format(subscription.renewalDate, 'MMMM dd, yyyy')}`
     }
@@ -79,9 +80,9 @@ export const SubscriptionIos = () => {
 
   const formatPrice = (purchasePackage: PurchasesPackage) => {
     if (purchasePackage.identifier === 'connection_unlimited_yearly') {
-      return `${formatDollars(purchasePackage.product.price)} / year`
+      return `${formatDollars(purchasePackage.product.price, CurrencyCode.USD)} / year`
     }
-    return `${formatDollars(purchasePackage.product.price)} / month`
+    return `${formatDollars(purchasePackage.product.price, CurrencyCode.USD)} / month`
   }
 
   if (!subscription || fetchingOfferings) {
@@ -148,7 +149,7 @@ export const SubscriptionIos = () => {
                   </Text>
                   <Text variant="titleMedium" style={{ marginTop: 5 }}>
                     {subscription.invoice.currency.toUpperCase()}{' '}
-                    {formatDollars(Math.max(0, subscription.invoice.amount))} on{' '}
+                    {formatDollars(Math.max(0, subscription.invoice.amount), CurrencyCode.USD)} on{' '}
                     {format(subscription.invoice.date, 'MMMM dd, yyyy')}
                   </Text>
                 </View>

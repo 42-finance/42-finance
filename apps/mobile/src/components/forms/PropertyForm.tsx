@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { autocompleteAddress } from 'frontend-api'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import { useDebounce } from 'frontend-utils/src/hooks/use-debounce.hook'
 import React, { useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -10,6 +9,7 @@ import { Button, Text, useTheme } from 'react-native-paper'
 import { CurrencyCode } from 'shared-types'
 import * as Yup from 'yup'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/CurrencyInput'
 import { PaperPickerField } from '../common/PaperPickerField'
 import { TextInput } from '../common/TextInput'
@@ -81,7 +81,10 @@ export const PropertyForm: React.FC<Props> = ({ propertyInfo, onSubmit, submitti
   })
 
   const currencyCodes = useMemo(
-    () => [CurrencyCode.CAD, CurrencyCode.USD].sort().map((c) => ({ label: c, value: c })),
+    () =>
+      Object.values(CurrencyCode)
+        .sort()
+        .map((c) => ({ label: c, value: c })),
     []
   )
 

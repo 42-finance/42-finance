@@ -2,6 +2,8 @@ import dotenv from 'dotenv'
 
 import { Account } from '../models/account'
 import { BalanceHistory } from '../models/balance-history'
+import { Bill } from '../models/bill'
+import { BillPayment } from '../models/bill-payment'
 import { Budget } from '../models/budget'
 import { Category } from '../models/category'
 import { Connection } from '../models/connection'
@@ -53,6 +55,8 @@ export const config = {
   entities: [
     Account,
     BalanceHistory,
+    Bill,
+    BillPayment,
     Budget,
     Category,
     Connection,

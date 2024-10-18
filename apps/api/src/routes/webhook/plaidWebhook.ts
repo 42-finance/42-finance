@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 
 import { handleItemWebhook } from '../../services/webhook/handleItemWebhook'
+import { handleLiabilitiesWebhook } from '../../services/webhook/handleLiabilitiesWebhook'
 import { handleTransactionsWebhook } from '../../services/webhook/handleTransactionsWebhook'
 import { unhandledWebhook } from '../../services/webhook/unhandledWebhook'
 
@@ -19,6 +20,9 @@ export const plaidWebhook = async (
       break
     case 'item':
       webhookHandler = handleItemWebhook
+      break
+    case 'liabilities':
+      webhookHandler = handleLiabilitiesWebhook
       break
     default:
       webhookHandler = unhandledWebhook

@@ -2,20 +2,22 @@ import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import { endOfDay, startOfDay } from 'date-fns'
 import { ApiQuery, exportTransactions, getTransactions, getTransactionsStats } from 'frontend-api'
-import { dateToUtc, formatDollarsSigned, setMessage } from 'frontend-utils'
+import { dateToUtc, formatDollars, setMessage } from 'frontend-utils'
 import { useTransactionsFilterContext } from 'frontend-utils/src/contexts/transactions-filter.context'
 import { useDebounce } from 'frontend-utils/src/hooks/use-debounce.hook'
+import _ from 'lodash'
 import * as React from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { Avatar, Button, Divider, ProgressBar, Searchbar, Text, useTheme } from 'react-native-paper'
 
-import _ from 'lodash'
 import { Transaction } from '../../../../libs/frontend-types/src/transaction.type'
 import { ActivityIndicator } from '../components/common/ActivityIndicator'
 import { BottomActionView } from '../components/common/BottomActionView'
 import { View } from '../components/common/View'
 import { TransactionsList } from '../components/list/TransactionsList'
+import { incomeColor } from '../constants/theme'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { useRefetchOnFocus } from '../hooks/use-refetch-on-focus.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
@@ -23,6 +25,7 @@ import { RootStackScreenProps } from '../types/root-stack-screen-props'
 export const TransactionsScreen = ({ navigation }: RootStackScreenProps<'Transactions'>) => {
   const showActionSheet = useActionSheet()
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
   const {
     amountType,
     amountFilter,
@@ -329,7 +332,13 @@ export const TransactionsScreen = ({ navigation }: RootStackScreenProps<'Transac
             <Text variant="titleMedium" style={{ flex: 1 }}>
               Total amount
             </Text>
-            <Text variant="titleMedium">{formatDollarsSigned(transactionStats.totalAmount)}</Text>
+            <Text
+              variant="titleMedium"
+              style={{ color: transactionStats.totalAmount < 0 ? incomeColor : colors.onSurface }}
+            >
+              {transactionStats.totalAmount < 0 ? '+' : ''}
+              {formatDollars(transactionStats.totalAmount, currencyCode)}
+            </Text>
           </View>
           <Divider />
           <View
@@ -343,7 +352,13 @@ export const TransactionsScreen = ({ navigation }: RootStackScreenProps<'Transac
             <Text variant="titleMedium" style={{ flex: 1 }}>
               Average transaction
             </Text>
-            <Text variant="titleMedium">{formatDollarsSigned(transactionStats.averageTransaction)}</Text>
+            <Text
+              variant="titleMedium"
+              style={{ color: transactionStats.averageTransaction < 0 ? incomeColor : colors.onSurface }}
+            >
+              {transactionStats.averageTransaction < 0 ? '+' : ''}
+              {formatDollars(transactionStats.averageTransaction, currencyCode)}
+            </Text>
           </View>
           <Divider />
           <View

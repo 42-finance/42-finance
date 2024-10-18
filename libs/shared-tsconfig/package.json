@@ -1,7 +1,7 @@
 {
   "name": "shared-tsconfig",
   "version": "1.0.0",
-  "author": "Renty Team <all@rentyapps.com>",
+  "author": "42 Finance <dev@42f.io>",
   "private": true,
   "devDependencies": {
     "ts-node": "^10.9.2",

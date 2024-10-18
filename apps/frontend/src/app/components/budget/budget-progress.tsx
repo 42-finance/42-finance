@@ -13,6 +13,7 @@ import _ from 'lodash'
 import { useMemo } from 'react'
 import { CategoryType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { ProgressBar } from '../common/progress-bar/progress-bar'
 
 type Props = {
@@ -21,6 +22,8 @@ type Props = {
 }
 
 export const BudgetProgress: React.FC<Props> = ({ type, backgroundColor }) => {
+  const { currencyCode } = useUserTokenContext()
+
   const { data: budgets = [] } = useQuery({
     queryKey: [ApiQuery.Budgets],
     queryFn: async () => {
@@ -71,9 +74,9 @@ export const BudgetProgress: React.FC<Props> = ({ type, backgroundColor }) => {
       />
       <div className="flex mt-2">
         <div className="text-lg" style={{ flex: 1 }}>
-          {formatDollarsSigned(total, 0)}
+          {formatDollarsSigned(total, currencyCode, 0)}
         </div>
-        <div className="text-lg">{formatDollars(totalBudget, 0)}</div>
+        <div className="text-lg">{formatDollars(totalBudget, currencyCode, 0)}</div>
       </div>
     </div>
   )

@@ -5,6 +5,8 @@ import '../models/http/request'
 import { acceptInvitationRouter } from './acceptInvitation'
 import { accountRouter } from './account'
 import { balanceHistoryRouter } from './balanceHistory'
+import { billPaymentsRouter } from './billPayments'
+import { billsRouter } from './bills'
 import { budgetRouter } from './budget'
 import { categoryRouter } from './category'
 import { changePasswordRouter } from './changePassword'
@@ -56,6 +58,8 @@ const router = Router()
 router.use('/accounts', authenticateToken, accountRouter)
 router.use('/accept-invitation', acceptInvitationRouter)
 router.use('/balance-history', authenticateToken, balanceHistoryRouter)
+router.use('/bills', authenticateToken, billsRouter)
+router.use('/bill-payments', authenticateToken, billPaymentsRouter)
 router.use('/budgets', authenticateToken, budgetRouter)
 router.use('/categories', authenticateToken, categoryRouter)
 router.use('/change-password', authenticateToken, changePasswordRouter)

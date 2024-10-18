@@ -18,6 +18,8 @@ import { AddTagScreen } from '../screens/AddTagScreen'
 import { AddTransactionScreen } from '../screens/AddTransactionScreen'
 import { AddVehicleScreen } from '../screens/AddVehicleScreen'
 import { AmountsRuleScreen } from '../screens/AmountsRuleScreen'
+import { BillScreen } from '../screens/BillScreen'
+import { BillsScreen } from '../screens/BillsScreen'
 import { BudgetScreen } from '../screens/BudgetScreen'
 import { CashFlowScreen } from '../screens/CashFlowScreen'
 import { CategoriesScreen } from '../screens/CategoriesScreen'
@@ -127,6 +129,8 @@ export const getStackScreens = (
       component={AmountsRuleScreen}
       options={{ title: 'Matches amount' }}
     />,
+    <Stack.Screen key="Bill" name="Bill" component={BillScreen} options={() => ({ title: 'Loading...' })} />,
+    <Stack.Screen key="Bills" name="Bills" component={BillsScreen} options={() => ({ title: 'Bills' })} />,
     <Stack.Screen key="Budget" name="Budget" component={BudgetScreen} options={() => ({ title: 'Budget' })} />,
     <Stack.Screen key="CashFlow" name="CashFlow" component={CashFlowScreen} options={() => ({ title: 'Reports' })} />,
     <Stack.Screen key="Categories" name="Categories" component={CategoriesScreen} options={{ title: 'Categories' }} />,

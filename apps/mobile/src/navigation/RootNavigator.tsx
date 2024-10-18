@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import { useTheme } from 'react-native-paper'
 
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { ForgotPasswordScreen } from '../screens/ForgotPasswordScreen'
 import LoginScreen from '../screens/LoginScreen'
 import RegisterScreen from '../screens/RegisterScreen'

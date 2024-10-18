@@ -3,7 +3,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigation } from '@react-navigation/native'
 import { eventEmitter } from 'frontend-utils'
 import { formatAccountName } from 'frontend-utils/src/account/account.utils'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import { useEffect, useMemo } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
 import { View } from 'react-native'
@@ -13,6 +12,7 @@ import * as Yup from 'yup'
 
 import { Account } from '../../../../../libs/frontend-types/src/account.type'
 import { Category } from '../../../../../libs/frontend-types/src/category.type'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/CurrencyInput'
 import { DateField } from '../common/DateField'
 import { PaperPickerField } from '../common/PaperPickerField'
@@ -94,7 +94,7 @@ export const TransactionForm: React.FC<Props> = ({ transactionInfo, onSubmit, su
   const type = watch('type')
   const date = watch('date')
 
-  const currencyItems = useMemo(() => [CurrencyCode.CAD, CurrencyCode.USD].map((c) => ({ label: c, value: c })), [])
+  const currencyItems = useMemo(() => Object.values(CurrencyCode).map((c) => ({ label: c, value: c })), [])
 
   return (
     <View>

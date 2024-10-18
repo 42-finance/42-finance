@@ -1,11 +1,11 @@
 import { Entypo, FontAwesome5, FontAwesome6 } from '@expo/vector-icons'
 import { formatAccountName, formatDateInUtc, formatDollars } from 'frontend-utils'
-import { useUserTokenContext } from 'frontend-utils/src/contexts/user-token.context'
 import { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Avatar, Divider, Text, useTheme } from 'react-native-paper'
 
 import { Transaction } from '../../../../../libs/frontend-types/src/transaction.type'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 
 type Props = {
   transaction: Transaction
@@ -110,7 +110,7 @@ const TI = ({
           }}
         >
           {transaction.amount < 0 ? '+' : ''}
-          {formatDollars(transaction.amount)}
+          {formatDollars(transaction.amount, transaction.account.currencyCode)}
           {transaction.account.currencyCode === currencyCode ? '' : ` ${transaction.account.currencyCode}`}
         </Text>
       </View>

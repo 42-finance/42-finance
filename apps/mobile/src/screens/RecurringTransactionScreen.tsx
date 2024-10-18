@@ -22,6 +22,7 @@ import { CategoryType } from 'shared-types'
 import { MonthlyBarChart } from '../components/charts/MonthlyBarChart'
 import { View } from '../components/common/View'
 import { TransactionItem } from '../components/list-items/TransactionItem'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
@@ -31,6 +32,7 @@ export const RecurringTransactionScreen = ({ navigation, route }: RootStackScree
   const showActionSheet = useActionSheet()
   const { colors } = useTheme()
   const queryClient = useQueryClient()
+  const { currencyCode } = useUserTokenContext()
 
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -234,7 +236,7 @@ export const RecurringTransactionScreen = ({ navigation, route }: RootStackScree
         <Text variant="titleMedium" style={{ flex: 1 }}>
           Total amount
         </Text>
-        <Text variant="titleMedium">{formatDollarsSigned(totalValue)}</Text>
+        <Text variant="titleMedium">{formatDollarsSigned(totalValue, currencyCode)}</Text>
       </View>
       <Divider />
       <View
@@ -248,7 +250,7 @@ export const RecurringTransactionScreen = ({ navigation, route }: RootStackScree
         <Text variant="titleMedium" style={{ flex: 1 }}>
           Average transaction
         </Text>
-        <Text variant="titleMedium">{formatDollarsSigned(averageTransaction)}</Text>
+        <Text variant="titleMedium">{formatDollarsSigned(averageTransaction, currencyCode)}</Text>
       </View>
       <Divider />
       <View

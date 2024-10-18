@@ -40,12 +40,14 @@ export const getLinkToken = async (
 
   let accessToken: string | undefined = undefined
   let products = [Products.Transactions]
+  let optionalProducts = [Products.Liabilities]
 
   if (connectionId) {
     const connection = await dataSource.getRepository(Connection).findOne({ where: { id: connectionId } })
     if (connection?.accessToken) {
       accessToken = connection.accessToken
       products = []
+      optionalProducts = []
     }
   }
 
@@ -70,6 +72,7 @@ export const getLinkToken = async (
       client_user_id: String(householdId)
     },
     products,
+    optional_products: optionalProducts,
     access_token: accessToken,
     webhook: `${config.express.apiUrl}/webhook/plaid`,
     transactions: {

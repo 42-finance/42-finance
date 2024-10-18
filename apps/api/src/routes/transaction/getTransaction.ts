@@ -1,4 +1,14 @@
-import { Account, Category, Merchant, RecurringTransaction, Rule, Tag, Transaction, dataSource } from 'database'
+import {
+  Account,
+  Category,
+  Connection,
+  Merchant,
+  RecurringTransaction,
+  Rule,
+  Tag,
+  Transaction,
+  dataSource
+} from 'database'
 import { shouldApplyRule } from 'database/src/utils/rule.utils'
 import { Request, Response } from 'express'
 
@@ -12,6 +22,7 @@ export const getTransaction = async (request: Request<{ id: string }>, response:
     .getRepository(Transaction)
     .createQueryBuilder('transaction')
     .leftJoinAndMapOne('transaction.account', Account, 'account', 'account.id = transaction.accountId')
+    .leftJoinAndMapOne('account.connection', Connection, 'connection', 'connection.id = account.connectionId')
     .leftJoinAndMapOne('transaction.category', Category, 'category', 'category.id = transaction.categoryId')
     .leftJoinAndMapOne('transaction.merchant', Merchant, 'merchant', 'merchant.id = transaction.merchantId')
     .leftJoinAndMapMany(

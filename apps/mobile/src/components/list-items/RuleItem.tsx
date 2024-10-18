@@ -5,6 +5,7 @@ import { Divider, Text, useTheme } from 'react-native-paper'
 import { AmountFilter } from 'shared-types'
 
 import { Rule } from '../../../../../libs/frontend-types/src/rule.type'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 
 type Props = {
   rule: Rule
@@ -14,6 +15,7 @@ type Props = {
 
 export const RuleItem = ({ rule, onSelected, index }: Props) => {
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   return (
     <TouchableOpacity
@@ -46,8 +48,10 @@ export const RuleItem = ({ rule, onSelected, index }: Props) => {
             {rule.amountType && rule.amountFilterType && rule.amountValue != null && (
               <Text variant="titleMedium">
                 If transaction is a {mapTransactionAmountType(rule.amountType).toLowerCase()} and the amount is{' '}
-                {mapAmountFilter(rule.amountFilterType).toLowerCase()} {formatDollars(rule.amountValue)}
-                {rule.amountFilterType === AmountFilter.Between ? ` and ${formatDollars(rule.amountValue2)}` : ''}
+                {mapAmountFilter(rule.amountFilterType).toLowerCase()} {formatDollars(rule.amountValue, currencyCode)}
+                {rule.amountFilterType === AmountFilter.Between
+                  ? ` and ${formatDollars(rule.amountValue2, currencyCode)}`
+                  : ''}
               </Text>
             )}
             {rule.category && (

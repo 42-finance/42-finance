@@ -1,5 +1,5 @@
 import { Account, Category, Merchant, Tag } from 'frontend-types'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { AmountFilter, TransactionAmountType } from 'shared-types'
 
 type Props = {
@@ -31,6 +31,7 @@ type TransactionsFilterContextType = {
   setNeedsReview: React.Dispatch<React.SetStateAction<boolean | null>>
   tags: Tag[]
   setTags: React.Dispatch<React.SetStateAction<Tag[]>>
+  reset: () => void
 }
 
 const TransactionsFilterContext = React.createContext<TransactionsFilterContextType>(
@@ -52,6 +53,22 @@ export const TransactionsFilterProvider = (props: Props) => {
   const [hidden, setHidden] = useState<boolean | null>(null)
   const [needsReview, setNeedsReview] = useState<boolean | null>(null)
   const [tags, setTags] = useState<Tag[]>([])
+
+  const reset = useCallback(() => {
+    setAccounts([])
+    setAmountType(null)
+    setAmountType(null)
+    setAmountFilter(null)
+    setAmountValue(null)
+    setAmountValue2(null)
+    setCategories([])
+    setStartDate(null)
+    setEndDate(null)
+    setMerchants([])
+    setHidden(null)
+    setNeedsReview(null)
+    setTags([])
+  }, [])
 
   const value = {
     accounts,
@@ -77,7 +94,8 @@ export const TransactionsFilterProvider = (props: Props) => {
     needsReview,
     setNeedsReview,
     tags,
-    setTags
+    setTags,
+    reset
   }
 
   return <TransactionsFilterContext.Provider value={value}>{props.children}</TransactionsFilterContext.Provider>

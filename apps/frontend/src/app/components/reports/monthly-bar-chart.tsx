@@ -4,6 +4,7 @@ import React, { useMemo } from 'react'
 import { Chart } from 'react-chartjs-2'
 import { ChartJSOrUndefined } from 'react-chartjs-2/dist/types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { Loader } from '../common/loader/loader'
 
 type Data = {
@@ -20,6 +21,8 @@ type Props = {
 }
 
 export const MonthlyBarChart: React.FC<Props> = ({ data, onSelected, isLoading }) => {
+  const { currencyCode } = useUserTokenContext()
+
   const chartRef = React.useRef<ChartJSOrUndefined>(null)
   const [chartData, setChartData] = React.useState<ChartData<'bar', (number | null)[], unknown>>({
     datasets: []
@@ -56,14 +59,14 @@ export const MonthlyBarChart: React.FC<Props> = ({ data, onSelected, isLoading }
     const num = Number(value)
     if (num < 0) {
       if (num > -1000) {
-        return `-${formatDollars(num, 0)}`
+        return `-${formatDollars(num, currencyCode, 0)}`
       }
-      return `-${formatDollars(num / 1000, 0)}K`
+      return `-${formatDollars(num / 1000, currencyCode, 0)}K`
     } else {
       if (num < 1000) {
-        return `${formatDollars(num, 0)}`
+        return `${formatDollars(num, currencyCode, 0)}`
       }
-      return `${formatDollars(num / 1000, 0)}K`
+      return `${formatDollars(num / 1000, currencyCode, 0)}K`
     }
   }
 

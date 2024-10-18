@@ -16,6 +16,7 @@ import * as Yup from 'yup'
 
 import { Account } from '../../../../../libs/frontend-types/src/account.type'
 import { Category } from '../../../../../libs/frontend-types/src/category.type'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { PaperPickerField } from '../common/PaperPickerField'
 import { TextInput } from '../common/TextInput'
 import { TouchableTextInput } from '../common/TouchableTextInput'
@@ -56,6 +57,7 @@ type MerchantRule = {
 export const RuleForm: React.FC<Props> = ({ ruleInfo, onSubmit, submitting }) => {
   const navigation = useNavigation()
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const schema = Yup.object().shape({
     merchant: Yup.object().shape({
@@ -232,7 +234,14 @@ export const RuleForm: React.FC<Props> = ({ ruleInfo, onSubmit, submitting }) =>
           format={(value) =>
             value.amountType == null || value.amountFilterType == null || value.amountValue == null
               ? ''
-              : mapAmount(value.amountType, value.amountFilterType, value.amountValue, value.amountValue2)
+              : mapAmount(
+                  value.amountType,
+                  value.amountFilterType,
+                  value.amountValue,
+                  value.amountValue2,
+                  '',
+                  currencyCode
+                )
           }
           onPress={() =>
             navigation.navigate('AmountsRule', {

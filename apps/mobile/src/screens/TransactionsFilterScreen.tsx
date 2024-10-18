@@ -18,6 +18,7 @@ import { PaperPickerField } from '../components/common/PaperPickerField'
 import { View } from '../components/common/View'
 import { MerchantFilterSelection } from '../components/merchant/MerchantFilterSelection'
 import { TagFilterSelection } from '../components/tag/TagFilterSelection'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 import { AmountFormFields } from './SelectAmountsScreen'
 
@@ -38,6 +39,7 @@ export type TransactionFilterFormFields = {
 
 export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'TransactionsFilter'>) => {
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
   const {
     setAccounts,
     setAmountType,
@@ -366,7 +368,7 @@ export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'T
         <Divider />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>
           <Text variant="bodyMedium" style={{ flex: 1 }}>
-            {mapAmount(amountType, amountFilter, amountValue, amountValue2, 'All Amounts')}
+            {mapAmount(amountType, amountFilter, amountValue, amountValue2, 'All Amounts', currencyCode)}
           </Text>
           <TouchableOpacity
             onPress={() =>

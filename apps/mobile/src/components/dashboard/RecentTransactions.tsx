@@ -1,10 +1,10 @@
-import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getTransactions } from 'frontend-api'
 import { Button, Card, Divider, Text, useTheme } from 'react-native-paper'
 
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
+import { NoData } from '../common/NoData'
 import { View } from '../common/View'
 import { TransactionItem } from '../list-items/TransactionItem'
 
@@ -44,14 +44,7 @@ export const RecentTransactions = () => {
             />
           </View>
         ))}
-        {transactions.length === 0 && (
-          <View style={{ flex: 1, alignSelf: 'center', alignItems: 'center', padding: 20 }}>
-            <MaterialIcons name="money-off" size={48} color={colors.onSurface} />
-            <Text variant="titleMedium" style={{ marginTop: 5 }}>
-              No transactions
-            </Text>
-          </View>
-        )}
+        {transactions.length === 0 && <NoData text="No transactions" />}
         <Divider />
         <Button
           mode="outlined"

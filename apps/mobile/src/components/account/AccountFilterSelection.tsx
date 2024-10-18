@@ -33,7 +33,7 @@ export const AccountFilterSelection = ({ account, onDelete, showBalance }: Props
           </Text>
           {showBalance && (
             <Text variant="titleMedium" numberOfLines={1}>
-              {formatDollarsSigned(account.convertedBalance)}
+              {formatDollarsSigned(account.convertedBalance, account.currencyCode)}
             </Text>
           )}
         </View>

@@ -184,7 +184,9 @@ export const TransactionInfo: React.FC<Props> = ({ transaction }) => {
         }}
       />
       <div className="flex flex-col">
-        <div className="text-center text-3xl py-6 border-b w-full">{formatDollars(transaction.amount)}</div>
+        <div className="text-center text-3xl py-6 border-b w-full">
+          {formatDollars(transaction.amount, transaction.account.currencyCode)}
+        </div>
         {renderDetail(
           'Merchant',
           <>

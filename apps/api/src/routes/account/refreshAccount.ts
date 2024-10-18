@@ -1,6 +1,6 @@
 import { Account, Connection, dataSource } from 'database'
 import { Request, Response } from 'express'
-import { updateTransactions } from 'plaid-helpers'
+import { updateLiabilities, updateTransactions } from 'plaid-helpers'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
@@ -25,6 +25,12 @@ export const refreshAccount = async (request: Request<{ id: string }>, response:
         errors: [`Connection credentials need to be updated. Update the connection to resume syncing.`],
         payload: {}
       })
+    }
+
+    try {
+      await updateLiabilities(account.connection.id)
+    } catch (e) {
+      console.log(e)
     }
   }
 

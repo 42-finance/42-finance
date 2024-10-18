@@ -9,6 +9,7 @@ import { Keyboard, TouchableOpacity } from 'react-native'
 import { Divider, Text, useTheme } from 'react-native-paper'
 import { CategoryType } from 'shared-types'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 import { BudgetCategory } from './BudgetCategory'
 
@@ -31,6 +32,7 @@ export const BudgetGroup: React.FC<Props> = ({
 }) => {
   const { colors } = useTheme()
   const queryClient = useQueryClient()
+  const { currencyCode } = useUserTokenContext()
 
   const [collapsed, setCollapsed] = useState(false)
   const [showUnbudgeted, setShowUnbudgeted] = useState(false)
@@ -146,10 +148,10 @@ export const BudgetGroup: React.FC<Props> = ({
           {group.name}
         </Text>
         <Text variant="titleSmall" style={{ textAlign: 'right' }}>
-          {formatBudgetAmount(totalRolloverBudget, totalBudget)}
+          {formatBudgetAmount(totalRolloverBudget, totalBudget, currencyCode)}
         </Text>
         <Text variant="titleSmall" style={{ width: 90, textAlign: 'right' }}>
-          {formatDollarsSigned(totalRolloverBudget - totalSpent, 0)}
+          {formatDollarsSigned(totalRolloverBudget - totalSpent, currencyCode, 0)}
         </Text>
       </View>
       {!collapsed && (
@@ -201,7 +203,7 @@ export const BudgetGroup: React.FC<Props> = ({
                 <Text variant="bodyMedium" style={{ flex: 1, marginStart: 10, color: colors.outline }}>
                   {showUnbudgeted ? 'Hide' : 'Show'} {unbudgetedCategories.length} unbudgeted
                 </Text>
-                <Text variant="titleSmall">{formatDollarsSigned(0 - unbudgetedAmount, 0)}</Text>
+                <Text variant="titleSmall">{formatDollarsSigned(0 - unbudgetedAmount, currencyCode, 0)}</Text>
               </TouchableOpacity>
             </>
           )}

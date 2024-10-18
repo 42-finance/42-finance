@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { AmountFilter } from 'shared-types'
 import { BooleanParam, NumberParam, StringParam, useQueryParams } from 'use-query-params'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { Button } from '../common/button/button'
 import { Card } from '../common/card/card'
 import { IconButton } from '../common/icon-button/icon-button'
@@ -26,6 +27,7 @@ import { EditRuleModal } from '../modals/edit-rule-modal'
 
 export const SettingsRules = () => {
   const queryClient = useQueryClient()
+  const { currencyCode } = useUserTokenContext()
 
   const [query] = useQueryParams({
     add: BooleanParam,
@@ -104,8 +106,11 @@ export const SettingsRules = () => {
                 {rule.amountType && rule.amountFilterType && rule.amountValue != null && (
                   <div className="text-base">
                     If transaction is a {mapTransactionAmountType(rule.amountType).toLowerCase()} and the amount is{' '}
-                    {mapAmountFilter(rule.amountFilterType).toLowerCase()} {formatDollars(rule.amountValue)}
-                    {rule.amountFilterType === AmountFilter.Between ? ` and ${formatDollars(rule.amountValue2)}` : ''}
+                    {mapAmountFilter(rule.amountFilterType).toLowerCase()}{' '}
+                    {formatDollars(rule.amountValue, currencyCode)}
+                    {rule.amountFilterType === AmountFilter.Between
+                      ? ` and ${formatDollars(rule.amountValue2, currencyCode)}`
+                      : ''}
                   </div>
                 )}
                 {rule.category && (

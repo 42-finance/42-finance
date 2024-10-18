@@ -63,7 +63,10 @@ export const AccountForm: React.FC<Props> = ({ onSubmit, accountInfo, canChangeC
   )
 
   const currencyCodes = useMemo(
-    () => [CurrencyCode.CAD, CurrencyCode.USD].sort().map((c) => ({ label: c, value: c })),
+    () =>
+      Object.values(CurrencyCode)
+        .sort()
+        .map((c) => ({ label: c, value: c })),
     []
   )
 

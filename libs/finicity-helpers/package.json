@@ -1,7 +1,7 @@
 {
   "name": "finicity-helpers",
   "version": "1.0.0",
-  "author": "Renty Team <all@rentyapps.com>",
+  "author": "42 Finance <dev@42f.io>",
   "license": "Proprietary",
   "private": true,
   "main": "src/index.ts",

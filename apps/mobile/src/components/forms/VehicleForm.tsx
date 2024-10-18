@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useUserTokenContext } from 'frontend-utils'
 import React, { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { View } from 'react-native'
@@ -7,6 +6,7 @@ import { Button, TextInput as PaperTextInput } from 'react-native-paper'
 import { CurrencyCode } from 'shared-types'
 import * as Yup from 'yup'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/CurrencyInput'
 import { PaperPickerField } from '../common/PaperPickerField'
 import { TextInput } from '../common/TextInput'
@@ -52,7 +52,10 @@ export const VehicleForm: React.FC<Props> = ({ vehicleInfo, onSubmit, submitting
   })
 
   const currencyCodes = useMemo(
-    () => [CurrencyCode.CAD, CurrencyCode.USD].sort().map((c) => ({ label: c, value: c })),
+    () =>
+      Object.values(CurrencyCode)
+        .sort()
+        .map((c) => ({ label: c, value: c })),
     []
   )
 

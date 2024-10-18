@@ -25,6 +25,7 @@ import { CategoryType, ReportDateFilter } from 'shared-types'
 
 import { Transaction } from '../../../../../libs/frontend-types/src/transaction.type'
 import { expenseColor, incomeColor } from '../../constants/theme'
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { MonthlyBarChart } from '../charts/MonthlyBarChart'
 import { View } from '../common/View'
 import { TransactionItem } from '../list-items/TransactionItem'
@@ -40,6 +41,7 @@ type Props = {
 export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmount, type, dateFilter }) => {
   const navigation = useNavigation()
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const [selectedDate, setSelectedDate] = useState(date ? dateToUtc(startOfMonth(dateToLocal(date))) : null)
 
@@ -132,7 +134,7 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
             <Text variant="titleMedium" style={{ flex: 1 }}>
               Remaining budget
             </Text>
-            <Text variant="titleMedium">{formatDollarsSigned(budgetAmount - totalValue)}</Text>
+            <Text variant="titleMedium">{formatDollarsSigned(budgetAmount - totalValue, currencyCode)}</Text>
           </View>
           <ProgressBar
             progress={calculateBudgetProgress(totalValue, budgetAmount)}
@@ -145,7 +147,7 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
             color={mapCategoryTypeToColor(type)}
           />
           <Text variant="bodyMedium" style={{ color: colors.outline }}>
-            {formatDollars(budgetAmount, 0)} budget
+            {formatDollars(budgetAmount, currencyCode, 0)} budget
           </Text>
         </View>
       )}
@@ -161,7 +163,7 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
         <Text variant="titleMedium" style={{ flex: 1 }}>
           Total amount
         </Text>
-        <Text variant="titleMedium">{formatDollarsSigned(totalValue)}</Text>
+        <Text variant="titleMedium">{formatDollarsSigned(totalValue, currencyCode)}</Text>
       </View>
       <Divider />
       <View
@@ -175,7 +177,7 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
         <Text variant="titleMedium" style={{ flex: 1 }}>
           Average transaction
         </Text>
-        <Text variant="titleMedium">{formatDollarsSigned(averageTransaction)}</Text>
+        <Text variant="titleMedium">{formatDollarsSigned(averageTransaction, currencyCode)}</Text>
       </View>
       <Divider />
       <View
