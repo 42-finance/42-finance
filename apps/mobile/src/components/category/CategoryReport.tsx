@@ -4,19 +4,27 @@ import {
   calculateBudgetProgress,
   dateToLocal,
   dateToUtc,
-  formatDateInUtc,
+  filterTransactionsByDateFilter,
+  formatDateShortWithDateFilter,
+  formatDateWithDateFilter,
   formatDollars,
   formatDollarsSigned
 } from 'frontend-utils'
 import { mapCategoryTypeToColor } from 'frontend-utils/src/mappers/map-category-type'
-import { groupTransactionsByMonth } from 'frontend-utils/src/transaction/transaction.utils'
-import _ from 'lodash'
+import {
+  groupTransactionsByMonth,
+  groupTransactionsByQuarter,
+  groupTransactionsByWeek,
+  groupTransactionsByYear
+} from 'frontend-utils/src/transaction/transaction.utils'
+import _, { sumBy } from 'lodash'
 import { useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { Divider, ProgressBar, Text, useTheme } from 'react-native-paper'
-import { CategoryType } from 'shared-types'
+import { CategoryType, ReportDateFilter } from 'shared-types'
 
 import { Transaction } from '../../../../../libs/frontend-types/src/transaction.type'
+import { expenseColor, incomeColor } from '../../constants/theme'
 import { MonthlyBarChart } from '../charts/MonthlyBarChart'
 import { View } from '../common/View'
 import { TransactionItem } from '../list-items/TransactionItem'
@@ -26,17 +34,18 @@ type Props = {
   date: Date | null
   budgetAmount?: number
   type: CategoryType
+  dateFilter: ReportDateFilter
 }
 
-export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmount, type }) => {
+export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmount, type, dateFilter }) => {
   const navigation = useNavigation()
   const { colors } = useTheme()
 
   const [selectedDate, setSelectedDate] = useState(date ? dateToUtc(startOfMonth(dateToLocal(date))) : null)
 
   const filteredTransactions = useMemo(
-    () => transactions.filter((t) => !selectedDate || t.date.getUTCMonth() === selectedDate.getUTCMonth()),
-    [transactions, selectedDate]
+    () => (selectedDate ? filterTransactionsByDateFilter(transactions, selectedDate, dateFilter) : transactions),
+    [transactions, selectedDate, dateFilter]
   )
 
   const totalValue = useMemo(
@@ -67,36 +76,39 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
     [filteredTransactions, type]
   )
 
-  const monthTransactions = useMemo(() => groupTransactionsByMonth(transactions), [transactions])
+  const groupedTransactions = useMemo(() => {
+    switch (dateFilter) {
+      case ReportDateFilter.Weekly:
+        return groupTransactionsByWeek(transactions)
+      case ReportDateFilter.Monthly:
+        return groupTransactionsByMonth(transactions)
+      case ReportDateFilter.Quarterly:
+        return groupTransactionsByQuarter(transactions)
+      case ReportDateFilter.Yearly:
+        return groupTransactionsByYear(transactions)
+    }
+  }, [transactions, dateFilter])
 
-  const monthlyData = useMemo(
+  const chartData = useMemo(
     () =>
-      monthTransactions.map(({ key, transactions }) => ({
-        value: Math.abs(_.sumBy(transactions, 'convertedAmount')),
-        frontColor:
-          key.getTime() === selectedDate?.getTime()
-            ? colors.outline
-            : mapCategoryTypeToColor(type ?? CategoryType.Income),
-        label: formatDateInUtc(key, 'MMM').toUpperCase(),
-        date: key
-      })),
-    [monthTransactions, type, selectedDate, colors.outline]
-  )
-
-  const transactionGroups = useMemo(
-    () =>
-      _.chain(filteredTransactions)
-        .groupBy('date')
-        .map((value, key) => ({ title: key, data: value }))
-        .value(),
-    [filteredTransactions]
+      groupedTransactions.map(({ key, transactions }) => {
+        const value = sumBy(transactions, 'convertedAmount')
+        return {
+          value,
+          frontColor:
+            key.getTime() === selectedDate?.getTime() ? colors.outline : value < 0 ? incomeColor : expenseColor,
+          label: formatDateShortWithDateFilter(key, dateFilter),
+          date: key
+        }
+      }),
+    [groupedTransactions, type, selectedDate, colors.outline]
   )
 
   return (
     <ScrollView style={{ marginTop: 5 }}>
       <View style={{ alignSelf: 'center', marginTop: 20 }}>
         <MonthlyBarChart
-          data={monthlyData}
+          data={chartData}
           onSelected={(date) => setSelectedDate((oldDate) => (oldDate?.getTime() === date.getTime() ? null : date))}
           loading={false}
         />
@@ -109,10 +121,12 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
           marginTop: 15
         }}
       >
-        <Text variant="titleMedium">{selectedDate ? formatDateInUtc(selectedDate, 'MMMM yyyy') : 'Last 6 months'}</Text>
+        <Text variant="titleMedium">
+          {selectedDate ? formatDateWithDateFilter(selectedDate, dateFilter) : 'All transactions'}
+        </Text>
       </View>
       <Divider />
-      {budgetAmount != null && (
+      {budgetAmount != null && selectedDate != null && dateFilter === ReportDateFilter.Monthly && (
         <View style={{ paddingHorizontal: 15, paddingVertical: 20, backgroundColor: colors.elevation.level2 }}>
           <View style={{ flexDirection: 'row' }}>
             <Text variant="titleMedium" style={{ flex: 1 }}>
@@ -177,24 +191,21 @@ export const CategoryReport: React.FC<Props> = ({ transactions, date, budgetAmou
         </Text>
         <Text variant="titleMedium">{filteredTransactions.length}</Text>
       </View>
-      {transactionGroups.map((transactionGroup) => (
-        <View key={transactionGroup.title}>
-          <Text style={{ padding: 10, backgroundColor: colors.surface }}>
-            {formatDateInUtc(new Date(transactionGroup.title), 'MMMM d, yyyy')}
-          </Text>
-          {transactionGroup.data.map((transaction) => (
-            <View key={transaction.id} style={{ backgroundColor: colors.elevation.level2 }}>
-              <Divider />
-              <TransactionItem
-                transaction={transaction}
-                onSelected={() => {
-                  navigation.navigate('Transaction', { transactionId: transaction.id })
-                }}
-              />
-            </View>
-          ))}
-        </View>
-      ))}
+      <View style={{ marginTop: 20 }}>
+        {filteredTransactions.map((transaction) => (
+          <View key={transaction.id} style={{ backgroundColor: colors.elevation.level2 }}>
+            <Divider />
+            <TransactionItem
+              transaction={transaction}
+              onSelected={() => {
+                navigation.navigate('Transaction', { transactionId: transaction.id })
+              }}
+              showDate
+              showAccount
+            />
+          </View>
+        ))}
+      </View>
     </ScrollView>
   )
 }

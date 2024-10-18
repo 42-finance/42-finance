@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getTransactions } from 'frontend-api'
 import {
   filterByGraphType,
-  formatDateInUtc,
+  formatDateShortWithDateFilter,
   groupTransactionsByMonth,
   groupTransactionsByQuarter,
   groupTransactionsByWeek,
@@ -19,19 +19,6 @@ import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
 import { MonthlyBarChart } from '../charts/MonthlyBarChart'
 import { View } from '../common/View'
 import { CashFlowInfo } from './CashFlowInfo'
-
-const formatDate = (date: Date, dateFilter: ReportDateFilter) => {
-  switch (dateFilter) {
-    case ReportDateFilter.Weekly:
-      return `W${formatDateInUtc(date, 'w yy').toUpperCase()}`
-    case ReportDateFilter.Monthly:
-      return formatDateInUtc(date, 'MMM yy').toUpperCase()
-    case ReportDateFilter.Quarterly:
-      return `Q${formatDateInUtc(date, 'Q yy').toUpperCase()}`
-    case ReportDateFilter.Yearly:
-      return formatDateInUtc(date, 'yyyy').toUpperCase()
-  }
-}
 
 type Props = {
   onSelected: (date: Date) => void
@@ -75,14 +62,14 @@ export const CashFlowGraph: React.FC<Props> = ({ onSelected, dateFilter, graphTy
     }
   }, [filteredTransactions, dateFilter])
 
-  const monthlyData = useMemo(
+  const chartData = useMemo(
     () =>
       groupedTransactions.map(({ key, transactions }) => {
         const value = sumBy(transactions, 'convertedAmount')
         return {
           value: graphType === ReportGraphType.Expense ? value : -value,
           frontColor: value < 0 ? incomeColor : expenseColor,
-          label: formatDate(key, dateFilter),
+          label: formatDateShortWithDateFilter(key, dateFilter),
           date: key
         }
       }),
@@ -103,7 +90,7 @@ export const CashFlowGraph: React.FC<Props> = ({ onSelected, dateFilter, graphTy
       </View>
       <Divider />
       <View style={{ alignSelf: 'center', marginVertical: 20 }}>
-        <MonthlyBarChart data={monthlyData} onSelected={(date) => onSelected(date)} loading={isFetching} />
+        <MonthlyBarChart data={chartData} onSelected={(date) => onSelected(date)} loading={isFetching} />
       </View>
       <Divider />
       <CashFlowInfo

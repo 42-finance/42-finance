@@ -51,7 +51,7 @@ export type RootStackParamList = {
     amountValue2: number | null
   }
   Budget: undefined
-  Category: { categoryId: number; date?: string }
+  Category: { categoryId: number; date?: string; dateFilter: ReportDateFilter }
   CategoryRule: { eventName: string }
   CashFlow: undefined
   Categories: undefined
@@ -76,10 +76,10 @@ export type RootStackParamList = {
   ForgotPassword: undefined
   Goal: { goalId: number }
   Goals: undefined
-  Group: { groupId: number; date: string }
+  Group: { groupId: number; date: string; dateFilter: ReportDateFilter }
   InviteUser: undefined
   Members: undefined
-  Merchant: { merchantId: number; date: string | null }
+  Merchant: { merchantId: number; date?: string; dateFilter: ReportDateFilter }
   MerchantRule: {
     merchantValueFilter: NameFilter | null
     merchantName: string | null

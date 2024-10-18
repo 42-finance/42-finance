@@ -38,6 +38,7 @@ import {
   Text,
   useTheme
 } from 'react-native-paper'
+import { ReportDateFilter } from 'shared-types'
 
 import { Category } from '../../../../libs/frontend-types/src/category.type'
 import { View } from '../components/common/View'
@@ -275,7 +276,7 @@ export const TransactionScreen: React.FC<RootStackScreenProps<'Transaction'>> = 
           onPress={() =>
             navigation.navigate('Merchant', {
               merchantId: transaction.merchantId,
-              date: transaction.date.toISOString()
+              dateFilter: ReportDateFilter.Monthly
             })
           }
         >
@@ -312,7 +313,7 @@ export const TransactionScreen: React.FC<RootStackScreenProps<'Transaction'>> = 
           onPress={() =>
             navigation.navigate('Merchant', {
               merchantId: transaction.merchantId,
-              date: transaction.date.toISOString()
+              dateFilter: ReportDateFilter.Monthly
             })
           }
         >

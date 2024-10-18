@@ -153,6 +153,8 @@ export const GoalGraph: React.FC<Props> = ({ goal }) => {
               setSelectedEndDate(netWorthHistory[pointerIndex].date)
             }
           }}
+          curved
+          curveType={1}
         />
       </View>
     </>
