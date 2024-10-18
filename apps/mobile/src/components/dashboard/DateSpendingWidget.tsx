@@ -1,7 +1,7 @@
 import { Card, Divider, customText } from 'react-native-paper'
-import { ReportDateFilter } from 'shared-types'
+import { DateRangeFilter } from 'shared-types'
 
-import { DateSpending } from '../stats/DateSpending'
+import { SpendingGraph } from '../stats/SpendingGraph'
 
 export const DateSpendingWidget = () => {
   const Text = customText<'titleLargeBold'>()
@@ -13,7 +13,7 @@ export const DateSpendingWidget = () => {
           Spending By Date
         </Text>
         <Divider style={{ marginTop: 15 }} />
-        <DateSpending dateFilter={ReportDateFilter.Monthly} />
+        <SpendingGraph widthReduction={20} dateRangeFilter={DateRangeFilter.OneMonth} />
       </Card.Content>
     </Card>
   )

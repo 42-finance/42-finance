@@ -9,6 +9,7 @@ import { TouchableOpacity } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Avatar, Button, Divider, ProgressBar, Text, useTheme } from 'react-native-paper'
+import { DashboardWidgetType } from 'shared-types'
 
 import { ActivityIndicator } from '../components/common/ActivityIndicator'
 import { View } from '../components/common/View'
@@ -46,8 +47,14 @@ export const DashboardScreen = ({ navigation }: RootStackScreenProps<'Dashboard'
     queryFn: async () => {
       const res = await getDashboardWidgets()
       if (res.ok && res.parsedBody?.payload) {
-        setSelectedWidgets(res.parsedBody.payload)
-        return res.parsedBody.payload
+        const payload = res.parsedBody?.payload
+        const widgetTypes = Object.values(DashboardWidgetType)
+        const missingWidgetTypes = widgetTypes.filter((widgetType) =>
+          payload.every((widget) => widget.type !== widgetType)
+        )
+        const allWidgets = payload.concat(missingWidgetTypes.map((w) => ({ type: w, isSelected: true, order: 0 })))
+        setSelectedWidgets(allWidgets)
+        return allWidgets
       }
       return []
     },

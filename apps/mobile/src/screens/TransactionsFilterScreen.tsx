@@ -1,7 +1,6 @@
-import { AntDesign, Feather } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import { Account, Category, Merchant, Tag } from 'frontend-types'
 import { eventEmitter } from 'frontend-utils'
-import { useTransactionsFilterContext } from 'frontend-utils/src/contexts/transactions-filter.context'
 import { mapAmount } from 'frontend-utils/src/mappers/map-amount-filter'
 import * as React from 'react'
 import { useEffect, useMemo } from 'react'
@@ -10,31 +9,32 @@ import { ScrollView, TouchableOpacity } from 'react-native'
 import { Divider, Text, useTheme } from 'react-native-paper'
 import { AmountFilter, TransactionAmountType } from 'shared-types'
 
-import { AccountFilterSelection } from '../components/account/AccountFilterSelection'
-import { CategoryFilterSelection } from '../components/category/CategoryFilterSelection'
+import { AccountFilter } from '../components/account/AccountFilter'
+import { CategoryFilter } from '../components/category/CategoryFilter'
 import { BottomActionView } from '../components/common/BottomActionView'
 import { DateField } from '../components/common/DateField'
 import { PaperPickerField } from '../components/common/PaperPickerField'
 import { View } from '../components/common/View'
-import { MerchantFilterSelection } from '../components/merchant/MerchantFilterSelection'
-import { TagFilterSelection } from '../components/tag/TagFilterSelection'
+import { MerchantFilter } from '../components/merchant/MerchantFilter'
+import { TagFilter } from '../components/tag/TagFilter'
+import { useTransactionsFilterContext } from '../contexts/transactions-filter.context'
 import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 import { AmountFormFields } from './SelectAmountsScreen'
 
 export type TransactionFilterFormFields = {
-  accounts: Account[]
+  accounts: string[]
   amountType: TransactionAmountType | null
   amountFilter: AmountFilter | null
   amountValue: number | null
   amountValue2: number | null
-  categories: Category[]
+  categories: number[]
   startDate: Date | null
   endDate: Date | null
-  merchants: Merchant[]
+  merchants: number[]
   hidden: boolean | null
   needsReview: boolean | null
-  tags: Tag[]
+  tags: number[]
 }
 
 export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'TransactionsFilter'>) => {
@@ -132,9 +132,9 @@ export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'T
     const onCategorySelected = (category: Category) => {
       setValue(
         'categories',
-        categories.find((c) => c.id === category.id)
-          ? categories.filter((c) => c.id !== category.id)
-          : [...categories, category]
+        categories.find((c) => c === category.id)
+          ? categories.filter((c) => c !== category.id)
+          : [...categories, category.id]
       )
     }
 
@@ -149,9 +149,9 @@ export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'T
     const onMerchantSelected = (merchant: Merchant) => {
       setValue(
         'merchants',
-        merchants.find((c) => c.id === merchant.id)
-          ? merchants.filter((c) => c.id !== merchant.id)
-          : [...merchants, merchant]
+        merchants.find((c) => c === merchant.id)
+          ? merchants.filter((c) => c !== merchant.id)
+          : [...merchants, merchant.id]
       )
     }
 
@@ -166,7 +166,7 @@ export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'T
     const onAccountSelected = (account: Account) => {
       setValue(
         'accounts',
-        accounts.find((c) => c.id === account.id) ? accounts.filter((c) => c.id !== account.id) : [...accounts, account]
+        accounts.find((c) => c === account.id) ? accounts.filter((c) => c !== account.id) : [...accounts, account.id]
       )
     }
 
@@ -194,7 +194,7 @@ export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'T
 
   useEffect(() => {
     const onTagSelected = (tag: Tag) => {
-      setValue('tags', tags.find((c) => c.id === tag.id) ? tags.filter((c) => c.id !== tag.id) : [...tags, tag])
+      setValue('tags', tags.find((c) => c === tag.id) ? tags.filter((c) => c !== tag.id) : [...tags, tag.id])
     }
 
     eventEmitter.on('onTagFilterSelected', onTagSelected)
@@ -254,117 +254,45 @@ export const TransactionsFilterScreen = ({ navigation }: RootStackScreenProps<'T
             marginTop: 5
           }}
         />
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>
-          <Text variant="bodyMedium" style={{ flex: 1 }}>
-            Accounts
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('SelectAccount', {
-                accountIds: accounts.map((a) => a.id),
-                eventName: 'onAccountFilterSelected',
-                multiple: true
-              })
-            }
-          >
-            <AntDesign name="pluscircleo" size={24} color={colors.onSurface} />
-          </TouchableOpacity>
-        </View>
-        {accounts.map((account) => (
-          <AccountFilterSelection
-            key={account.id}
-            account={account}
-            onDelete={() =>
-              setValue(
-                'accounts',
-                accounts.filter((c) => c.id !== account.id)
-              )
-            }
-          />
-        ))}
+        <AccountFilter
+          accountIds={accounts}
+          onDelete={(accountId) => {
+            setValue(
+              'accounts',
+              accounts.filter((c) => c !== accountId)
+            )
+          }}
+        />
         <Divider />
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>
-          <Text variant="bodyMedium" style={{ flex: 1 }}>
-            Categories
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('SelectCategory', {
-                categoryIds: categories.map((c) => c.id),
-                eventName: 'onCategoryFilterSelected',
-                multiple: true
-              })
-            }
-          >
-            <AntDesign name="pluscircleo" size={24} color={colors.onSurface} />
-          </TouchableOpacity>
-        </View>
-        {categories.map((category) => (
-          <CategoryFilterSelection
-            key={category.id}
-            category={category}
-            onDelete={() =>
-              setValue(
-                'categories',
-                categories.filter((c) => c.id !== category.id)
-              )
-            }
-          />
-        ))}
+        <CategoryFilter
+          categoryIds={categories}
+          onDelete={(categoryId) =>
+            setValue(
+              'categories',
+              categories.filter((c) => c !== categoryId)
+            )
+          }
+        />
         <Divider />
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>
-          <Text variant="bodyMedium" style={{ flex: 1 }}>
-            Merchants
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('SelectMerchant', {
-                merchantIds: merchants.map((m) => m.id),
-                eventName: 'onMerchantFilterSelected',
-                multiple: true
-              })
-            }
-          >
-            <AntDesign name="pluscircleo" size={24} color={colors.onSurface} />
-          </TouchableOpacity>
-        </View>
-        {merchants.map((merchant) => (
-          <MerchantFilterSelection
-            key={merchant.id}
-            merchant={merchant}
-            onDelete={() =>
-              setValue(
-                'merchants',
-                merchants.filter((c) => c.id !== merchant.id)
-              )
-            }
-          />
-        ))}
+        <MerchantFilter
+          merchantIds={merchants}
+          onDelete={(merchantId) =>
+            setValue(
+              'merchants',
+              merchants.filter((c) => c !== merchantId)
+            )
+          }
+        />
         <Divider />
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>
-          <Text variant="bodyMedium" style={{ flex: 1 }}>
-            Tags
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('SelectTag', { tagIds: tags.map((t) => t.id), eventName: 'onTagFilterSelected' })
-            }
-          >
-            <AntDesign name="pluscircleo" size={24} color={colors.onSurface} />
-          </TouchableOpacity>
-        </View>
-        {tags.map((tag) => (
-          <TagFilterSelection
-            key={tag.id}
-            tag={tag}
-            onDelete={() =>
-              setValue(
-                'tags',
-                tags.filter((c) => c.id !== tag.id)
-              )
-            }
-          />
-        ))}
+        <TagFilter
+          tagIds={tags}
+          onDelete={(tagId) =>
+            setValue(
+              'tags',
+              tags.filter((c) => c !== tagId)
+            )
+          }
+        />
         <Divider />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, marginVertical: 10 }}>
           <Text variant="bodyMedium" style={{ flex: 1 }}>

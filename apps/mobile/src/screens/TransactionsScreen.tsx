@@ -3,7 +3,6 @@ import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import { endOfDay, startOfDay } from 'date-fns'
 import { ApiQuery, exportTransactions, getTransactions, getTransactionsStats } from 'frontend-api'
 import { dateToUtc, formatDollars, setMessage } from 'frontend-utils'
-import { useTransactionsFilterContext } from 'frontend-utils/src/contexts/transactions-filter.context'
 import { useDebounce } from 'frontend-utils/src/hooks/use-debounce.hook'
 import _ from 'lodash'
 import * as React from 'react'
@@ -17,6 +16,7 @@ import { BottomActionView } from '../components/common/BottomActionView'
 import { View } from '../components/common/View'
 import { TransactionsList } from '../components/list/TransactionsList'
 import { incomeColor } from '../constants/theme'
+import { useTransactionsFilterContext } from '../contexts/transactions-filter.context'
 import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { useRefetchOnFocus } from '../hooks/use-refetch-on-focus.hook'
@@ -61,10 +61,10 @@ export const TransactionsScreen = ({ navigation }: RootStackScreenProps<'Transac
 
   const { mutate: exportMutation, isPending: isLoadingExport } = useMutation({
     mutationFn: async () => {
-      const accountIds = accounts.length > 0 ? accounts.map((c) => c.id) : null
-      const categoryIds = categories.length > 0 ? categories.map((c) => c.id) : null
-      const merchantIds = merchants.length > 0 ? merchants.map((c) => c.id) : null
-      const tagIds = tags.length > 0 ? tags.map((c) => c.id) : null
+      const accountIds = accounts.length > 0 ? accounts : null
+      const categoryIds = categories.length > 0 ? categories : null
+      const merchantIds = merchants.length > 0 ? merchants : null
+      const tagIds = tags.length > 0 ? tags : null
       const res = await exportTransactions({
         startDate,
         endDate,
@@ -152,10 +152,10 @@ export const TransactionsScreen = ({ navigation }: RootStackScreenProps<'Transac
       tags
     ],
     queryFn: async () => {
-      const accountIds = accounts.length > 0 ? accounts.map((c) => c.id) : null
-      const categoryIds = categories.length > 0 ? categories.map((c) => c.id) : null
-      const merchantIds = merchants.length > 0 ? merchants.map((c) => c.id) : null
-      const tagIds = tags.length > 0 ? tags.map((c) => c.id) : null
+      const accountIds = accounts.length > 0 ? accounts : null
+      const categoryIds = categories.length > 0 ? categories : null
+      const merchantIds = merchants.length > 0 ? merchants : null
+      const tagIds = tags.length > 0 ? tags : null
       const res = await getTransactions({
         startDate: startDate ? dateToUtc(startOfDay(startDate)) : undefined,
         endDate: endDate ? dateToUtc(endOfDay(endDate)) : undefined,
@@ -237,10 +237,10 @@ export const TransactionsScreen = ({ navigation }: RootStackScreenProps<'Transac
       if (filterCount === 0 && _.isEmpty(searchParam)) {
         return null
       }
-      const accountIds = accounts.length > 0 ? accounts.map((c) => c.id) : null
-      const categoryIds = categories.length > 0 ? categories.map((c) => c.id) : null
-      const merchantIds = merchants.length > 0 ? merchants.map((c) => c.id) : null
-      const tagIds = tags.length > 0 ? tags.map((c) => c.id) : null
+      const accountIds = accounts.length > 0 ? accounts : null
+      const categoryIds = categories.length > 0 ? categories : null
+      const merchantIds = merchants.length > 0 ? merchants : null
+      const tagIds = tags.length > 0 ? tags : null
       const res = await getTransactionsStats({
         startDate: startDate ? dateToUtc(startOfDay(startDate)) : undefined,
         endDate: endDate ? dateToUtc(endOfDay(endDate)) : undefined,

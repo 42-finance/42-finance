@@ -17,6 +17,7 @@ import { CashFlowFilter, CategoryType, ReportDateFilter } from 'shared-types'
 
 import { useUserTokenContext } from '../../contexts/user-token.context'
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
+import { NoData } from '../common/NoData'
 import { View } from '../common/View'
 
 type Props = {
@@ -69,8 +70,13 @@ export const CategorySpendingGraph: React.FC<Props> = ({ dateFilter }) => {
   )
 
   return (
-    <View style={{ position: 'relative', alignItems: 'center', marginVertical: 20 }}>
+    <View style={{ alignItems: 'center', marginVertical: 20 }}>
       <Text variant="titleLarge">{formatDateLongWithDateFilter(date, dateFilter)}</Text>
+      {expenseGroupedTransactions.length === 0 && (
+        <View style={{ marginTop: 15 }}>
+          <NoData text="No transactions" />
+        </View>
+      )}
       <PieChart
         data={expenseGroupedTransactions}
         donut
