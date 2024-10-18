@@ -2,12 +2,10 @@
 node_modules/
 dist/
 .expo
-apps/api/transactions.json
 coverage
 .idea
 *.tar.gz
 build
-apps/mobile/google-services.json
-apps/mobile/renty-416515-704b21b4cde9.json
-apps/mobile/finance-62c44-firebase-adminsdk-xg83n-62ea8e2dd2.json
-apps/mobile/finance-421417-3eb6d2189802.json
+.DS_Store
+android
+ios
