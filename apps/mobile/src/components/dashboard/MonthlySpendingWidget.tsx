@@ -58,7 +58,7 @@ export const MonthlySpendingWidget: React.FC = () => {
   )
 
   const lastMonthSpendingData = useMemo(() => {
-    const data = lastMonthSpending.map((v) => Math.max(0, v))
+    const data = lastMonthSpending.map(({ value }) => Math.max(0, value))
     if (data.length === 1) {
       data.push(data[0])
     }
@@ -66,7 +66,7 @@ export const MonthlySpendingWidget: React.FC = () => {
   }, [lastMonthSpending])
 
   const thisMonthSpendingData = useMemo(() => {
-    const data = thisMonthSpending.map((v) => Math.max(0, v))
+    const data = thisMonthSpending.map(({ value }) => Math.max(0, value))
     if (data.length === 1) {
       data.push(data[0])
     }
@@ -80,12 +80,12 @@ export const MonthlySpendingWidget: React.FC = () => {
       hideDataPoint: index !== data.length - 1,
       textColor: colors.primary,
       textShiftY: -10,
-      textShiftX: -4.5 * lastValueTextLength
+      textShiftX: data.length > 10 ? -4.5 * lastValueTextLength : 0
     }))
   }, [thisMonthSpending])
 
   const maxValue = useMemo(
-    () => Math.max(_.max(thisMonthSpending) ?? 0, _.max(lastMonthSpending) ?? 0),
+    () => Math.max(_.maxBy(thisMonthSpending, 'value')?.value ?? 0, _.maxBy(lastMonthSpending, 'value')?.value ?? 0),
     [thisMonthSpending, lastMonthSpending]
   )
 

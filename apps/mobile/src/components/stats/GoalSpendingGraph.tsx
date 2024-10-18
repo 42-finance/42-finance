@@ -1,8 +1,9 @@
+import { Feather } from '@expo/vector-icons'
 import { useQuery } from '@tanstack/react-query'
 import { endOfDay, startOfDay } from 'date-fns'
 import { ApiQuery, getTransactions } from 'frontend-api'
 import { Goal } from 'frontend-types'
-import { calculateGoalProgress, groupTransactionsByDay } from 'frontend-utils'
+import { calculateGoalProgress, getDailySpending, valueChangeColor, valueChangeIcon } from 'frontend-utils'
 import { dateToLocal, dateToUtc, formatDateInUtc, todayInUtc } from 'frontend-utils/src/date/date.utils'
 import { formatDollars, formatDollarsSigned } from 'frontend-utils/src/invoice/invoice.utils'
 import _ from 'lodash'
@@ -10,7 +11,7 @@ import { useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { ProgressBar, Text, useTheme } from 'react-native-paper'
-import { CategoryType, GoalType } from 'shared-types'
+import { AccountType, CategoryType, GoalType } from 'shared-types'
 
 import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
@@ -25,6 +26,7 @@ export const GoalSpendingGraph: React.FC<Props> = ({ goal }) => {
 
   const [today] = useState(todayInUtc())
   const [spendingOverride, setSpendingOverride] = useState<number | null>(null)
+  const [spendingOnDate, setSpendingOnDate] = useState<number | null>(null)
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null)
   const [startDate] = useState(dateToUtc(startOfDay(dateToLocal(goal.startDate ?? today))))
   const [endDate] = useState(dateToUtc(endOfDay(dateToLocal(goal.targetDate ?? today))))
@@ -51,20 +53,35 @@ export const GoalSpendingGraph: React.FC<Props> = ({ goal }) => {
 
   const spendingTotal = useMemo(() => _.sumBy(expenseTransactions, 'convertedAmount'), [expenseTransactions])
 
-  const groupedTransactions = useMemo(() => groupTransactionsByDay(expenseTransactions), [expenseTransactions])
+  const graphEndDate = useMemo(() => (endDate.getTime() > today.getTime() ? today : endDate), [endDate, today])
 
-  const spendingByDay = useMemo(
-    () =>
-      groupedTransactions.map(({ key, transactions }) => ({
-        date: key,
-        value: _.sumBy(transactions, 'convertedAmount')
-      })),
-    [groupedTransactions]
+  const dailySpending = useMemo(
+    () => getDailySpending(expenseTransactions, startDate, graphEndDate),
+    [expenseTransactions]
   )
 
-  const graphData = useMemo(() => spendingByDay.map(({ value }) => ({ value: Math.max(0, value) })), [spendingByDay])
+  const spendingData = useMemo(() => {
+    const data = dailySpending.map(({ value, date, dailyValue }) => ({ value, date, dailyValue }))
+    if (data.length === 1) {
+      data.push(data[0])
+    }
+    return data
+  }, [dailySpending])
 
-  const spendingValue = useMemo(() => spendingOverride ?? spendingTotal, [spendingByDay, spendingOverride])
+  const spendingValue = useMemo(() => spendingOverride ?? spendingTotal, [spendingData, spendingOverride])
+
+  const spendingOnDateValue = useMemo(() => {
+    if (spendingOnDate != null) {
+      return {
+        value: spendingOnDate,
+        date: selectedEndDate
+      }
+    }
+    return {
+      value: spendingData[spendingData.length - 1]?.dailyValue ?? 0,
+      date: today
+    }
+  }, [spendingOnDate, spendingData])
 
   const width = Dimensions.get('window').width
 
@@ -84,10 +101,25 @@ export const GoalSpendingGraph: React.FC<Props> = ({ goal }) => {
           marginBottom: 15
         }}
       >
+        <Feather
+          name={valueChangeIcon(spendingOnDateValue.value)}
+          size={20}
+          color={valueChangeColor(spendingOnDateValue.value, AccountType.Liability)}
+          style={{ marginTop: 1, marginRight: 2 }}
+        />
+        <Text
+          variant="bodyMedium"
+          style={{
+            color: valueChangeColor(spendingOnDateValue.value, AccountType.Liability)
+          }}
+          numberOfLines={1}
+        >
+          {formatDollars(spendingOnDateValue.value, currencyCode)}
+        </Text>
         <Text variant="bodyMedium" style={{ marginLeft: 5, color: colors.outline }}>
           {selectedEndDate == null
             ? `${formatDateInUtc(startDate, 'MMM d, yyyy')} - ${formatDateInUtc(endDate, 'MMM d, yyyy')}`
-            : formatDateInUtc(selectedEndDate, 'MMM d, yyyy')}
+            : `${formatDateInUtc(startDate, 'MMM d, yyyy')} - ${formatDateInUtc(selectedEndDate, 'MMM d, yyyy')}`}
         </Text>
       </View>
       <View style={{ flex: 1, padding: 15 }}>
@@ -113,7 +145,7 @@ export const GoalSpendingGraph: React.FC<Props> = ({ goal }) => {
       <View style={{ marginLeft: -10 }}>
         <LineChart
           initialSpacing={0}
-          data={graphData}
+          data={spendingData}
           hideDataPoints
           thickness={3}
           hideRules
@@ -138,9 +170,11 @@ export const GoalSpendingGraph: React.FC<Props> = ({ goal }) => {
             if (pointerIndex === -1) {
               setSpendingOverride(null)
               setSelectedEndDate(null)
+              setSpendingOnDate(null)
             } else {
-              setSpendingOverride(spendingByDay[pointerIndex].value)
-              setSelectedEndDate(spendingByDay[pointerIndex].date)
+              setSpendingOverride(spendingData[pointerIndex].value)
+              setSelectedEndDate(spendingData[pointerIndex].date)
+              setSpendingOnDate(spendingData[pointerIndex].dailyValue)
             }
           }}
           curved
