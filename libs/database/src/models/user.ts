@@ -2,6 +2,7 @@ import { CurrencyCode } from 'shared-types'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import { BaseEntity } from './base-entity'
+import { DashboardWidget } from './dashboard-widget'
 import { HouseholdUser } from './household-user'
 import { NotificationSetting } from './notification-setting'
 import { NotificationToken } from './notification-token'
@@ -72,4 +73,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => NotificationSetting, (notificationSetting) => notificationSetting.user)
   notificationSettings!: NotificationSetting[]
+
+  @OneToMany(() => DashboardWidget, (dashboardWidget) => dashboardWidget.user)
+  dashboardWidgets!: DashboardWidget[]
 }

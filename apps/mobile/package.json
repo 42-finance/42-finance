@@ -57,6 +57,7 @@
     "react-native": "0.74.5",
     "react-native-calendars": "^1.1306.0",
     "react-native-currency-input": "^1.1.1",
+    "react-native-draggable-flatlist": "^4.0.1",
     "react-native-drawer-layout": "^3.2.2",
     "react-native-floating-label-input": "^1.4.3",
     "react-native-gesture-handler": "~2.16.1",

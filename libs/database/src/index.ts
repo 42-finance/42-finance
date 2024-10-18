@@ -9,6 +9,7 @@ import { BillPayment } from './models/bill-payment'
 import { Budget } from './models/budget'
 import { Category } from './models/category'
 import { Connection } from './models/connection'
+import { DashboardWidget } from './models/dashboard-widget'
 import { EntityType } from './models/entity-type'
 import { ExchangeRate } from './models/exchange-rate'
 import { Expense } from './models/expense'
@@ -49,6 +50,7 @@ export {
   Category,
   Connection,
   createOrUpdateRecurringTransaction,
+  DashboardWidget,
   dataSource,
   EntityType,
   ExchangeRate,

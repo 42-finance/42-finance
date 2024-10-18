@@ -11,10 +11,6 @@ export type EditUserRequest = {
   name?: string
   phone?: string | null
   currencyCode?: CurrencyCode
-  hideGettingStarted?: boolean
-  hideWhatsNew?: boolean
-  hideCommunity?: boolean
-  hideOpenSource?: boolean
 }
 
 export const editUser = async (body: EditUserRequest) => patch<HTTPResponseBody<User>>(`${config.apiUrl}/users`, body)

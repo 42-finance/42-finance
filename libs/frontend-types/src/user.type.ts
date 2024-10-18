@@ -17,8 +17,4 @@ export type User = {
   invitations: UserInvite[]
   accountSetup: AccountSetup
   hasPassword: boolean
-  hideGettingStarted: boolean
-  hideWhatsNew: boolean
-  hideCommunity: boolean
-  hideOpenSource: boolean
 }

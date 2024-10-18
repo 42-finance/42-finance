@@ -14,7 +14,7 @@ import { useUserTokenContext } from '../../contexts/user-token.context'
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
 import { View } from '../common/View'
 
-export const Spending: React.FC = () => {
+export const MonthlySpendingWidget: React.FC = () => {
   const { colors } = useTheme()
   const { currencyCode } = useUserTokenContext()
 
