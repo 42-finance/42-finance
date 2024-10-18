@@ -41,10 +41,7 @@ const getRecurringDates = (
         currentDate.setUTCDate(currentDate.getUTCDate() + 14)
         break
       case Frequency.SemiMonthly:
-        currentDate.setUTCDate(
-          currentDate.getUTCDate() +
-            (currentDate.getUTCDate() <= 15 ? 15 - currentDate.getUTCDate() : 30 - currentDate.getUTCDate())
-        )
+        currentDate.setUTCDate(currentDate.getUTCDate() + 15)
         break
       case Frequency.MonthlyExactDay: {
         const month = currentDate.getUTCMonth()

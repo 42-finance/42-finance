@@ -91,7 +91,9 @@ export const RecurringTransactionsScreen = ({ navigation }: RootStackScreenProps
     for (const date of dates) {
       const formattedDate = formatDateInUtc(date, 'yyyy-MM-dd')
       if (marked[formattedDate]) {
-        marked[formattedDate].dots.push({ color: colors.primary })
+        if (marked[formattedDate].dots.length < 3) {
+          marked[formattedDate].dots.push({ color: colors.primary })
+        }
       } else {
         marked[formattedDate] = { dots: [{ color: colors.primary }] }
       }

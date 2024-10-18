@@ -5,7 +5,7 @@ import { ApiQuery, getRecurringTransactions } from 'frontend-api'
 import { RecurringTransaction } from 'frontend-types'
 import { dateToUtc, getNextRecurringDate, getRecurringDatesForMonth } from 'frontend-utils'
 import { useMemo } from 'react'
-import { Button, Card, Divider, Text, useTheme } from 'react-native-paper'
+import { Button, Card, Divider, Text } from 'react-native-paper'
 
 import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
 import { NoData } from '../common/NoData'
@@ -14,7 +14,6 @@ import { RecurringTransactionItem } from '../list-items/RecurringTransactionItem
 
 export const RecurringTransactionsWidget = () => {
   const navigation = useNavigation()
-  const { colors } = useTheme()
 
   const { data: transactions = [], refetch } = useQuery({
     queryKey: [ApiQuery.RecurringTransactions],
