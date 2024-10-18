@@ -3,6 +3,8 @@ import { ReactNode } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
+import { View } from '../common/View'
+
 type Props = {
   label: string
   icon: ReactNode
@@ -22,7 +24,7 @@ export const SettingsItem: React.FC<Props> = ({ label, icon, onPress }) => {
         alignItems: 'center'
       }}
     >
-      {icon}
+      <View style={{ width: 20, alignItems: 'center' }}>{icon}</View>
       <Text variant="titleMedium" style={{ marginStart: 15, flex: 1 }}>
         {label}
       </Text>

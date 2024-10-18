@@ -28,7 +28,7 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={{ marginRight: 15 }}>
           <Feather name="settings" size={24} color={colors.onSurface} />
         </TouchableOpacity>
       ),

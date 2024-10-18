@@ -90,6 +90,12 @@ export const SettingsScreen: React.FC<RootStackScreenProps<'Settings'>> = ({ nav
         HOUSEHOLD
       </Text>
       <SettingsItem
+        label="Bills"
+        icon={<FontAwesome6 name="file-invoice-dollar" size={20} color={colors.onSurface} />}
+        onPress={() => navigation.navigate('Bills')}
+      />
+      <Divider />
+      <SettingsItem
         label="Categories"
         icon={<AntDesign name="appstore-o" size={20} color={colors.onSurface} />}
         onPress={() => navigation.navigate('Categories')}

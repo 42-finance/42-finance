@@ -88,28 +88,24 @@ export const AccountForm: React.FC<Props> = ({ onSubmit, accountInfo, canChangeC
             options={accountSubTypes}
           />
         </div>
-        {canChangeCurrency && (
-          <>
-            <div>
-              <FormInput
-                control={control}
-                errors={errors.currentBalance?.message}
-                label="Balance"
-                name="currentBalance"
-                type="text"
-              />
-            </div>
-            <div>
-              <FormSelect
-                control={control}
-                errors={errors.currencyCode?.message}
-                label="Currency"
-                name="currencyCode"
-                options={currencyCodes}
-              />
-            </div>
-          </>
-        )}
+        <div>
+          <FormInput
+            control={control}
+            errors={errors.currentBalance?.message}
+            label="Balance"
+            name="currentBalance"
+            type="text"
+          />
+        </div>
+        <div>
+          <FormSelect
+            control={control}
+            errors={errors.currencyCode?.message}
+            label="Currency"
+            name="currencyCode"
+            options={currencyCodes}
+          />
+        </div>
       </div>
     </form>
   )
