@@ -10,6 +10,7 @@ import { Button, Dialog, Divider, Portal, ProgressBar, Text, useTheme } from 're
 import { AccountSubType, DateRangeFilter } from 'shared-types'
 
 import { DateRangePicker } from '../components/common/DateRangePicker'
+import { NoData } from '../components/common/NoData'
 import { View } from '../components/common/View'
 import { BillItem } from '../components/list-items/BillItem'
 import { TransactionItem } from '../components/list-items/TransactionItem'
@@ -221,6 +222,11 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
           </Button>
         </View>
         <Divider />
+        {transactions.length === 0 && (
+          <View style={{ backgroundColor: colors.elevation.level2 }}>
+            <NoData text="No transactions" />
+          </View>
+        )}
         {transactions.map((transaction) => (
           <View key={transaction.id}>
             <Divider />

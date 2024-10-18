@@ -126,25 +126,27 @@ export const BudgetScreen = ({ navigation }: RootStackScreenProps<'Budget'>) => 
         {budgetGroups.map(({ type, groups }) => (
           <View key={type}>
             {renderHeader(mapCategoryType(type))}
-            {groups.map((group) => (
-              <BudgetGroup
-                key={group.id}
-                group={group}
-                budgets={budgets}
-                transactions={transactions}
-                onCategoryPressed={(category) => {
-                  if (editCategory?.id === category.id) {
+            {groups
+              .filter((group) => !group.hideFromBudget)
+              .map((group) => (
+                <BudgetGroup
+                  key={group.id}
+                  group={group}
+                  budgets={budgets}
+                  transactions={transactions}
+                  onCategoryPressed={(category) => {
+                    if (editCategory?.id === category.id) {
+                      setEditCategory(null)
+                    } else {
+                      setEditCategory(category)
+                    }
+                  }}
+                  onCategoryEdited={() => {
                     setEditCategory(null)
-                  } else {
-                    setEditCategory(category)
-                  }
-                }}
-                onCategoryEdited={() => {
-                  setEditCategory(null)
-                }}
-                editingCategoryId={editCategory?.id ?? null}
-              />
-            ))}
+                  }}
+                  editingCategoryId={editCategory?.id ?? null}
+                />
+              ))}
           </View>
         ))}
       </ScrollView>

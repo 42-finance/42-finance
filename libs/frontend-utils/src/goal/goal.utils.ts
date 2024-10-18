@@ -43,7 +43,7 @@ export const calculateGoalTargetDate = (
   accounts: Account[],
   amount: number
 ) => {
-  if (budgetAmount == null) {
+  if (budgetAmount == null || budgetAmount === 0) {
     return null
   }
   const accountsValue = accounts.reduce((acc, account) => acc + account.convertedBalance, 0)

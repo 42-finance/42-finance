@@ -85,7 +85,7 @@ export const BudgetProgress: React.FC<Props> = ({ type, backgroundColor }) => {
   const typeTransactions = useMemo(
     () =>
       transactions
-        .filter((t) => t.category.group.type === type)
+        .filter((t) => t.category.group.type === type && !t.category.hideFromBudget && !t.category.group.hideFromBudget)
         .map((t) => ({ ...t, convertedAmount: type === CategoryType.Income ? -t.convertedAmount : t.convertedAmount })),
     [transactions, type]
   )
