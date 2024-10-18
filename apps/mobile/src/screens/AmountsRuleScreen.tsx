@@ -9,12 +9,14 @@ import { AmountFilter, TransactionAmountType } from 'shared-types'
 import { CurrencyInput } from '../components/common/CurrencyInput'
 import { PaperPickerField } from '../components/common/PaperPickerField'
 import { View } from '../components/common/View'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
 export const AmountsRuleScreen = ({ route }: RootStackScreenProps<'AmountsRule'>) => {
   const { amountType, amountFilter, amountValue, amountValue2 } = route.params
 
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const { control, setValue, watch } = useForm({
     defaultValues: {
@@ -107,6 +109,7 @@ export const AmountsRuleScreen = ({ route }: RootStackScreenProps<'AmountsRule'>
             marginTop: 5,
             marginHorizontal: 5
           }}
+          currencyCode={currencyCode}
         />
       )}
       {type && filter === AmountFilter.Between && (
@@ -118,6 +121,7 @@ export const AmountsRuleScreen = ({ route }: RootStackScreenProps<'AmountsRule'>
             marginTop: 5,
             marginHorizontal: 5
           }}
+          currencyCode={currencyCode}
         />
       )}
     </View>

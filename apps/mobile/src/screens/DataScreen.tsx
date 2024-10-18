@@ -9,7 +9,7 @@ import { ScrollView } from 'react-native'
 import { Button, Dialog, Portal, Text, useTheme } from 'react-native-paper'
 
 import { View } from '../components/common/View'
-import { SettingsItem } from '../components/settings/SettingsItems'
+import { SettingsItem } from '../components/settings/SettingsItem'
 import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 

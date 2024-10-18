@@ -4,6 +4,7 @@ import {
   AmountFilter,
   CategoryType,
   NameFilter,
+  NotificationType,
   ReportDateFilter,
   TransactionAmountType
 } from 'shared-types'
@@ -100,6 +101,12 @@ export type RootStackParamList = {
   Profile: undefined
   ManagePayments: undefined
   Merchants: undefined
+  NotificationSetting: {
+    type: NotificationType
+    sendPushNotification: boolean
+    sendEmail: boolean
+    minimumAmount: number | null
+  }
   NotificationSettings: undefined
   RentalUnit: { rentalUnitId: number }
   Tags: undefined
@@ -122,8 +129,6 @@ export type RootStackParamList = {
   Settings: undefined
   Subscription: undefined
   SplitTransaction: { transactionId: string }
-  CreateRotessaClient: undefined
-  CreateRotessaCustomer: { tenantId: number }
   Expenses: { propertyId?: number; rentalUnitId?: number }
   Expense: { expenseId: number }
   EditExpense: { expenseId: number }

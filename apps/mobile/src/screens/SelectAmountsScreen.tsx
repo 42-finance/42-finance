@@ -9,6 +9,7 @@ import { AmountFilter, TransactionAmountType } from 'shared-types'
 import { CurrencyInput } from '../components/common/CurrencyInput'
 import { PaperPickerField } from '../components/common/PaperPickerField'
 import { View } from '../components/common/View'
+import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
 export type AmountFormFields = {
@@ -22,6 +23,7 @@ export const SelectAmountsScreen = ({ route }: RootStackScreenProps<'SelectAmoun
   const { eventName, defaultAmountType, defaultAmountFilter, defaultAmountValue, defaultAmountValue2 } = route.params
 
   const { colors } = useTheme()
+  const { currencyCode } = useUserTokenContext()
 
   const { control, setValue, watch } = useForm<AmountFormFields>({
     defaultValues: {
@@ -114,6 +116,7 @@ export const SelectAmountsScreen = ({ route }: RootStackScreenProps<'SelectAmoun
             marginTop: 5,
             marginHorizontal: 5
           }}
+          currencyCode={currencyCode}
         />
       )}
       {amountType && amountFilter === AmountFilter.Between && (
@@ -125,6 +128,7 @@ export const SelectAmountsScreen = ({ route }: RootStackScreenProps<'SelectAmoun
             marginTop: 5,
             marginHorizontal: 5
           }}
+          currencyCode={currencyCode}
         />
       )}
     </View>

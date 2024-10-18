@@ -3,11 +3,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigation } from '@react-navigation/native'
 import { eventEmitter } from 'frontend-utils'
 import { formatAccountName } from 'frontend-utils/src/account/account.utils'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
 import { View } from 'react-native'
 import { Button, SegmentedButtons, useTheme } from 'react-native-paper'
-import { CurrencyCode, TransactionAmountType } from 'shared-types'
+import { TransactionAmountType } from 'shared-types'
 import * as Yup from 'yup'
 
 import { Account } from '../../../../../libs/frontend-types/src/account.type'
@@ -15,7 +15,6 @@ import { Category } from '../../../../../libs/frontend-types/src/category.type'
 import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/CurrencyInput'
 import { DateField } from '../common/DateField'
-import { PaperPickerField } from '../common/PaperPickerField'
 import { TextInput } from '../common/TextInput'
 import { TouchableTextInput } from '../common/TouchableTextInput'
 
@@ -26,7 +25,6 @@ export type TransactionFormFields = {
   category: Category | null
   merchantName: string
   type: string
-  currencyCode: CurrencyCode
 }
 
 type Props = {
@@ -49,8 +47,7 @@ export const TransactionForm: React.FC<Props> = ({ transactionInfo, onSubmit, su
       .nullable()
       .notOneOf([null], 'Category is required'),
     merchantName: Yup.string().required('Merchant is required'),
-    type: Yup.string().required('Type is required'),
-    currencyCode: Yup.mixed<CurrencyCode>().required('Currency is required')
+    type: Yup.string().required('Type is required')
   })
 
   const {
@@ -67,8 +64,7 @@ export const TransactionForm: React.FC<Props> = ({ transactionInfo, onSubmit, su
       account: transactionInfo?.account ?? null,
       category: transactionInfo?.category ?? null,
       merchantName: transactionInfo?.merchantName ?? '',
-      type: transactionInfo?.type ?? 'debit',
-      currencyCode: transactionInfo?.currencyCode ?? currencyCode
+      type: transactionInfo?.type ?? 'debit'
     }
   })
 
@@ -93,8 +89,7 @@ export const TransactionForm: React.FC<Props> = ({ transactionInfo, onSubmit, su
 
   const type = watch('type')
   const date = watch('date')
-
-  const currencyItems = useMemo(() => Object.values(CurrencyCode).map((c) => ({ label: c, value: c })), [])
+  const account = watch('account')
 
   return (
     <View>
@@ -138,6 +133,7 @@ export const TransactionForm: React.FC<Props> = ({ transactionInfo, onSubmit, su
           marginHorizontal: 5
         }}
         error={errors.amount}
+        currencyCode={account?.currencyCode ?? currencyCode}
       />
       <TextInput
         label="Merchant name"
@@ -190,17 +186,6 @@ export const TransactionForm: React.FC<Props> = ({ transactionInfo, onSubmit, su
           marginHorizontal: 5
         }}
         error={errors.category as FieldError}
-      />
-      <PaperPickerField
-        label="Currency"
-        name="currencyCode"
-        control={control}
-        items={currencyItems}
-        style={{
-          marginTop: 5,
-          marginHorizontal: 5
-        }}
-        error={errors.currencyCode}
       />
       <Button
         mode="contained"

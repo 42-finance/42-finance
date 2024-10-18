@@ -21,6 +21,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import 'react-native-url-polyfill/auto'
 import { CurrencyCode } from 'shared-types'
 
+import { config } from './common/config'
 import { Message } from './components/common/Message'
 import { UserTokenProvider } from './contexts/user-token.context'
 import { Navigation } from './navigation/Navigation'
@@ -60,7 +61,7 @@ const App: React.FC = () => {
   mixpanel.init()
 
   Sentry.init({
-    dsn: 'https://da5a5b4094e2874147cd66775c3c513a@o4507016330674176.ingest.us.sentry.io/4507016336375808'
+    dsn: config.sentryDsn
   })
 
   const queryClient = new QueryClient({

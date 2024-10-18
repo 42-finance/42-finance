@@ -31,8 +31,7 @@ export const AddTransactionModal: React.FC<Props> = ({ onClose }) => {
       amount: formData.type === 'debit' ? formData.amount : -formData.amount,
       accountId: formData.accountId as string,
       categoryId: formData.categoryId as number,
-      merchantName: formData.merchantName,
-      currencyCode: formData.currencyCode
+      merchantName: formData.merchantName
     })
   }
 

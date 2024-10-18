@@ -182,7 +182,6 @@ export type AddTransactionRequest = {
   accountId: string
   categoryId: number
   merchantName: string
-  currencyCode: CurrencyCode
 }
 
 export const addTransaction = async (body: AddTransactionRequest) =>

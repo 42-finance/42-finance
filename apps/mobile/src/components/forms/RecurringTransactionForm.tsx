@@ -9,6 +9,7 @@ import { Button } from 'react-native-paper'
 import { CategoryType, Frequency } from 'shared-types'
 import * as Yup from 'yup'
 
+import { useUserTokenContext } from '../../contexts/user-token.context'
 import { CurrencyInput } from '../common/CurrencyInput'
 import { DateField } from '../common/DateField'
 import { PaperPickerField } from '../common/PaperPickerField'
@@ -34,6 +35,7 @@ type Props = {
 
 export const RecurringTransactionForm: React.FC<Props> = ({ transactionInfo, onSubmit, submitting }) => {
   const navigation = useNavigation()
+  const { currencyCode } = useUserTokenContext()
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -85,6 +87,7 @@ export const RecurringTransactionForm: React.FC<Props> = ({ transactionInfo, onS
 
   const startDate = watch('startDate')
   const frequency = watch('frequency')
+  const account = watch('account')
 
   const frequencyItems = useMemo(() => Object.values(Frequency).map((f) => ({ label: mapFrequency(f), value: f })), [])
 
@@ -160,6 +163,7 @@ export const RecurringTransactionForm: React.FC<Props> = ({ transactionInfo, onS
           marginHorizontal: 5
         }}
         error={errors.amount}
+        currencyCode={account?.currencyCode ?? currencyCode}
       />
       <TouchableTextInput
         label="Account"

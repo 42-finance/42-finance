@@ -3,10 +3,9 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getAccounts, getGroups } from 'frontend-api'
 import React, { useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { CurrencyCode, TransactionAmountType } from 'shared-types'
+import { TransactionAmountType } from 'shared-types'
 import * as Yup from 'yup'
 
-import { useLocalStorage } from '../../hooks/use-local-storage.hook'
 import { FormCurrencyInput } from '../common/form/form-currency-input'
 import { FormDateInput } from '../common/form/form-date-input'
 import { FormInput } from '../common/form/form-input'
@@ -20,7 +19,6 @@ export type TransactionFormFields = {
   categoryId: number | null
   merchantName: string
   type: string
-  currencyCode: CurrencyCode
   needsReview: boolean
   hidden: boolean
 }
@@ -32,8 +30,6 @@ type Props = {
 }
 
 export const TransactionForm: React.FC<Props> = ({ onSubmit, transactionInfo, mode }) => {
-  const [currencyCode] = useLocalStorage('currencyCode', CurrencyCode.USD)
-
   const schema = Yup.object().shape({
     date: Yup.date().required('Date is required'),
     amount: Yup.number().moreThan(0, 'Amount must be greater than 0').required('Amount is required'),
@@ -41,7 +37,6 @@ export const TransactionForm: React.FC<Props> = ({ onSubmit, transactionInfo, mo
     categoryId: Yup.number().required('Category is required').nullable().notOneOf([null], 'Category is required'),
     merchantName: Yup.string().required('Merchant is required'),
     type: Yup.string().required('Type is required'),
-    currencyCode: Yup.mixed<CurrencyCode>().required('Currency is required'),
     needsReview: Yup.boolean().required('Review status is required'),
     hidden: Yup.boolean().required('Visibility is required')
   })
@@ -59,7 +54,6 @@ export const TransactionForm: React.FC<Props> = ({ onSubmit, transactionInfo, mo
       categoryId: transactionInfo?.categoryId ?? null,
       merchantName: transactionInfo?.merchantName ?? '',
       type: transactionInfo?.type ?? TransactionAmountType.Debit,
-      currencyCode: transactionInfo?.currencyCode ?? currencyCode,
       needsReview: transactionInfo?.needsReview ?? true,
       hidden: transactionInfo?.hidden ?? false
     }
@@ -114,8 +108,6 @@ export const TransactionForm: React.FC<Props> = ({ onSubmit, transactionInfo, mo
     ],
     []
   )
-
-  const currencyItems = useMemo(() => Object.values(CurrencyCode).map((c) => ({ label: c, value: c })), [])
 
   const reviewItems = useMemo(
     () => [
@@ -193,16 +185,6 @@ export const TransactionForm: React.FC<Props> = ({ onSubmit, transactionInfo, mo
             name="categoryId"
             options={groupItems}
             loading={fetchingGroups}
-          />
-        </div>
-        <div>
-          <FormSelect
-            control={control}
-            errors={errors.currencyCode?.message}
-            label="Currency"
-            name="currencyCode"
-            options={currencyItems}
-            disabled={mode === 'edit'}
           />
         </div>
         {mode === 'edit' && (

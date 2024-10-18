@@ -1,15 +1,19 @@
+import { getCurrencySymbol } from 'frontend-utils'
 import { createNumberMask } from 'react-native-mask-input'
+import { CurrencyCode } from 'shared-types'
 
-export const dollarMask = createNumberMask({
-  prefix: ['$'],
-  delimiter: ',',
-  separator: '.',
-  precision: 0
-})
+export const dollarMask = (currencyCode: CurrencyCode) =>
+  createNumberMask({
+    prefix: [getCurrencySymbol(currencyCode)],
+    delimiter: ',',
+    separator: '.',
+    precision: 0
+  })
 
-export const dollarCentMask = createNumberMask({
-  prefix: ['$'],
-  delimiter: ',',
-  separator: '.',
-  precision: 2
-})
+export const dollarCentMask = (currencyCode: CurrencyCode) =>
+  createNumberMask({
+    prefix: [getCurrencySymbol(currencyCode)],
+    delimiter: ',',
+    separator: '.',
+    precision: 2
+  })

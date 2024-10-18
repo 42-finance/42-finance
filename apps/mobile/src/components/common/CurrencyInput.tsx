@@ -1,8 +1,10 @@
+import { getCurrencySymbol } from 'frontend-utils'
 import React from 'react'
 import { Control, Controller, FieldError, FieldPath, FieldValues } from 'react-hook-form'
 import { ReturnKeyTypeOptions, StyleProp, TextStyle } from 'react-native'
 import NativeCurrencyInput from 'react-native-currency-input'
 import { TextInput as PaperTextInput } from 'react-native-paper'
+import { CurrencyCode } from 'shared-types'
 
 import { ErrorText } from './ErrorText'
 
@@ -10,6 +12,7 @@ type Props<FormFields extends FieldValues> = {
   label: string
   name: FieldPath<FormFields>
   control: Control<FormFields>
+  currencyCode: CurrencyCode
   onChangeValue?: (value: number) => void
   onBlur?: () => void
   returnKeyType?: ReturnKeyTypeOptions
@@ -35,7 +38,8 @@ export const CurrencyInput = <FormFields extends FieldValues>({
   control,
   name,
   forwardRef,
-  disabled
+  disabled,
+  currencyCode
 }: Props<FormFields>) => {
   return (
     <Controller
@@ -66,7 +70,7 @@ export const CurrencyInput = <FormFields extends FieldValues>({
                     onChangeValue?.(value as number)
                   }}
                   keyboardType="number-pad"
-                  prefix="$"
+                  prefix={getCurrencySymbol(currencyCode)}
                   delimiter=","
                   separator="."
                   precision={2}

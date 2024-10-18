@@ -153,7 +153,11 @@ export const BC: React.FC<Props> = ({
                 )
               }
               render={(props) => (
-                <MaskInput {...props} onChangeText={(_masked, unmasked) => setAmount(unmasked)} mask={dollarMask} />
+                <MaskInput
+                  {...props}
+                  onChangeText={(_masked, unmasked) => setAmount(unmasked)}
+                  mask={dollarMask(currencyCode)}
+                />
               )}
             />
             {isLoading && <ActivityIndicator style={{ position: 'absolute', right: 16, top: 15 }} />}

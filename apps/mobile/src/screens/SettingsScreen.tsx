@@ -15,7 +15,7 @@ import { ScrollView } from 'react-native'
 import { Divider, Text, useTheme } from 'react-native-paper'
 import Purchases from 'react-native-purchases'
 
-import { SettingsItem } from '../components/settings/SettingsItems'
+import { SettingsItem } from '../components/settings/SettingsItem'
 import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 import { getPushToken } from '../utils/notification.utils'
