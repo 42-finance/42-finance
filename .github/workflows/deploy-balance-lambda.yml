@@ -1,0 +1,48 @@
+name: Deploy - Balance Lambda
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-balance-lambda:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Load the node_modules folder from cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: |
+            **/node_modules
+            **/.eslintcache
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Create zip deployment package
+        run: yarn workspace balance-lambda build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ca-central-1
+
+      - name: Copy deployment package to S3
+        run: aws s3 cp apps/balance-lambda/dist/balance-lambda.zip s3://renty-lambdas
+
+      - name: Update lambda code
+        run: aws lambda update-function-code --function-name=renty-balance-lambda --s3-bucket=renty-lambdas --s3-key=balance-lambda.zip

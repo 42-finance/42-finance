@@ -1,0 +1,278 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Barlow;
+  src: url('./assets/fonts/Barlow-Medium.ttf');
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    font-family: Barlow, ui-sans-serif;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+body {
+  @apply text-sm h-screen pb-safe overflow-x-hidden;
+}
+
+* {
+  font-family: 'Barlow';
+}
+
+/*
+ * Loading Icon Inside Buttons
+ */
+.icon-spin {
+  -webkit-animation: icon-spin 1s infinite linear;
+  animation: icon-spin 1s infinite linear;
+  display: inline-block;
+}
+
+@keyframes icon-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+/*
+ * React Date Picker
+ */
+.react-datepicker__input-container input {
+  @apply h-[40px] block w-full min-w-[230px] text-sm py-[5px] pl-3 pr-8 bg-white border border-gray-300 text-gray-900 placeholder:text-gray-300 rounded-[4px] focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30;
+}
+
+form .react-datepicker__input-container input {
+  @apply py-2;
+}
+
+.react-datepicker-popper {
+  @apply z-50 w-72 text-sm bg-white shadow-lg px-3 py-2 border border-gray-300 rounded-sm;
+}
+
+.react-datepicker-popper[data-placement^='top'] {
+  @apply bottom-1.5 !important;
+}
+
+.react-datepicker-popper[data-placement^='bottom'] {
+  @apply top-1.5 !important;
+}
+
+.react-datepicker__portal {
+  @apply absolute z-10 w-72 text-sm transform-none bg-white shadow px-3 py-2 top-12 right-0 border-2 border-gray-300 rounded;
+}
+
+.react-datepicker__month-container {
+  @apply flex flex-col;
+}
+
+.react-datepicker__month {
+  @apply flex flex-col;
+}
+
+.react-datepicker__current-month {
+  @apply ml-2.5 text-lg font-semibold;
+}
+
+.react-datepicker__week {
+  @apply flex justify-around;
+}
+
+.react-datepicker__day-names {
+  @apply flex justify-around text-gray-400 font-medium text-center text-xs;
+}
+
+.react-datepicker__day-name {
+  @apply w-8 h-8 flex items-center justify-center py-1 rounded-full select-none;
+}
+
+.react-datepicker__navigation {
+  @apply absolute top-2;
+}
+
+.react-datepicker__navigation--previous {
+  @apply right-12 w-8 h-8 rounded transition flex items-center justify-center hover:bg-gray-200;
+}
+
+.react-datepicker__navigation--next {
+  @apply right-4 w-8 h-8 rounded transition flex items-center justify-center hover:bg-gray-200;
+}
+
+.react-datepicker__day {
+  @apply mb-1 w-8 h-8 flex items-center cursor-pointer justify-center py-1 text-sm leading-loose transition text-gray-700 select-none hover:bg-gray-100 hover:text-gray-700;
+}
+
+.react-datepicker__day--today {
+  @apply bg-white border border-lighter-green;
+}
+
+.react-datepicker__day--disabled {
+  @apply cursor-not-allowed bg-gray-200 opacity-30 hover:bg-transparent;
+}
+
+.react-datepicker__day--outside-month {
+  @apply text-gray-300;
+}
+
+.react-datepicker__day--in-range {
+  @apply bg-gray-200;
+}
+
+.react-datepicker__day--in-selecting-range {
+  @apply bg-lighter-green/20;
+}
+
+.react-datepicker__day--selecting-range-start {
+  @apply bg-white border-2 border-lighter-green;
+}
+
+.react-datepicker__day--selecting-range-end {
+  @apply bg-white border-2 border-lighter-green;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-lighter-green text-white;
+}
+
+.react-datepicker__day--range-start {
+  @apply bg-lighter-green text-white hover:text-gray-700 hover:bg-white;
+}
+
+.react-datepicker__day--range-end {
+  @apply bg-lighter-green text-white hover:text-gray-700 hover:bg-white;
+}
+
+.react-datepicker__today-button {
+  @apply text-center text-sm pt-2 pb-1 text-lighter-green cursor-pointer hover:underline select-none;
+}
+
+.react-datepicker__day--highlighted {
+  @apply bg-midnight-blue/20;
+}
+
+.react-datepicker__aria-live {
+  display: none;
+}
+
+/**
+ * React Select
+ */
+
+.react-select__control {
+  @apply bg-white border border-cool-grey rounded-[4px] min-h-[40px] !important;
+}
+
+.form-select .react-select__control {
+  @apply min-h-[38px] !important;
+}
+
+.form-select-errors .react-select__control {
+  @apply border-red-500 !important;
+}
+
+.react-select__control--is-focused {
+  @apply border-midnight-blue ring-1 ring-midnight-blue/30 shadow-none !important;
+}
+
+.react-select__value-container {
+  @apply py-0 !important;
+}
+
+.react-select__input {
+  @apply ring-0 border-none caret-transparent !important;
+}
+
+.react-select__placeholder {
+  @apply text-midnight-blue !important;
+}
+
+.react-select__single-value {
+  @apply text-sm !important;
+}
+
+.react-select__indicator {
+  @apply p-1 !important;
+}
+
+.react-select__menu {
+  @apply bg-white border border-gray-300 rounded-sm shadow-lg mt-1 z-50 !important;
+}
+
+.react-select__option--is-selected {
+  @apply bg-midnight-blue text-white !important;
+}
+
+.react-select__option--is-focused {
+  @apply bg-midnight-blue/20 text-inherit !important;
+}
+
+.react-select-addon-before .react-select__control {
+  @apply bg-gray-100 rounded-r-none border-r-0 !important;
+}
+
+.react-select-addon-before .react-select__control--is-focused {
+  @apply border-midnight-blue border-r z-10 !important;
+}
+
+.react-select-addon-middle .react-select__control {
+  @apply bg-gray-100 rounded-none border-r-0 !important;
+}
+
+.react-select-addon-middle .react-select__control--is-focused {
+  @apply border-midnight-blue border-r z-10 !important;
+}
+
+.react-select-addon-after .react-select__control {
+  @apply rounded-l-none !important;
+}
+
+.react-select--is-disabled .react-select__control {
+  @apply bg-gray-100 !important;
+}
+
+/**
+  * React-Carousel
+  */
+.carousel .carousel-status {
+  @apply top-auto bottom-0.5 left-0 right-0 text-base text-center !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+em-emoji-picker {
+  @apply w-full;
+}
+
+.dark .border-b {
+  @apply border-neutral-700;
+}
+
+.dark .border-t {
+  @apply border-neutral-700;
+}
+
+.action-sheet-title {
+  display: none;
+}

@@ -1,0 +1,22 @@
+{
+  "name": "42-finance",
+  "version": "1.0.0",
+  "description": "Workspace for 42 Finance",
+  "repository": "git@github.com:42-finance/42-finance.git",
+  "author": "42 Finance Team <dev@42f.io>",
+  "license": "Proprietary",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "eslint": "^9.9.0",
+    "eslint-config-universe": "^13.0.0",
+    "prettier": "^3.3.3"
+  },
+  "resolutions": {
+    "react-native-webview": "13.8.6"
+  }
+}

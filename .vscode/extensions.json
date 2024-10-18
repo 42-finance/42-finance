@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "pflannery.vscode-versionlens",
+    "VisualStudioExptTeam.vscodeintellicode",
+    "vscode-icons-team.vscode-icons"
+  ]
+}
