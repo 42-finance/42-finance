@@ -5,6 +5,7 @@ import _ from 'lodash'
 import verifyAppleToken from 'verify-apple-id-token'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
+import { createDefaultDashboardWidgets } from '../../utils/dashboard.utils'
 import { createHousehold } from '../../utils/household.utils'
 import { createDefaultNotifications } from '../../utils/notification.utils'
 
@@ -42,6 +43,7 @@ export const loginWithApple = async (
     await dataSource.transaction(async (entityManager) => {
       user = await entityManager.getRepository(User).save({ email, name, emailConfirmed: true })
       await createDefaultNotifications(user.id, entityManager)
+      await createDefaultDashboardWidgets(user.id, entityManager)
       await createHousehold(user, entityManager)
     })
   }
