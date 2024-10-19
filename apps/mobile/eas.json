@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">=12.0.0",
+    "version": ">=12.5.4",
     "appVersionSource": "remote",
     "requireCommit": true
   },

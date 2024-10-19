@@ -17,6 +17,7 @@
     "prettier": "^3.3.3"
   },
   "resolutions": {
-    "react-native-webview": "13.8.6"
+    "react-native-webview": "13.8.6",
+    "node-fetch": "2.7.0"
   }
 }
