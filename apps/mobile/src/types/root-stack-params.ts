@@ -65,6 +65,7 @@ export type RootStackParamList = {
   Dashboard: undefined
   Data: undefined
   EditAccount: { accountId: string }
+  EditBalanceHistory: { accountId: string }
   EditCategory: { categoryId: number }
   EditGoal: { goalId: number }
   EditGroup: { groupId: number }

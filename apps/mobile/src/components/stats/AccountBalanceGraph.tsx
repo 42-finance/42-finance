@@ -32,7 +32,7 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter 
   const filterStartDate = useMemo(() => mapDateRangeToDate(dateRangeFilter), [dateRangeFilter])
 
   const { data: balanceHistory = [] } = useQuery({
-    queryKey: [ApiQuery.AccountBalanceHistory, account],
+    queryKey: [ApiQuery.AccountBalanceHistory, account.id],
     queryFn: async () => {
       const res = await getBalanceHistory({ accountIds: [account.id] })
       if (res.ok && res.parsedBody?.payload) {

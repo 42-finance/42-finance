@@ -74,6 +74,9 @@ export const NetWorthGraph: React.FC<Props> = ({
 
   const netWorthHistory = useMemo(() => {
     const history = getNetWorthHistory(balanceHistory, accountTypes, true, accountGroupType == null, filterStartDate)
+    if (history.length === 0) {
+      history.push({ date: today, value: netWorth })
+    }
     if (history.length === 1) {
       history.push(history[0])
     }

@@ -116,6 +116,10 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
                 onSelected: () => navigation.navigate('EditAccount', { accountId })
               },
               {
+                label: 'Edit balance history',
+                onSelected: () => navigation.navigate('EditBalanceHistory', { accountId })
+              },
+              {
                 label: 'Delete account',
                 onSelected: () => setDeleteDialogVisible(true),
                 isDestructive: true

@@ -33,7 +33,7 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
   const [filterDate, setFilterDate] = useState<Date | null>(null)
 
   const { data: balanceHistory = [], isFetching: isFetchingBalanceHistory } = useQuery({
-    queryKey: [ApiQuery.AccountBalanceHistory, account],
+    queryKey: [ApiQuery.AccountBalanceHistory, account.id],
     queryFn: async () => {
       const res = await getBalanceHistory({ accountIds: [account.id] })
       if (res.ok && res.parsedBody?.payload) {

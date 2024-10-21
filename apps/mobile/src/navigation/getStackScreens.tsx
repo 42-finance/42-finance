@@ -32,6 +32,7 @@ import { ConnectionsScreen } from '../screens/ConnectionsScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
 import { DataScreen } from '../screens/DataScreen'
 import { EditAccountScreen } from '../screens/EditAccountScreen'
+import { EditBalanceHistoryScreen } from '../screens/EditBalanceHistoryScreen'
 import { EditCategoryScreen } from '../screens/EditCategoryScreen'
 import { EditGoalScreen } from '../screens/EditGoalScreen'
 import { EditGroupScreen } from '../screens/EditGroupScreen'
@@ -176,6 +177,12 @@ export const getStackScreens = (
       name="EditAccount"
       component={EditAccountScreen}
       options={{ title: 'Edit account' }}
+    />,
+    <Stack.Screen
+      key="EditBalanceHistory"
+      name="EditBalanceHistory"
+      component={EditBalanceHistoryScreen}
+      options={{ title: 'Edit balance history' }}
     />,
     <Stack.Screen
       key="EditCategory"
