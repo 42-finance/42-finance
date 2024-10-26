@@ -1,4 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { ApiQuery, getAccountGroups } from 'frontend-api'
 import { mapAccountSubType } from 'frontend-utils/src/mappers/map-account-sub-type'
 import { mapAccountType } from 'frontend-utils/src/mappers/map-account-type'
 import React, { useMemo } from 'react'
@@ -19,6 +21,7 @@ export type AccountFormFields = {
   subType: AccountSubType
   currentBalance: number
   currencyCode: CurrencyCode
+  accountGroupId: number | null
 }
 
 type Props = {
@@ -35,7 +38,8 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
     type: Yup.mixed<AccountType>().required('Type is required'),
     subType: Yup.mixed<AccountSubType>().required('Subtype is required'),
     currentBalance: Yup.number().required('Balance is required'),
-    currencyCode: Yup.mixed<CurrencyCode>().required('Currency is required')
+    currencyCode: Yup.mixed<CurrencyCode>().required('Currency is required'),
+    accountGroupId: Yup.number().defined().nullable()
   })
 
   const {
@@ -50,8 +54,21 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
       type: accountInfo?.type ?? AccountType.Asset,
       subType: accountInfo?.subType ?? AccountSubType.Other,
       currentBalance: accountInfo?.currentBalance ?? 0,
-      currencyCode: accountInfo?.currencyCode ?? currencyCode
+      currencyCode: accountInfo?.currencyCode ?? currencyCode,
+      accountGroupId: accountInfo?.accountGroupId ?? null
     }
+  })
+
+  const { data: accountGroups = [] } = useQuery({
+    queryKey: [ApiQuery.AccountGroups],
+    queryFn: async () => {
+      const res = await getAccountGroups()
+      if (res.ok && res.parsedBody?.payload) {
+        return res.parsedBody.payload
+      }
+      return []
+    },
+    placeholderData: keepPreviousData
   })
 
   const accountTypes = useMemo(
@@ -72,6 +89,11 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
       Object.values(CurrencyCode)
         .sort()
         .map((c) => ({ label: c, value: c })),
+    []
+  )
+
+  const accountGroupItems = useMemo(
+    () => [{ label: 'None', value: null }, ...accountGroups.map((a) => ({ label: a.name, value: a.id }))],
     []
   )
 
@@ -111,6 +133,17 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
           marginHorizontal: 5
         }}
         error={errors.subType}
+      />
+      <PaperPickerField
+        label="Account Group"
+        name="accountGroupId"
+        control={control}
+        items={accountGroupItems}
+        style={{
+          marginTop: 5,
+          marginHorizontal: 5
+        }}
+        error={errors.accountGroupId}
       />
       <CurrencyInput
         label="Balance"

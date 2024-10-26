@@ -1,20 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ApiQuery, EditAccountRequest, editAccount, getAccount } from 'frontend-api'
+import { ApiQuery, EditAccountGroupRequest, editAccountGroup, getAccountGroup } from 'frontend-api'
 import * as React from 'react'
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native'
 
-import { AccountForm } from '../components/forms/AccountForm'
+import { AccountGroupForm } from '../components/forms/AccountGroupForm'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
-export const EditAccountScreen = ({ route, navigation }: RootStackScreenProps<'EditAccount'>) => {
-  const { accountId } = route.params
+export const EditAccountGroupScreen = ({ route, navigation }: RootStackScreenProps<'EditAccountGroup'>) => {
+  const { accountGroupId } = route.params
 
   const queryClient = useQueryClient()
 
-  const { data: account } = useQuery({
-    queryKey: [ApiQuery.Account, accountId],
+  const { data: accountGroup } = useQuery({
+    queryKey: [ApiQuery.AccountGroup, accountGroupId],
     queryFn: async () => {
-      const res = await getAccount(accountId)
+      const res = await getAccountGroup(accountGroupId)
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }
@@ -22,24 +22,23 @@ export const EditAccountScreen = ({ route, navigation }: RootStackScreenProps<'E
   })
 
   const { mutate, isPending: submitting } = useMutation({
-    mutationFn: async (request: EditAccountRequest) => {
+    mutationFn: async (request: EditAccountGroupRequest) => {
       Keyboard.dismiss()
-      const res = await editAccount(accountId, request)
+      const res = await editAccountGroup(accountGroupId, request)
       if (res.ok && res.parsedBody?.payload) {
-        await queryClient.invalidateQueries({ queryKey: [ApiQuery.Account] })
-        await queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
+        await queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountGroup] })
         await queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountGroups] })
         navigation.pop()
       }
     }
   })
 
-  if (!account) return null
+  if (!accountGroup) return null
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <AccountForm accountInfo={account} onSubmit={mutate} submitting={submitting} />
+        <AccountGroupForm accountGroupInfo={accountGroup} onSubmit={mutate} submitting={submitting} />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   )

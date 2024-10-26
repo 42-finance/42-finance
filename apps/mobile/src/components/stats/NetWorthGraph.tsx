@@ -1,12 +1,12 @@
 import { Feather } from '@expo/vector-icons'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getAccounts, getBalanceHistory } from 'frontend-api'
+import { AccountGroup } from 'frontend-types'
 import { mapDateRangeFilterFull, mapDateRangeToDate } from 'frontend-utils'
 import { getMonthlyValueChange, getNetWorth, getNetWorthHistory } from 'frontend-utils/src/account/account.utils'
 import { valueChangeColor, valueChangeIcon } from 'frontend-utils/src/color/color.utils'
 import { formatDateInUtc, todayInUtc } from 'frontend-utils/src/date/date.utils'
 import { formatDollars, formatDollarsSigned, formatPercentage } from 'frontend-utils/src/invoice/invoice.utils'
-import { mapAccountGroupTypeToAccountSubTypes } from 'frontend-utils/src/mappers/map-account-group-type'
 import { useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
@@ -18,13 +18,13 @@ import { useRefetchOnFocus } from '../../hooks/use-refetch-on-focus.hook'
 import { View } from '../common/View'
 
 type Props = {
-  accountGroupType?: AccountGroupType | null
+  accountGroup?: AccountGroup | null
   dateRangeFilter?: DateRangeFilter
   widthReduction?: number
 }
 
 export const NetWorthGraph: React.FC<Props> = ({
-  accountGroupType = null,
+  accountGroup = null,
   dateRangeFilter = DateRangeFilter.AllTime,
   widthReduction = 0
 }) => {
@@ -65,15 +65,13 @@ export const NetWorthGraph: React.FC<Props> = ({
 
   useRefetchOnFocus(refetchBalanceHistory)
 
-  const accountTypes = useMemo(() => mapAccountGroupTypeToAccountSubTypes(accountGroupType), [accountGroupType])
-
   const netWorth = useMemo(
-    () => getNetWorth(accounts, accountTypes, true, accountGroupType == null),
-    [accounts, accountTypes, accountGroupType]
+    () => getNetWorth(accounts, accountGroup, true, accountGroup == null),
+    [accounts, accountGroup]
   )
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, true, accountGroupType == null, filterStartDate)
+    const history = getNetWorthHistory(balanceHistory, accountGroup, true, accountGroup == null, filterStartDate)
     if (history.length === 0) {
       history.push({ date: today, value: netWorth })
     }
@@ -81,7 +79,7 @@ export const NetWorthGraph: React.FC<Props> = ({
       history.push(history[0])
     }
     return history
-  }, [balanceHistory, accountTypes, accountGroupType, filterStartDate])
+  }, [balanceHistory, accountGroup, filterStartDate])
 
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
@@ -89,13 +87,13 @@ export const NetWorthGraph: React.FC<Props> = ({
     () =>
       getMonthlyValueChange(
         balanceHistory,
-        accountTypes,
+        accountGroup,
         startDate,
         selectedEndDate ?? today,
         true,
-        accountGroupType == null
+        accountGroup == null
       ),
-    [balanceHistory, accountTypes, startDate, selectedEndDate, accountGroupType]
+    [balanceHistory, startDate, selectedEndDate, accountGroup]
   )
 
   const netWorthData = useMemo(
@@ -104,6 +102,14 @@ export const NetWorthGraph: React.FC<Props> = ({
   )
 
   const netWorthValue = useMemo(() => netWorthOverride ?? netWorth, [netWorth, netWorthOverride])
+
+  const type = useMemo(
+    () =>
+      accountGroup?.type === AccountGroupType.CreditCards || accountGroup?.type === AccountGroupType.Loans
+        ? AccountType.Liability
+        : AccountType.Asset,
+    [accountGroup]
+  )
 
   const width = Dimensions.get('window').width
 
@@ -128,23 +134,13 @@ export const NetWorthGraph: React.FC<Props> = ({
         <Feather
           name={valueChangeIcon(netWorthChange.value)}
           size={20}
-          color={valueChangeColor(
-            netWorthChange.value,
-            accountGroupType === AccountGroupType.CreditCards || accountGroupType === AccountGroupType.Loans
-              ? AccountType.Liability
-              : AccountType.Asset
-          )}
+          color={valueChangeColor(netWorthChange.value, type)}
           style={{ marginTop: 1, marginRight: 2 }}
         />
         <Text
           variant="bodyMedium"
           style={{
-            color: valueChangeColor(
-              netWorthChange.value,
-              accountGroupType === AccountGroupType.CreditCards || accountGroupType === AccountGroupType.Loans
-                ? AccountType.Liability
-                : AccountType.Asset
-            )
+            color: valueChangeColor(netWorthChange.value, type)
           }}
           numberOfLines={1}
         >

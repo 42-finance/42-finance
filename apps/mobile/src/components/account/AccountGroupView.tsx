@@ -2,6 +2,8 @@ import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getBalanceHistory } from 'frontend-api'
+import { AccountGroup } from 'frontend-types'
+import { Account } from 'frontend-types/src/account.type'
 import {
   formatAccountBalance,
   formatDateDifference,
@@ -9,11 +11,7 @@ import {
   formatPercentage,
   getMonthlyValueChange,
   getNetWorth,
-  mapAccountGroupType,
-  mapAccountGroupTypeToAccountSubTypes,
   mapAccountSubType,
-  mapAccountSubTypeToAccountGroupType,
-  mapAccountTypeToAccountSubTypes,
   mapDateRangeFilterFull,
   mapDateRangeToDate,
   todayInUtc,
@@ -24,21 +22,20 @@ import { sumBy } from 'lodash'
 import { useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Card, Divider, Text, useTheme } from 'react-native-paper'
-import { AccountType, DateRangeFilter } from 'shared-types'
+import { AccountGroupType, AccountType, DateRangeFilter } from 'shared-types'
 
-import { Account } from '../../../../../libs/frontend-types/src/account.type'
 import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 import { AccountIcon } from './AccountIcon'
 
 type Props = {
-  groupAccounts: Account[]
+  accountGroup: AccountGroup
   allAccounts: Account[]
   dateRangeFilter?: DateRangeFilter
 }
 
-export const AccountGroup: React.FC<Props> = ({
-  groupAccounts,
+export const AccountGroupView: React.FC<Props> = ({
+  accountGroup,
   allAccounts,
   dateRangeFilter = DateRangeFilter.AllTime
 }) => {
@@ -62,26 +59,32 @@ export const AccountGroup: React.FC<Props> = ({
 
   const filterStartDate = useMemo(() => mapDateRangeToDate(dateRangeFilter), [dateRangeFilter])
 
-  const type = useMemo(() => groupAccounts[0].type, [groupAccounts])
-
-  const groupType = useMemo(() => mapAccountSubTypeToAccountGroupType(groupAccounts[0].subType), [groupAccounts])
-
-  const subTypes = useMemo(() => mapAccountGroupTypeToAccountSubTypes(groupType), [groupType])
-
-  const valueChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, subTypes, filterStartDate, today, true, false),
-    [balanceHistory, subTypes, filterStartDate, today]
+  const type = useMemo(
+    () =>
+      accountGroup.type === AccountGroupType.CreditCards || accountGroup.type === AccountGroupType.Loans
+        ? AccountType.Liability
+        : AccountType.Asset,
+    [accountGroup]
   )
 
-  const balance = useMemo(() => sumBy(groupAccounts, 'convertedBalance'), [groupAccounts])
+  const valueChange = useMemo(
+    () => getMonthlyValueChange(balanceHistory, accountGroup, filterStartDate, today, true, false),
+    [balanceHistory, filterStartDate, today]
+  )
+
+  const balance = useMemo(() => sumBy(accountGroup.accounts, 'convertedBalance'), [accountGroup])
 
   const isAsset = useMemo(() => type === AccountType.Asset, [type])
 
-  const accountTypeSubTypes = useMemo(() => mapAccountTypeToAccountSubTypes(type), [type])
-
   const totalValue = useMemo(
-    () => getNetWorth(allAccounts, accountTypeSubTypes, true, false),
-    [allAccounts, accountTypeSubTypes]
+    () =>
+      getNetWorth(
+        allAccounts.filter((a) => a.type === type),
+        null,
+        true,
+        false
+      ),
+    [allAccounts, type]
   )
 
   return (
@@ -93,7 +96,7 @@ export const AccountGroup: React.FC<Props> = ({
             backgroundColor: 'transparent'
           }}
         >
-          <View
+          <TouchableOpacity
             style={{
               flexDirection: 'row',
               width: '100%',
@@ -101,6 +104,7 @@ export const AccountGroup: React.FC<Props> = ({
               paddingHorizontal: 15,
               paddingBottom: 15
             }}
+            onPress={() => navigation.navigate('AccountGroup', { accountGroupId: accountGroup.id })}
           >
             <View
               style={{
@@ -110,7 +114,7 @@ export const AccountGroup: React.FC<Props> = ({
               }}
             >
               <Text variant="titleMedium" style={{}}>
-                {mapAccountGroupType(groupType)}
+                {accountGroup.name}
               </Text>
               <View style={{ flexDirection: 'row', marginTop: 5 }}>
                 <Feather
@@ -139,8 +143,8 @@ export const AccountGroup: React.FC<Props> = ({
                 {formatPercentage(Math.abs(balance / totalValue) * 100, 0)} of {isAsset ? 'assets' : 'liabilities'}
               </Text>
             </View>
-          </View>
-          {groupAccounts.map((account) => (
+          </TouchableOpacity>
+          {accountGroup.accounts.map((account) => (
             <TouchableOpacity
               key={account.id}
               onPress={() => navigation.navigate('Account', { accountId: account.id })}

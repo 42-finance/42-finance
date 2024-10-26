@@ -1,5 +1,6 @@
 import { AccountSubType, AccountType, CurrencyCode, WalletType } from 'shared-types'
 
+import { AccountGroup } from './account-group.type'
 import { Connection } from './connection.type'
 
 export type Account = {
@@ -18,6 +19,8 @@ export type Account = {
   walletTokenBalance: number | null
   connectionId: string | null
   connection: Connection | null
+  accountGroupId: number
+  accountGroup: AccountGroup
   updatedAt: Date
   transactionCount?: number
   convertedBalance: number

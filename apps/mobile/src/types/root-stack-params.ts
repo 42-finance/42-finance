@@ -21,10 +21,12 @@ declare global {
 
 export type RootStackParamList = {
   Account: { accountId: string }
+  AccountGroup: { accountGroupId: number }
   Accounts: undefined
   AccountLinking: undefined
   AccountRule: { value: Account | null }
   AddAccount: undefined
+  AddAccountGroup: undefined
   AddAsset: undefined
   AddCategory: undefined
   AddCrypto: undefined
@@ -65,6 +67,7 @@ export type RootStackParamList = {
   Dashboard: undefined
   Data: undefined
   EditAccount: { accountId: string }
+  EditAccountGroup: { accountGroupId: number }
   EditBalanceHistory: { accountId: string }
   EditCategory: { categoryId: number }
   EditGoal: { goalId: number }

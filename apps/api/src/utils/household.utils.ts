@@ -2,6 +2,7 @@ import { Household, HouseholdUser, User, dataSource } from 'database'
 import { UserPermission } from 'shared-types'
 import { EntityManager } from 'typeorm'
 
+import { createDefaultAccountGroups } from './account-group.utils'
 import { createDefaultCategories } from './category.utils'
 
 export const createHousehold = async (user: User, entityManager: EntityManager = dataSource.manager) => {
@@ -14,5 +15,6 @@ export const createHousehold = async (user: User, entityManager: EntityManager =
     permission: UserPermission.Owner
   })
   await createDefaultCategories(household.id, entityManager)
+  await createDefaultAccountGroups(household.id, entityManager)
   return household
 }

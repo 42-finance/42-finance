@@ -1,9 +1,11 @@
 export enum ApiQuery {
   Account = 'account',
+  AccountGroup = 'accountGroup',
   Accounts = 'accounts',
   AccountsFilter = 'accountsFilter',
   AccountBalanceHistory = 'accountBalanceHistory',
   AccountBills = 'accountBills',
+  AccountGroups = 'accountGroups',
   AccountTransactions = 'accountTransactions',
   BalanceHistory = 'balanceHistory',
   Bill = 'bill',

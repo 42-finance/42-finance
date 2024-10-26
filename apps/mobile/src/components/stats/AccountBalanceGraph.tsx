@@ -42,20 +42,15 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter 
     }
   })
 
-  const accountTypes = useMemo(() => Object.values(AccountSubType), [])
-
   const convertBalance = useMemo(
     () => account.subType === AccountSubType.CryptoExchange || account.subType === AccountSubType.Vehicle,
     [account]
   )
 
-  const netWorth = useMemo(
-    () => getNetWorth([account], accountTypes, convertBalance, false),
-    [account, accountTypes, convertBalance]
-  )
+  const netWorth = useMemo(() => getNetWorth([account], null, convertBalance, false), [account, convertBalance])
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, convertBalance, false, filterStartDate)
+    const history = getNetWorthHistory(balanceHistory, null, convertBalance, false, filterStartDate)
     if (history.length === 0) {
       history.push({ date: today, value: netWorth })
     }
@@ -63,14 +58,13 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter 
       history.push(history[0])
     }
     return history
-  }, [balanceHistory, accountTypes, convertBalance, filterStartDate])
+  }, [balanceHistory, convertBalance, filterStartDate])
 
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
   const netWorthChange = useMemo(
-    () =>
-      getMonthlyValueChange(balanceHistory, accountTypes, startDate, selectedEndDate ?? today, convertBalance, false),
-    [balanceHistory, accountTypes, selectedEndDate, startDate, convertBalance]
+    () => getMonthlyValueChange(balanceHistory, null, startDate, selectedEndDate ?? today, convertBalance, false),
+    [balanceHistory, selectedEndDate, startDate, convertBalance]
   )
 
   const netWorthData = useMemo(

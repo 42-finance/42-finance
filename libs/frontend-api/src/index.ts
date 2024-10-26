@@ -1,4 +1,5 @@
 export * from './accept-invitation.api'
+export * from './account-groups.api'
 export * from './accounts.api'
 export * from './api-query'
 export * from './auth.api'

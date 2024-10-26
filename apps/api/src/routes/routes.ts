@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import '../models/http/request'
 import { acceptInvitationRouter } from './acceptInvitation'
 import { accountRouter } from './account'
+import { accountGroupRouter } from './accountGroup'
 import { balanceHistoryRouter } from './balanceHistory'
 import { billPaymentsRouter } from './billPayments'
 import { billsRouter } from './bills'
@@ -58,6 +59,7 @@ function authenticateToken(request: Request, response: Response, next: NextFunct
 
 const router = Router()
 router.use('/accounts', authenticateToken, accountRouter)
+router.use('/account-groups', authenticateToken, accountGroupRouter)
 router.use('/accept-invitation', acceptInvitationRouter)
 router.use('/balance-history', authenticateToken, balanceHistoryRouter)
 router.use('/bills', authenticateToken, billsRouter)

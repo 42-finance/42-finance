@@ -1,6 +1,7 @@
 import { AccountSubType, AccountType, CurrencyCode, WalletType } from 'shared-types'
 import { Column, Entity, Index, ManyToMany, ManyToOne, OneToMany, PrimaryColumn, Relation } from 'typeorm'
 
+import { AccountGroup } from './account-group'
 import { BalanceHistory } from './balance-history'
 import { BaseEntity } from './base-entity'
 import { Connection } from './connection'
@@ -90,6 +91,13 @@ export class Account extends BaseEntity {
 
   @ManyToOne(() => Household, (household) => household.accounts, { onDelete: 'CASCADE' })
   household: Relation<Household> = {} as Household
+
+  @Index()
+  @Column({ type: Number, nullable: true })
+  accountGroupId: number | null = null
+
+  @ManyToOne(() => AccountGroup, (accountGroup) => accountGroup.accounts, { onDelete: 'RESTRICT' })
+  accountGroup: Relation<AccountGroup> = {} as AccountGroup
 
   @OneToMany(() => Transaction, (transaction) => transaction.account)
   transactions!: Transaction[]

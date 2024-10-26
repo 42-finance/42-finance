@@ -1,5 +1,5 @@
 import { addDays } from 'date-fns'
-import { Account, BalanceHistory, Transaction } from 'frontend-types'
+import { Account, AccountGroup, BalanceHistory, Transaction } from 'frontend-types'
 import _ from 'lodash'
 import { AccountSubType, AccountType, CategoryType, CurrencyCode } from 'shared-types'
 
@@ -11,17 +11,18 @@ type AccountBase = {
   subType: AccountSubType
   currentBalance: number
   convertedBalance: number
+  accountGroupId: number
 }
 
 export const getNetWorth = (
   accounts: AccountBase[],
-  accountTypes: AccountSubType[],
+  accountGroup: AccountGroup | null,
   convertBalance: boolean,
   invertLiabilities: boolean
 ) => {
   let value = 0
   for (const account of accounts) {
-    value += getAccountValue(account, accountTypes, convertBalance, invertLiabilities)
+    value += getAccountValue(account, accountGroup, convertBalance, invertLiabilities)
   }
   return value
 }
@@ -53,7 +54,7 @@ const getHistoryForAccount = (balanceHistory: BalanceHistory[], account: Account
 
 const getNetWorthForDate = (
   balanceHistory: BalanceHistory[],
-  accountTypes: AccountSubType[],
+  accountGroup: AccountGroup | null,
   date: Date,
   convertBalance: boolean,
   invertLiabilities: boolean
@@ -69,9 +70,10 @@ const getNetWorthForDate = (
           type: account.type,
           subType: account.subType,
           currentBalance: history.currentBalance,
-          convertedBalance: history.convertedBalance
+          convertedBalance: history.convertedBalance,
+          accountGroupId: account.accountGroupId
         },
-        accountTypes,
+        accountGroup,
         convertBalance,
         invertLiabilities
       )
@@ -82,7 +84,7 @@ const getNetWorthForDate = (
 
 export const getNetWorthHistory = (
   balanceHistory: BalanceHistory[],
-  accountTypes: AccountSubType[],
+  accountGroup: AccountGroup | null,
   convertBalance: boolean,
   invertLiabilities: boolean,
   startDate: Date | null
@@ -100,7 +102,7 @@ export const getNetWorthHistory = (
   const values: { date: Date; value: number }[] = []
 
   while (date.getTime() <= tomorrow.getTime()) {
-    const value = getNetWorthForDate(balanceHistory, accountTypes, date, convertBalance, invertLiabilities)
+    const value = getNetWorthForDate(balanceHistory, accountGroup, date, convertBalance, invertLiabilities)
     values.push({ date, value })
     date = addDays(date, 1)
   }
@@ -110,11 +112,11 @@ export const getNetWorthHistory = (
 
 export const getAccountValue = (
   account: AccountBase,
-  accountTypes: AccountSubType[],
+  accountGroup: AccountGroup | null,
   convertBalance: boolean,
   invertLiabilities: boolean
 ) => {
-  if (accountTypes.includes(account.subType)) {
+  if (accountGroup == null || account.accountGroupId === accountGroup.id) {
     switch (account.type) {
       case AccountType.Liability: {
         if (invertLiabilities) {
@@ -132,14 +134,14 @@ export const getAccountValue = (
 
 export const getMonthlyValueChange = (
   balanceHistory: BalanceHistory[],
-  accountTypes: AccountSubType[],
+  accountGroup: AccountGroup | null,
   startDate: Date,
   endDate: Date,
   convertBalance: boolean,
   invertLiabilities: boolean
 ) => {
-  const startValue = getNetWorthForDate(balanceHistory, accountTypes, startDate, convertBalance, invertLiabilities)
-  const currentValue = getNetWorthForDate(balanceHistory, accountTypes, endDate, convertBalance, invertLiabilities)
+  const startValue = getNetWorthForDate(balanceHistory, accountGroup, startDate, convertBalance, invertLiabilities)
+  const currentValue = getNetWorthForDate(balanceHistory, accountGroup, endDate, convertBalance, invertLiabilities)
   return {
     value: currentValue - startValue,
     percentage: startValue === 0 ? 100 : ((currentValue - startValue) / Math.abs(startValue)) * 100

@@ -16,6 +16,7 @@ export type AddAccountRequest = {
   subType: AccountSubType
   currentBalance: number | null
   currencyCode: CurrencyCode
+  accountGroupId?: number | null
   walletType?: WalletType | null
   walletAddress?: string | null
   vehicleVin?: string | null
@@ -32,6 +33,7 @@ export type EditAccountRequest = {
   subType?: AccountSubType
   currentBalance?: number | null
   currencyCode?: CurrencyCode
+  accountGroupId?: number | null
 }
 
 export const editAccount = async (accountId: string, body: EditAccountRequest) =>

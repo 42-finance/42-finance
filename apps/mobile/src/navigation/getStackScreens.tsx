@@ -2,9 +2,11 @@ import { FontAwesome } from '@expo/vector-icons'
 import { ParamListBase, StackNavigationState, TypedNavigator } from '@react-navigation/native'
 import { NativeStackNavigationEventMap, NativeStackNavigationOptions } from '@react-navigation/native-stack'
 
+import { AccountGroupScreen } from '../screens/AccountGroupScreen'
 import { AccountRuleScreen } from '../screens/AccountRuleScreen'
 import { AccountScreen } from '../screens/AccountScreen'
 import { AccountsScreen } from '../screens/AccountsScreen'
+import { AddAccountGroupScreen } from '../screens/AddAccountGroupScreen'
 import { AddAccountScreen } from '../screens/AddAccountScreen'
 import { AddAssetScreen } from '../screens/AddAssetScreen'
 import { AddCategoryScreen } from '../screens/AddCategoryScreen'
@@ -31,6 +33,7 @@ import { ConnectMxScreen } from '../screens/ConnectMxScreen'
 import { ConnectionsScreen } from '../screens/ConnectionsScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
 import { DataScreen } from '../screens/DataScreen'
+import { EditAccountGroupScreen } from '../screens/EditAccountGroupScreen'
 import { EditAccountScreen } from '../screens/EditAccountScreen'
 import { EditBalanceHistoryScreen } from '../screens/EditBalanceHistoryScreen'
 import { EditCategoryScreen } from '../screens/EditCategoryScreen'
@@ -87,6 +90,12 @@ export const getStackScreens = (
   return [
     <Stack.Screen key="Account" name="Account" component={AccountScreen} options={{ title: 'Account' }} />,
     <Stack.Screen
+      key="AccountGroup"
+      name="AccountGroup"
+      component={AccountGroupScreen}
+      options={{ title: 'Account Group' }}
+    />,
+    <Stack.Screen
       key="AccountRule"
       name="AccountRule"
       component={AccountRuleScreen}
@@ -94,6 +103,12 @@ export const getStackScreens = (
     />,
     <Stack.Screen key="Accounts" name="Accounts" component={AccountsScreen} options={() => ({ title: 'Accounts' })} />,
     <Stack.Screen key="AddAccount" name="AddAccount" component={AddAccountScreen} options={{ title: 'Add account' }} />,
+    <Stack.Screen
+      key="AddAccountGroup"
+      name="AddAccountGroup"
+      component={AddAccountGroupScreen}
+      options={{ title: 'Add account group' }}
+    />,
     <Stack.Screen key="AddAsset" name="AddAsset" component={AddAssetScreen} options={{ title: 'Add account' }} />,
     <Stack.Screen
       key="AddCategory"
@@ -177,6 +192,12 @@ export const getStackScreens = (
       name="EditAccount"
       component={EditAccountScreen}
       options={{ title: 'Edit account' }}
+    />,
+    <Stack.Screen
+      key="EditAccountGroup"
+      name="EditAccountGroup"
+      component={EditAccountGroupScreen}
+      options={{ title: 'Edit account group' }}
     />,
     <Stack.Screen
       key="EditBalanceHistory"

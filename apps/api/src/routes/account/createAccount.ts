@@ -12,6 +12,7 @@ type CreateAccountRequest = {
   subType: AccountSubType
   currentBalance: number | null
   currencyCode: CurrencyCode
+  accountGroupId: number | null
   walletType: WalletType | null
   walletAddress: string | null
   walletTokenBalance: number | null
@@ -31,6 +32,7 @@ export const createAccount = async (
     type,
     subType,
     currencyCode = CurrencyCode.USD,
+    accountGroupId,
     walletType,
     walletAddress,
     vehicleVin,
@@ -68,6 +70,7 @@ export const createAccount = async (
     subType,
     currentBalance: currentBalance ?? 0,
     currencyCode,
+    accountGroupId,
     walletType,
     walletAddress,
     walletTokenBalance,

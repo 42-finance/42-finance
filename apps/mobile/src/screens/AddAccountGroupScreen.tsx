@@ -1,20 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AddAccountRequest, ApiQuery, addAccount } from 'frontend-api'
+import { AddAccountGroupRequest, ApiQuery, addAccountGroup } from 'frontend-api'
 import * as React from 'react'
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native'
 
-import { AccountForm } from '../components/forms/AccountForm'
+import { AccountGroupForm } from '../components/forms/AccountGroupForm'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
-export const AddAccountScreen = ({ navigation }: RootStackScreenProps<'AddAccount'>) => {
+export const AddAccountGroupScreen = ({ navigation }: RootStackScreenProps<'AddAccountGroup'>) => {
   const queryClient = useQueryClient()
 
   const { mutate, isPending: submitting } = useMutation({
-    mutationFn: async (request: AddAccountRequest) => {
+    mutationFn: async (request: AddAccountGroupRequest) => {
       Keyboard.dismiss()
-      const res = await addAccount(request)
+      const res = await addAccountGroup(request)
       if (res.ok && res.parsedBody?.payload) {
-        queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
         queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountGroups] })
         navigation.navigate('Accounts')
       }
@@ -24,7 +23,7 @@ export const AddAccountScreen = ({ navigation }: RootStackScreenProps<'AddAccoun
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <AccountForm onSubmit={mutate} submitting={submitting} />
+        <AccountGroupForm onSubmit={mutate} submitting={submitting} />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   )

@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { ProgressBar, Text, useTheme } from 'react-native-paper'
-import { AccountSubType, AccountType, GoalType } from 'shared-types'
+import { AccountType, GoalType } from 'shared-types'
 
 import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
@@ -39,12 +39,10 @@ export const GoalGraph: React.FC<Props> = ({ goal }) => {
     }
   })
 
-  const accountTypes = useMemo(() => Object.values(AccountSubType), [])
-
-  const netWorth = useMemo(() => getNetWorth(goal.accounts, accountTypes, true, false), [goal, accountTypes])
+  const netWorth = useMemo(() => getNetWorth(goal.accounts, null, true, false), [goal])
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, true, false, null)
+    const history = getNetWorthHistory(balanceHistory, null, true, false, null)
     if (history.length === 0) {
       history.push({ date: today, value: netWorth })
     }
@@ -52,13 +50,13 @@ export const GoalGraph: React.FC<Props> = ({ goal }) => {
       history.push(history[0])
     }
     return history
-  }, [balanceHistory, accountTypes])
+  }, [balanceHistory])
 
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
   const netWorthChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, accountTypes, startDate, selectedEndDate ?? today, true, false),
-    [balanceHistory, accountTypes, selectedEndDate, startDate]
+    () => getMonthlyValueChange(balanceHistory, null, startDate, selectedEndDate ?? today, true, false),
+    [balanceHistory, selectedEndDate, startDate]
   )
 
   const netWorthData = useMemo(

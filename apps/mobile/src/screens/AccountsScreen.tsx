@@ -1,28 +1,26 @@
 import { Feather, FontAwesome5 } from '@expo/vector-icons'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { ApiQuery, getAccounts } from 'frontend-api'
-import {
-  mapAccountGroupType,
-  mapAccountSubTypeToAccountGroupType
-} from 'frontend-utils/src/mappers/map-account-group-type'
-import _ from 'lodash'
+import { ApiQuery, getAccountGroups, getAccounts } from 'frontend-api'
+import { AccountGroup } from 'frontend-types'
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { Chip, ProgressBar, useTheme } from 'react-native-paper'
 import { AccountGroupType, DateRangeFilter } from 'shared-types'
 
-import { AccountGroup } from '../components/account/AccountGroup'
+import { AccountGroupView } from '../components/account/AccountGroupView'
 import { DateRangePicker } from '../components/common/DateRangePicker'
 import { View } from '../components/common/View'
 import { NetWorthGraph } from '../components/stats/NetWorthGraph'
+import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { useRefetchOnFocus } from '../hooks/use-refetch-on-focus.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
 export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>) => {
   const { colors } = useTheme()
 
-  const [selectedFilter, setSelectedFilter] = useState<AccountGroupType | null>(null)
+  const showActionSheet = useActionSheet()
+  const [selectedFilter, setSelectedFilter] = useState<AccountGroup | null>(null)
   const [selectedDateRangeFilter, setSelectedDateRangeFilter] = useState<DateRangeFilter>(DateRangeFilter.OneMonth)
 
   useEffect(() => {
@@ -33,7 +31,20 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('AddAsset')}>
+        <TouchableOpacity
+          onPress={() => {
+            showActionSheet([
+              {
+                label: 'Add account',
+                onSelected: () => navigation.navigate('AddAsset')
+              },
+              {
+                label: 'Add account group',
+                onSelected: () => navigation.navigate('AddAccountGroup')
+              }
+            ])
+          }}
+        >
           <FontAwesome5 name="plus" size={24} color={colors.onSurface} />
         </TouchableOpacity>
       )
@@ -58,53 +69,91 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
 
   useRefetchOnFocus(refetch)
 
-  const allGroupTypes = useMemo(() => Object.values(AccountGroupType), [])
+  const {
+    data: accountGroups = [],
+    isFetching: fetchingAccountGroups,
+    refetch: refetchAccountGroups
+  } = useQuery({
+    queryKey: [ApiQuery.AccountGroups],
+    queryFn: async () => {
+      const res = await getAccountGroups()
+      if (res.ok && res.parsedBody?.payload) {
+        return res.parsedBody.payload
+      }
+      return []
+    },
+    placeholderData: keepPreviousData
+  })
 
-  const accountGroups = useMemo(
-    () =>
-      _.chain(accounts.map((a) => ({ ...a, groupType: mapAccountSubTypeToAccountGroupType(a.subType) })))
-        .groupBy('groupType')
-        .map((value, key) => ({ groupType: key as AccountGroupType, accounts: value }))
-        .sort((a1, a2) => allGroupTypes.indexOf(a1.groupType) - allGroupTypes.indexOf(a2.groupType))
-        .value(),
-    [accounts, allGroupTypes]
+  useRefetchOnFocus(refetchAccountGroups)
+
+  const ungroupedAccounts = useMemo(
+    () => accounts.filter((a) => a.accountGroupId == null).map((a) => ({ ...a, accountGroupId: 0 })),
+    [accounts]
   )
+
+  const ungroupedAccountGroup = useMemo(
+    () => ({
+      id: 0,
+      name: 'Ungrouped',
+      type: AccountGroupType.Other,
+      accounts: ungroupedAccounts
+    }),
+    [ungroupedAccounts]
+  )
+
+  const getChipStyle = (accountGroup: AccountGroup | null) => {
+    if (accountGroup?.id === selectedFilter?.id) {
+      return {}
+    }
+
+    return {
+      backgroundColor: 'transparent'
+    }
+  }
 
   return (
     <View style={{ flex: 1 }}>
-      <ProgressBar indeterminate visible={fetching} />
+      <ProgressBar indeterminate visible={fetching || fetchingAccountGroups} />
       <ScrollView style={{ marginTop: 5 }}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{ flexDirection: 'row', marginBottom: 15, marginLeft: 10 }}>
-            {[null, ...Object.values(AccountGroupType)].map((type) => (
+            {[null, ...accountGroups].map((accountGroup) => (
               <Chip
-                key={type}
-                onPress={() => setSelectedFilter(type)}
+                key={accountGroup?.id ?? 'netWorth'}
+                onPress={() => setSelectedFilter(accountGroup)}
                 theme={{ roundness: 20 }}
                 style={{
                   padding: 2,
-                  ...(selectedFilter === type ? {} : { backgroundColor: 'transparent' })
+                  ...getChipStyle(accountGroup)
                 }}
                 textStyle={{ fontWeight: 'bold', fontSize: 12 }}
               >
-                {mapAccountGroupType(type).toUpperCase()}
+                {accountGroup?.name.toUpperCase() ?? 'NET WORTH'}
               </Chip>
             ))}
           </View>
         </ScrollView>
-        <NetWorthGraph accountGroupType={selectedFilter} dateRangeFilter={selectedDateRangeFilter} />
+        <NetWorthGraph accountGroup={selectedFilter} dateRangeFilter={selectedDateRangeFilter} />
         <DateRangePicker
           selectedDateRangeFilter={selectedDateRangeFilter}
           onSelected={(type) => setSelectedDateRangeFilter(type)}
         />
         {accountGroups.map((accountGroup) => (
-          <AccountGroup
-            key={accountGroup.groupType}
-            groupAccounts={accountGroup.accounts}
+          <AccountGroupView
+            key={accountGroup.id}
+            accountGroup={accountGroup}
             allAccounts={accounts}
             dateRangeFilter={selectedDateRangeFilter}
           />
         ))}
+        {ungroupedAccounts.length > 0 && (
+          <AccountGroupView
+            accountGroup={ungroupedAccountGroup}
+            allAccounts={accounts}
+            dateRangeFilter={selectedDateRangeFilter}
+          />
+        )}
       </ScrollView>
     </View>
   )

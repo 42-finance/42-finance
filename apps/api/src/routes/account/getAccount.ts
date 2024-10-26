@@ -1,4 +1,4 @@
-import { Account, Connection, User, dataSource } from 'database'
+import { Account, AccountGroup, Connection, User, dataSource } from 'database'
 import { Request, Response } from 'express'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
@@ -12,6 +12,7 @@ export const getAccount = async (request: Request<{ id: string }>, response: Res
     .getRepository(Account)
     .createQueryBuilder('account')
     .leftJoinAndMapOne('account.connection', Connection, 'connection', 'connection.id = account.connectionId')
+    .leftJoinAndMapOne('account.accountGroup', AccountGroup, 'accountGroup', 'accountGroup.id = account.accountGroupId')
     .loadRelationCountAndMap('account.transactionCount', 'account.transactions')
     .where('account.householdId = :householdId', { householdId })
     .andWhere('account.id = :id', { id })

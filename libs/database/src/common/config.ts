@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 
 import { Account } from '../models/account'
+import { AccountGroup } from '../models/account-group'
 import { BalanceHistory } from '../models/balance-history'
 import { Bill } from '../models/bill'
 import { BillPayment } from '../models/bill-payment'
@@ -55,6 +56,7 @@ export const config = {
   migrations: [`${__dirname}/../migrations/*.*`],
   entities: [
     Account,
+    AccountGroup,
     BalanceHistory,
     Bill,
     BillPayment,

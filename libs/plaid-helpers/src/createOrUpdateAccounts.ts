@@ -1,5 +1,6 @@
-import { Account, BalanceHistory, Connection, dataSource } from 'database'
+import { Account, AccountGroup, BalanceHistory, Connection, dataSource } from 'database'
 import { startOfDay } from 'date-fns'
+import { mapAccountSubTypeToAccountGroupType } from 'frontend-utils'
 import { AccountBase } from 'plaid'
 import { CurrencyCode } from 'shared-types'
 
@@ -9,14 +10,21 @@ import { mapPlaidAccountType } from './utils/mapPlaidAccountType'
 export const createOrUpdateAccounts = async (connection: Connection, accounts: AccountBase[]) => {
   const savedAccounts: Account[] = []
 
+  const accountGroups = await dataSource.getRepository(AccountGroup).findBy({ householdId: connection.householdId })
+
   for (const account of accounts) {
+    const type = mapPlaidAccountType(account.type)
+    const subType = mapPlaidAccountSubType(account.subtype)
+    const accountGroupType = mapAccountSubTypeToAccountGroupType(subType)
+    const accountGroup = accountGroups.find((a) => a.type === accountGroupType)
+
     const savedAccount = {
       id: account.account_id,
       name: account.name,
       officialName: account.official_name,
       mask: account.mask,
-      type: mapPlaidAccountType(account.type),
-      subType: mapPlaidAccountSubType(account.subtype),
+      type,
+      subType,
       currentBalance: account.balances?.current ?? 0,
       availableBalance: account.balances?.available,
       limit: account.balances?.limit,
@@ -24,6 +32,7 @@ export const createOrUpdateAccounts = async (connection: Connection, accounts: A
         (account.balances?.iso_currency_code as CurrencyCode) ??
         (account.balances?.unofficial_currency_code as CurrencyCode) ??
         CurrencyCode.USD,
+      accountGroupId: accountGroup?.id,
       connectionId: connection.id,
       householdId: connection.householdId
     } as Account
