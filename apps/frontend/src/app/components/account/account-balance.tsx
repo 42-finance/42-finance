@@ -51,12 +51,12 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
   )
 
   const netWorth = useMemo(
-    () => getNetWorth([account], accountTypes, convertBalance, false),
+    () => getNetWorth([account], null, convertBalance, false),
     [account, accountTypes, convertBalance]
   )
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, convertBalance, false, null)
+    const history = getNetWorthHistory(balanceHistory, null, convertBalance, false, null)
     if (history.length === 1) {
       history.push(history[0])
     }
@@ -66,7 +66,7 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
   const netWorthChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, accountTypes, startDate, filterDate ?? today, convertBalance, false),
+    () => getMonthlyValueChange(balanceHistory, null, startDate, filterDate ?? today, convertBalance, false),
     [balanceHistory, accountTypes, filterDate, startDate, convertBalance]
   )
 

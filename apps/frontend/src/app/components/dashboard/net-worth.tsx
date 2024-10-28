@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getAccounts, getBalanceHistory } from 'frontend-api'
+import { AccountGroup } from 'frontend-types'
 import {
   dateToLocal,
   formatDateInUtc,
@@ -9,7 +10,6 @@ import {
   getMonthlyValueChange,
   getNetWorth,
   getNetWorthHistory,
-  mapAccountGroupTypeToAccountSubTypes,
   todayInUtc,
   valueChangeColor,
   valueChangeIcon
@@ -24,10 +24,10 @@ import { Card } from '../common/card/card'
 import { NetWorthGraph } from '../common/chart/net-worth-graph'
 
 type Props = {
-  accountGroupType?: AccountGroupType | null
+  accountGroup?: AccountGroup | null
 }
 
-export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
+export const NetWorth: React.FC<Props> = ({ accountGroup = null }) => {
   const [today] = useState(todayInUtc())
   const [netWorthOverride, setNetWorthOverride] = useState<number | null>(null)
   const [filterDate, setFilterDate] = useState<Date | null>(null)
@@ -57,34 +57,25 @@ export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
     placeholderData: keepPreviousData
   })
 
-  const accountTypes = useMemo(() => mapAccountGroupTypeToAccountSubTypes(accountGroupType), [accountGroupType])
-
   const netWorth = useMemo(
-    () => getNetWorth(accounts, accountTypes, true, accountGroupType == null),
-    [accounts, accountTypes]
+    () => getNetWorth(accounts, accountGroup, true, accountGroup == null),
+    [accounts, accountGroup]
   )
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, accountTypes, true, accountGroupType == null, null)
+    const history = getNetWorthHistory(balanceHistory, accountGroup, true, accountGroup == null, null)
     if (history.length === 1) {
       history.push(history[0])
     }
     return history
-  }, [balanceHistory, accountTypes])
+  }, [balanceHistory, accountGroup])
 
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
   const netWorthChange = useMemo(
     () =>
-      getMonthlyValueChange(
-        balanceHistory,
-        accountTypes,
-        startDate,
-        filterDate ?? today,
-        true,
-        accountGroupType == null
-      ),
-    [balanceHistory, accountTypes, startDate, filterDate]
+      getMonthlyValueChange(balanceHistory, accountGroup, startDate, filterDate ?? today, true, accountGroup == null),
+    [balanceHistory, accountGroup, startDate, filterDate]
   )
 
   const netWorthData = useMemo(
@@ -107,7 +98,7 @@ export const NetWorth: React.FC<Props> = ({ accountGroupType = null }) => {
             style={{
               color: valueChangeColor(
                 netWorthChange.value,
-                accountGroupType === AccountGroupType.CreditCards || accountGroupType === AccountGroupType.Loans
+                accountGroup?.type === AccountGroupType.CreditCards || accountGroup?.type === AccountGroupType.Loans
                   ? AccountType.Liability
                   : AccountType.Asset
               )

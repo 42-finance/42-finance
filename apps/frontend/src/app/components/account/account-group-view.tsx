@@ -1,18 +1,14 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { subMonths } from 'date-fns'
 import { ApiQuery, getBalanceHistory } from 'frontend-api'
-import { Account } from 'frontend-types'
+import { Account, AccountGroup } from 'frontend-types'
 import {
   formatAccountBalance,
   formatDollars,
   formatPercentage,
   getMonthlyValueChange,
   getNetWorth,
-  mapAccountGroupType,
-  mapAccountGroupTypeToAccountSubTypes,
   mapAccountSubType,
-  mapAccountSubTypeToAccountGroupType,
-  mapAccountTypeToAccountSubTypes,
   valueChangeColor
 } from 'frontend-utils'
 import { formatDateDifference, todayInUtc } from 'frontend-utils/src/date/date.utils'
@@ -20,18 +16,18 @@ import { sumBy } from 'lodash'
 import { useMemo, useState } from 'react'
 import { FiArrowDownLeft, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
-import { AccountType } from 'shared-types'
+import { AccountGroupType, AccountType } from 'shared-types'
 
 import { useUserTokenContext } from '../../contexts/user-token.context'
 import { AccountIcon } from './account-icon'
 
 type Props = {
-  groupAccounts: Account[]
+  accountGroup: AccountGroup
   allAccounts: Account[]
   onSelected: () => void
 }
 
-export const AccountGroup: React.FC<Props> = ({ groupAccounts, allAccounts, onSelected }) => {
+export const AccountGroupView: React.FC<Props> = ({ accountGroup, allAccounts, onSelected }) => {
   const navigate = useNavigate()
   const { currencyCode } = useUserTokenContext()
 
@@ -51,33 +47,39 @@ export const AccountGroup: React.FC<Props> = ({ groupAccounts, allAccounts, onSe
 
   const filterStartDate = useMemo(() => subMonths(today, 1), [])
 
-  const type = useMemo(() => groupAccounts[0].type, [groupAccounts])
-
-  const groupType = useMemo(() => mapAccountSubTypeToAccountGroupType(groupAccounts[0].subType), [groupAccounts])
-
-  const subTypes = useMemo(() => mapAccountGroupTypeToAccountSubTypes(groupType), [groupType])
-
-  const valueChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, subTypes, filterStartDate, today, true, false),
-    [balanceHistory, subTypes]
+  const type = useMemo(
+    () =>
+      accountGroup.type === AccountGroupType.CreditCards || accountGroup.type === AccountGroupType.Loans
+        ? AccountType.Liability
+        : AccountType.Asset,
+    [accountGroup]
   )
 
-  const balance = useMemo(() => sumBy(groupAccounts, 'convertedBalance'), [groupAccounts])
+  const valueChange = useMemo(
+    () => getMonthlyValueChange(balanceHistory, accountGroup, filterStartDate, today, true, false),
+    [balanceHistory, accountGroup, filterStartDate, today]
+  )
+
+  const balance = useMemo(() => sumBy(accountGroup.accounts, 'convertedBalance'), [accountGroup])
 
   const isAsset = useMemo(() => type === AccountType.Asset, [type])
 
-  const accountTypeSubTypes = useMemo(() => mapAccountTypeToAccountSubTypes(type), [type])
-
   const totalValue = useMemo(
-    () => getNetWorth(allAccounts, accountTypeSubTypes, true, false),
-    [allAccounts, accountTypeSubTypes]
+    () =>
+      getNetWorth(
+        allAccounts.filter((a) => a.type === type),
+        null,
+        true,
+        false
+      ),
+    [allAccounts, type]
   )
 
   return (
     <div className="flex flex-col rounded-md shadow-md mb-4">
       <div className="flex justify-between p-3">
         <div className="flex flex-col">
-          {mapAccountGroupType(groupType)}
+          {accountGroup.name}
           <div className="flex items-center">
             {valueChange.value >= 0 || type === AccountType.Liability ? (
               <FiArrowUpRight size={14} color={valueChangeColor(valueChange.value, type)} className="mt-[3px]" />
@@ -97,7 +99,7 @@ export const AccountGroup: React.FC<Props> = ({ groupAccounts, allAccounts, onSe
           </div>
         </div>
       </div>
-      {groupAccounts.map((account) => (
+      {accountGroup.accounts.map((account) => (
         <div
           className="flex w-full p-3 items-center border-t cursor-pointer hover:opacity-75"
           key={account.id}

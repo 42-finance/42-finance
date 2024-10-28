@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import { Control, Controller, FieldError, FieldPath, FieldValues } from 'react-hook-form'
 import { KeyboardTypeOptions, ReturnKeyTypeOptions, StyleProp, TextStyle } from 'react-native'
+import MaskInput, { Mask } from 'react-native-mask-input'
 import { TextInput as PaperTextInput } from 'react-native-paper'
 
 import { TextContentType } from '../../types/text-content-type.type'
@@ -26,6 +27,7 @@ type Props<FormFields extends FieldValues> = {
   disabled?: boolean
   secureTextEntry?: boolean
   textContentType?: TextContentType
+  mask?: Mask
 }
 
 export const TextInput = <FormFields extends FieldValues>({
@@ -47,7 +49,8 @@ export const TextInput = <FormFields extends FieldValues>({
   format,
   disabled,
   secureTextEntry,
-  textContentType
+  textContentType,
+  mask
 }: Props<FormFields>) => {
   return (
     <Controller
@@ -79,6 +82,20 @@ export const TextInput = <FormFields extends FieldValues>({
             disabled={disabled}
             secureTextEntry={secureTextEntry}
             textContentType={textContentType}
+            render={
+              mask
+                ? (props) => (
+                    <MaskInput
+                      {...props}
+                      onChangeText={(_masked, unmasked) => {
+                        onControllerChange(unmasked)
+                        onChangeText?.(unmasked)
+                      }}
+                      mask={mask}
+                    />
+                  )
+                : undefined
+            }
           />
           <ErrorText visible={error != null} message={error?.message} marginBottom={0} marginTop={-5} />
         </>

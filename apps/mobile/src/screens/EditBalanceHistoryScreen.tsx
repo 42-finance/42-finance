@@ -1,3 +1,4 @@
+import { FontAwesome5 } from '@expo/vector-icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   ApiQuery,
@@ -10,20 +11,38 @@ import {
 } from 'frontend-api'
 import { BalanceHistory } from 'frontend-types'
 import * as React from 'react'
-import { useCallback, useState } from 'react'
-import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native'
-import { ActivityIndicator, Button, Dialog, Portal, ProgressBar, Text } from 'react-native-paper'
+import { useCallback, useEffect, useState } from 'react'
+import { Keyboard, KeyboardAvoidingView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { ActivityIndicator, Button, Dialog, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
 
 import { BalanceHistoryEntry } from '../components/balance-history/BalanceHistoryEntry'
+import { BalanceHistoryForm, BalanceHistoryFormFields } from '../components/forms/BalanceHistoryForm'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
-export const EditBalanceHistoryScreen = ({ route }: RootStackScreenProps<'EditBalanceHistory'>) => {
+export const EditBalanceHistoryScreen = ({ route, navigation }: RootStackScreenProps<'EditBalanceHistory'>) => {
   const { accountId } = route.params
 
+  const { colors } = useTheme()
   const queryClient = useQueryClient()
 
   const [editingBalanceHistory, setEditingBalanceHistory] = useState<BalanceHistory | null>(null)
   const [deletingBalanceHistory, setDeletingBalanceHistory] = useState<BalanceHistory | null>(null)
+  const [addingBalanceHistory, setAddingBalanceHistory] = useState(false)
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            setAddingBalanceHistory(true)
+            setEditingBalanceHistory(null)
+          }}
+        >
+          <FontAwesome5 name="plus" size={24} color={colors.onSurface} />
+        </TouchableOpacity>
+      )
+    })
+  }, [colors, navigation])
 
   const { data: account } = useQuery({
     queryKey: [ApiQuery.Account, accountId],
@@ -51,6 +70,8 @@ export const EditBalanceHistoryScreen = ({ route }: RootStackScreenProps<'EditBa
       Keyboard.dismiss()
       const res = await editBalanceHistory(accountId, request)
       if (res.ok && res.parsedBody?.payload) {
+        setAddingBalanceHistory(false)
+        setEditingBalanceHistory(null)
         await queryClient.invalidateQueries({ queryKey: [ApiQuery.Account] })
         await queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
         await queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountBalanceHistory] })
@@ -63,6 +84,8 @@ export const EditBalanceHistoryScreen = ({ route }: RootStackScreenProps<'EditBa
       Keyboard.dismiss()
       const res = await deleteBalanceHistory(accountId, request)
       if (res.ok && res.parsedBody?.payload) {
+        setAddingBalanceHistory(false)
+        setEditingBalanceHistory(null)
         await queryClient.invalidateQueries({ queryKey: [ApiQuery.Account] })
         await queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
         await queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountBalanceHistory] })
@@ -72,24 +95,16 @@ export const EditBalanceHistoryScreen = ({ route }: RootStackScreenProps<'EditBa
 
   const onPress = useCallback((history: BalanceHistory) => {
     setEditingBalanceHistory(history)
+    setAddingBalanceHistory(false)
   }, [])
 
-  const onEdit = useCallback(
-    (history: BalanceHistory, amount: number) => {
-      mutate({
-        date: history.date,
-        currentBalance: amount
-      })
-    },
-    [mutate]
-  )
+  const onEdit = useCallback((values: BalanceHistoryFormFields) => {
+    mutate(values)
+  }, [])
 
-  const onDelete = useCallback(
-    (history: BalanceHistory) => {
-      setDeletingBalanceHistory(history)
-    },
-    [mutateDelete]
-  )
+  const onDelete = useCallback((history: BalanceHistory) => {
+    setDeletingBalanceHistory(history)
+  }, [])
 
   if (!account) {
     return <ProgressBar indeterminate />
@@ -140,6 +155,7 @@ export const EditBalanceHistoryScreen = ({ route }: RootStackScreenProps<'EditBa
               isLoading={isPending}
             />
           ))}
+          {addingBalanceHistory && <BalanceHistoryForm onSubmit={onEdit} submitting={isPending} />}
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </>

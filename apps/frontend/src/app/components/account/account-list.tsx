@@ -1,18 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
-import { ApiQuery, getAccounts } from 'frontend-api'
-import { mapAccountSubTypeToAccountGroupType } from 'frontend-utils'
-import _ from 'lodash'
+import { ApiQuery, getAccountGroups, getAccounts } from 'frontend-api'
 import { useMemo } from 'react'
 import { AccountGroupType } from 'shared-types'
 
-import { AccountGroup } from './account-group'
+import { AccountGroupView } from './account-group-view'
 
 type Props = {
   onSelected: () => void
 }
 
 export const AccountList: React.FC<Props> = ({ onSelected }) => {
-  const { data: accounts = [], isFetching: fetching } = useQuery({
+  const { data: accounts = [] } = useQuery({
     queryKey: [ApiQuery.Accounts],
     queryFn: async () => {
       const res = await getAccounts()
@@ -23,28 +21,45 @@ export const AccountList: React.FC<Props> = ({ onSelected }) => {
     }
   })
 
-  const allGroupTypes = useMemo(() => Object.values(AccountGroupType), [])
+  const { data: accountGroups = [] } = useQuery({
+    queryKey: [ApiQuery.AccountGroups],
+    queryFn: async () => {
+      const res = await getAccountGroups()
+      if (res.ok && res.parsedBody?.payload) {
+        return res.parsedBody.payload
+      }
+      return []
+    }
+  })
 
-  const accountGroups = useMemo(
-    () =>
-      _.chain(accounts.map((a) => ({ ...a, groupType: mapAccountSubTypeToAccountGroupType(a.subType) })))
-        .groupBy('groupType')
-        .map((value, key) => ({ groupType: key as AccountGroupType, accounts: value }))
-        .sort((a1, a2) => allGroupTypes.indexOf(a1.groupType) - allGroupTypes.indexOf(a2.groupType))
-        .value(),
-    [accounts, allGroupTypes]
+  const ungroupedAccounts = useMemo(
+    () => accounts.filter((a) => a.accountGroupId == null).map((a) => ({ ...a, accountGroupId: 0 })),
+    [accounts]
+  )
+
+  const ungroupedAccountGroup = useMemo(
+    () => ({
+      id: 0,
+      name: 'Ungrouped',
+      type: AccountGroupType.Other,
+      accounts: ungroupedAccounts
+    }),
+    [ungroupedAccounts]
   )
 
   return (
     <div className="flex flex-col h-full p-4">
       {accountGroups.map((accountGroup) => (
-        <AccountGroup
-          key={accountGroup.groupType}
-          groupAccounts={accountGroup.accounts}
+        <AccountGroupView
+          key={accountGroup.id}
+          accountGroup={accountGroup}
           allAccounts={accounts}
           onSelected={onSelected}
         />
       ))}
+      {ungroupedAccounts.length > 0 && (
+        <AccountGroupView accountGroup={ungroupedAccountGroup} allAccounts={accounts} onSelected={onSelected} />
+      )}
     </div>
   )
 }
