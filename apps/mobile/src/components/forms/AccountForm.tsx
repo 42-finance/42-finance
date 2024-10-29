@@ -25,7 +25,7 @@ export type AccountFormFields = {
   hideFromAccountsList: boolean
   hideFromNetWorth: boolean
   hideFromBudget: boolean
-  convertBalanceCurrency?: boolean
+  convertBalanceCurrency: boolean
 }
 
 type Props = {
@@ -67,7 +67,7 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
       hideFromAccountsList: accountInfo?.hideFromAccountsList ?? false,
       hideFromNetWorth: accountInfo?.hideFromNetWorth ?? false,
       hideFromBudget: accountInfo?.hideFromBudget ?? false,
-      convertBalanceCurrency: true
+      convertBalanceCurrency: accountInfo?.convertBalanceCurrency ?? true
     }
   })
 

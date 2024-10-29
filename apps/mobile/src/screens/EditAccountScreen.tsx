@@ -39,7 +39,11 @@ export const EditAccountScreen = ({ route, navigation }: RootStackScreenProps<'E
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <AccountForm accountInfo={account} onSubmit={mutate} submitting={submitting} />
+        <AccountForm
+          accountInfo={{ ...account, convertBalanceCurrency: true }}
+          onSubmit={mutate}
+          submitting={submitting}
+        />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   )
