@@ -13,7 +13,6 @@ import { GettingStartedWidget } from './GettingStartedWidget'
 import { GoalsWidget } from './GoalsWidget'
 import { MonthlySpendingWidget } from './MonthlySpendingWidget'
 import { NetWorthWidget } from './NetWorthWidget'
-import { NewsWidget } from './NewsWidget'
 import { RecentTransactions } from './RecentTransactions'
 import { RecurringTransactionsWidget } from './RecurringTransactionsWidget'
 import { ReviewTransactions } from './ReviewTransactions'
@@ -25,7 +24,6 @@ type Props = {
 export const WL: React.FC<Props> = ({ widgets }) => {
   const widgetMap = useMemo(
     () => ({
-      [DashboardWidgetType.News]: NewsWidget,
       [DashboardWidgetType.Community]: CommunityWidget,
       [DashboardWidgetType.GettingStarted]: GettingStartedWidget,
       [DashboardWidgetType.NetWorth]: NetWorthWidget,

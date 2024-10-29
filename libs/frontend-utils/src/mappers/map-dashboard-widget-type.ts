@@ -2,8 +2,6 @@ import { DashboardWidgetType } from 'shared-types'
 
 export const mapDashboardWidgetType = (dashboardWidgetType: DashboardWidgetType) => {
   switch (dashboardWidgetType) {
-    case DashboardWidgetType.News:
-      return `What's New`
     case DashboardWidgetType.Community:
       return 'Community'
     case DashboardWidgetType.GettingStarted:

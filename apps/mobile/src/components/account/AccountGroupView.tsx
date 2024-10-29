@@ -156,7 +156,8 @@ export const AccountGroupView: React.FC<Props> = ({
             >
               <Text variant="titleMedium">{formatDollars(balance, currencyCode)}</Text>
               <Text variant="bodySmall" style={{ marginTop: 5 }}>
-                {formatPercentage(Math.abs(balance / totalValue) * 100, 0)} of {isAsset ? 'assets' : 'liabilities'}
+                {formatPercentage(totalValue === 0 ? 0 : Math.abs(balance / totalValue) * 100, 0)} of{' '}
+                {isAsset ? 'assets' : 'liabilities'}
               </Text>
             </View>
           </TouchableOpacity>

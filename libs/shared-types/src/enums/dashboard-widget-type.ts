@@ -1,5 +1,4 @@
 export enum DashboardWidgetType {
-  News = 'news',
   Community = 'community',
   GettingStarted = 'gettingStarted',
   NetWorth = 'netWorth',

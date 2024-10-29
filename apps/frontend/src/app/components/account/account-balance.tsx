@@ -49,6 +49,9 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
 
   const netWorthHistory = useMemo(() => {
     const history = getNetWorthHistory(balanceHistory, null, false, false, null)
+    if (history.length === 0) {
+      history.push({ date: today, value: netWorth })
+    }
     if (history.length === 1) {
       history.push(history[0])
     }

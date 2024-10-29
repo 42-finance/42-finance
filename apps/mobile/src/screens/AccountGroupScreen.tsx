@@ -44,7 +44,6 @@ export const AccountGroupScreen = ({ route, navigation }: RootStackScreenProps<'
       const res = await deleteAccountGroup(accountGroupId)
       if (res.ok && res.parsedBody?.payload) {
         queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
-        queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountGroup] })
         queryClient.invalidateQueries({ queryKey: [ApiQuery.AccountGroups] })
         navigation.pop()
       }
