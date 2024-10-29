@@ -36,7 +36,7 @@ export default (): ExpoConfig => {
     name: appName,
     slug: 'fortytwofinance',
     owner: '42-finance',
-    version: '1.1.2',
+    version: '1.2.0',
     orientation: 'portrait',
     icon: './src/assets/images/icon.png',
     scheme: 'fortytwofinance',
