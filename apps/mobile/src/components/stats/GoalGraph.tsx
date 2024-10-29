@@ -83,7 +83,8 @@ export const GoalGraph: React.FC<Props> = ({ goal }) => {
           size={20}
           color={valueChangeColor(
             netWorthChange.value,
-            goal.type === GoalType.Savings ? AccountType.Asset : AccountType.Liability
+            goal.type === GoalType.Savings ? AccountType.Asset : AccountType.Liability,
+            colors.outline
           )}
           style={{}}
         />
@@ -92,7 +93,8 @@ export const GoalGraph: React.FC<Props> = ({ goal }) => {
           style={{
             color: valueChangeColor(
               netWorthChange.value,
-              goal.type === GoalType.Savings ? AccountType.Asset : AccountType.Liability
+              goal.type === GoalType.Savings ? AccountType.Asset : AccountType.Liability,
+              colors.outline
             )
           }}
           numberOfLines={1}

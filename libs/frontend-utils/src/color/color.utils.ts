@@ -1,14 +1,19 @@
 import { AccountType } from 'shared-types'
 
-export const valueChangeColor = (value: number, type: AccountType) => {
+export const valueChangeColor = (value: number, type: AccountType, neutralColor: string = '#74777f') => {
+  if (value === 0) {
+    return neutralColor
+  }
+
   if (type === AccountType.Asset) {
     return value >= 0 ? '#19d2a5' : '#f0648c'
-  } else {
-    return value >= 0 ? '#f0648c' : '#19d2a5'
   }
+
+  return value >= 0 ? '#f0648c' : '#19d2a5'
 }
 
-export const valueChangeIcon = (value: number) => (value >= 0 ? 'arrow-up-right' : 'arrow-down-left')
+export const valueChangeIcon = (value: number) =>
+  value === 0 ? 'minus' : value >= 0 ? 'arrow-up-right' : 'arrow-down-left'
 
 export const lightColors = {
   primary: 'rgb(0, 95, 175)',

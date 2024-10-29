@@ -89,12 +89,12 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter 
         <Feather
           name={valueChangeIcon(netWorthChange.value)}
           size={20}
-          color={valueChangeColor(netWorthChange.value, account.type)}
+          color={valueChangeColor(netWorthChange.value, account.type, colors.outline)}
           style={{ marginTop: 1, marginRight: 2 }}
         />
         <Text
           variant="bodyMedium"
-          style={{ color: valueChangeColor(netWorthChange.value, account.type) }}
+          style={{ color: valueChangeColor(netWorthChange.value, account.type, colors.outline) }}
           numberOfLines={1}
         >
           {formatDollars(netWorthChange.value, account.currencyCode)} ({formatPercentage(netWorthChange.percentage)})

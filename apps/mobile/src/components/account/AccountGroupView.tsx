@@ -131,10 +131,10 @@ export const AccountGroupView: React.FC<Props> = ({
                 <Feather
                   name={valueChangeIcon(valueChange.value)}
                   size={14}
-                  color={valueChangeColor(valueChange.value, type)}
+                  color={valueChangeColor(valueChange.value, type, colors.outline)}
                   style={{ marginTop: 1, marginRight: 2 }}
                 />
-                <Text variant="bodySmall" style={{ color: valueChangeColor(valueChange.value, type) }}>
+                <Text variant="bodySmall" style={{ color: valueChangeColor(valueChange.value, type, colors.outline) }}>
                   {formatDollars(valueChange.value, currencyCode)} ({formatPercentage(valueChange.percentage)})
                 </Text>
                 <Text variant="bodySmall" style={{ marginLeft: 5, color: colors.outline }}>

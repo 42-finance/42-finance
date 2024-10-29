@@ -136,13 +136,13 @@ export const NetWorthGraph: React.FC<Props> = ({
         <Feather
           name={valueChangeIcon(netWorthChange.value)}
           size={20}
-          color={valueChangeColor(netWorthChange.value, type)}
+          color={valueChangeColor(netWorthChange.value, type, colors.outline)}
           style={{ marginTop: 1, marginRight: 2 }}
         />
         <Text
           variant="bodyMedium"
           style={{
-            color: valueChangeColor(netWorthChange.value, type)
+            color: valueChangeColor(netWorthChange.value, type, colors.outline)
           }}
           numberOfLines={1}
         >

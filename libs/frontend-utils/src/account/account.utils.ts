@@ -142,9 +142,10 @@ export const getMonthlyValueChange = (
 ) => {
   const startValue = getNetWorthForDate(balanceHistory, accountGroup, startDate, convertBalance, invertLiabilities)
   const currentValue = getNetWorthForDate(balanceHistory, accountGroup, endDate, convertBalance, invertLiabilities)
+  const value = currentValue - startValue
   return {
-    value: currentValue - startValue,
-    percentage: startValue === 0 ? 100 : ((currentValue - startValue) / Math.abs(startValue)) * 100
+    value,
+    percentage: value === 0 ? 0 : startValue === 0 ? 100 : (value / Math.abs(startValue)) * 100
   }
 }
 

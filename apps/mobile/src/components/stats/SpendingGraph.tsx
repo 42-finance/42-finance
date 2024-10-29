@@ -106,13 +106,13 @@ export const SpendingGraph: React.FC<Props> = ({ dateRangeFilter = DateRangeFilt
         <Feather
           name={valueChangeIcon(spendingOnDateValue.value)}
           size={20}
-          color={valueChangeColor(spendingOnDateValue.value, AccountType.Liability)}
+          color={valueChangeColor(spendingOnDateValue.value, AccountType.Liability, colors.outline)}
           style={{ marginTop: 1, marginRight: 2 }}
         />
         <Text
           variant="bodyMedium"
           style={{
-            color: valueChangeColor(spendingOnDateValue.value, AccountType.Liability)
+            color: valueChangeColor(spendingOnDateValue.value, AccountType.Liability, colors.outline)
           }}
           numberOfLines={1}
         >
