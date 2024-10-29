@@ -105,7 +105,7 @@ export class Account extends BaseEntity {
   @Column({ type: Number, nullable: true })
   accountGroupId: number | null = null
 
-  @ManyToOne(() => AccountGroup, (accountGroup) => accountGroup.accounts, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => AccountGroup, (accountGroup) => accountGroup.accounts, { onDelete: 'SET NULL' })
   accountGroup: Relation<AccountGroup> = {} as AccountGroup
 
   @OneToMany(() => Transaction, (transaction) => transaction.account)

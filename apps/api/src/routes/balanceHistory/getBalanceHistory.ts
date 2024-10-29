@@ -19,6 +19,13 @@ export const getBalanceHistory = async (
   const { householdId, userId } = request
   const { startDate, endDate, accountIds, hideFromAccountsList, hideFromNetWorth, hideFromBudget } = request.query
 
+  if (accountIds?.length === 0) {
+    return response.send({
+      errors: [],
+      payload: []
+    })
+  }
+
   let balanceHistoryQuery = dataSource
     .getRepository(BalanceHistory)
     .createQueryBuilder('balanceHistory')
@@ -33,7 +40,7 @@ export const getBalanceHistory = async (
   if (endDate) {
     balanceHistoryQuery = balanceHistoryQuery.andWhere('balanceHistory.date <= :endDate', { endDate })
   }
-  if (accountIds) {
+  if (accountIds?.length) {
     balanceHistoryQuery = balanceHistoryQuery.andWhere('balanceHistory.accountId IN (:...accountIds)', {
       accountIds: accountIds.split(',')
     })
