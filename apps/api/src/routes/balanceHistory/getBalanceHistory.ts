@@ -1,8 +1,7 @@
-import { Account, BalanceHistory, User, dataSource } from 'database'
+import { Account, BalanceHistory, User, dataSource, getExchangeRate } from 'database'
 import { Request, Response } from 'express'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
-import { getExchangeRate } from '../../utils/exchange-rate.utils'
 
 type BalanceHistoryQuery = {
   startDate?: string

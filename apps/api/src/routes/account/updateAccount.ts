@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import { AccountSubType, AccountType, CurrencyCode } from 'shared-types'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
+import { convertAccountCurrency } from '../../utils/account.utils'
 
 type UpdateAccountRequest = {
   name?: string
@@ -15,6 +16,7 @@ type UpdateAccountRequest = {
   hideFromAccountsList?: boolean
   hideFromNetWorth?: boolean
   hideFromBudget?: boolean
+  convertBalanceCurrency?: boolean
 }
 
 export const updateAccount = async (
@@ -32,7 +34,8 @@ export const updateAccount = async (
     accountGroupId,
     hideFromAccountsList,
     hideFromNetWorth,
-    hideFromBudget
+    hideFromBudget,
+    convertBalanceCurrency
   } = request.body
 
   const account = await dataSource
@@ -42,37 +45,43 @@ export const updateAccount = async (
     .andWhere('account.householdId = :householdId', { householdId })
     .getOneOrFail()
 
-  const result = await dataSource.getRepository(Account).update(account.id, {
-    name,
-    type,
-    subType,
-    currentBalance,
-    currencyCode,
-    accountGroupId,
-    hideFromAccountsList,
-    hideFromNetWorth,
-    hideFromBudget
-  })
+  return await dataSource.transaction(async (entityManager) => {
+    const result = await entityManager.getRepository(Account).update(account.id, {
+      name,
+      type,
+      subType,
+      currentBalance,
+      currencyCode,
+      accountGroupId,
+      hideFromAccountsList,
+      hideFromNetWorth,
+      hideFromBudget
+    })
 
-  if (currentBalance !== account.currentBalance) {
-    await dataSource
-      .createQueryBuilder()
-      .insert()
-      .into(BalanceHistory)
-      .values({
-        date: startOfDay(new Date()),
-        currentBalance,
-        availableBalance: account.availableBalance,
-        limit: account.limit,
-        accountId: account.id,
-        householdId
-      })
-      .orUpdate(['currentBalance', 'availableBalance', 'limit'], ['date', 'accountId'])
-      .execute()
-  }
+    if (currentBalance != null && currentBalance !== account.currentBalance) {
+      await entityManager
+        .createQueryBuilder()
+        .insert()
+        .into(BalanceHistory)
+        .values({
+          date: startOfDay(new Date()),
+          currentBalance,
+          availableBalance: account.availableBalance,
+          limit: account.limit,
+          accountId: account.id,
+          householdId
+        })
+        .orUpdate(['currentBalance', 'availableBalance', 'limit'], ['date', 'accountId'])
+        .execute()
+    }
 
-  return response.json({
-    errors: [],
-    payload: result
+    if (convertBalanceCurrency && currencyCode && currencyCode != account.currencyCode) {
+      await convertAccountCurrency(id, householdId, account.currencyCode, currencyCode, entityManager)
+    }
+
+    return response.json({
+      errors: [],
+      payload: result
+    })
   })
 }

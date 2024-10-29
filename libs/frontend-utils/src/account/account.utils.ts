@@ -97,7 +97,7 @@ export const getNetWorthHistory = (
     return []
   }
 
-  let date = sortedBalanceHistory[0].date
+  let date = startDate ?? sortedBalanceHistory[0].date
   const tomorrow = addDays(todayInUtc(), 1)
   const values: { date: Date; value: number }[] = []
 
@@ -140,6 +140,9 @@ export const getMonthlyValueChange = (
   convertBalance: boolean,
   invertLiabilities: boolean
 ) => {
+  if (startDate.getTime() > endDate.getTime()) {
+    endDate = startDate
+  }
   const startValue = getNetWorthForDate(balanceHistory, accountGroup, startDate, convertBalance, invertLiabilities)
   const currentValue = getNetWorthForDate(balanceHistory, accountGroup, endDate, convertBalance, invertLiabilities)
   const value = currentValue - startValue

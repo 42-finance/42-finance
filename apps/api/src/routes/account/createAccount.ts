@@ -55,7 +55,8 @@ export const createAccount = async (
   if (walletType && walletAddress) {
     const { currentBalance: balance, walletTokenBalance: tokenBalance } = await getWalletBalance(
       walletAddress,
-      walletType
+      walletType,
+      currencyCode
     )
     currentBalance = balance
     walletTokenBalance = tokenBalance

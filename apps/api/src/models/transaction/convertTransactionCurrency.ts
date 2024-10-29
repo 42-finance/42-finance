@@ -1,6 +1,4 @@
-import { Transaction, User } from 'database'
-
-import { getExchangeRate } from '../../utils/exchange-rate.utils'
+import { Transaction, User, getExchangeRate } from 'database'
 
 export const convertTransactionsCurrency = async (transactions: Transaction[], user: User) => {
   const convertedTransactions: Transaction[] = []

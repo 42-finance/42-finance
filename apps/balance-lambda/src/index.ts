@@ -63,7 +63,8 @@ export const handler = async () => {
         try {
           const { currentBalance, walletTokenBalance } = await getWalletBalance(
             cryptoAccount.walletAddress,
-            cryptoAccount.walletType
+            cryptoAccount.walletType,
+            cryptoAccount.currencyCode
           )
 
           if (currentBalance != null && walletTokenBalance != null) {

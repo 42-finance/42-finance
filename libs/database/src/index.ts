@@ -34,6 +34,7 @@ import { User } from './models/user'
 import { UserInvite } from './models/user-invite'
 import { getCategory } from './utils/category.utils'
 import { getWalletBalance, getWalletTransactions, updateWalletTransactions } from './utils/covalent.utils'
+import { getExchangeRate } from './utils/exchange-rate.utils'
 import { getOrCreateMerchant } from './utils/merchant.utils'
 import { createOrUpdateRecurringTransaction } from './utils/recurring.utils'
 import { applyRules } from './utils/rule.utils'
@@ -58,6 +59,7 @@ export {
   ExchangeRate,
   Expense,
   getCategory,
+  getExchangeRate,
   getOrCreateMerchant,
   getVehicleValue,
   getWalletBalance,

@@ -1,8 +1,7 @@
-import { Account, Connection, Merchant, RecurringTransaction, User, dataSource } from 'database'
+import { Account, Connection, Merchant, RecurringTransaction, User, dataSource, getExchangeRate } from 'database'
 import { Request, Response } from 'express'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
-import { getExchangeRate } from '../../utils/exchange-rate.utils'
 
 export const getRecurringTransactions = async (
   request: Request<object, object, object, object>,

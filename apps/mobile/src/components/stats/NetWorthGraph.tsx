@@ -83,19 +83,19 @@ export const NetWorthGraph: React.FC<Props> = ({
     return history
   }, [balanceHistory, accountGroup, filterStartDate])
 
-  const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
+  const startDate = useMemo(() => netWorthHistory[0].date, [netWorthHistory])
 
   const netWorthChange = useMemo(
     () =>
       getMonthlyValueChange(
         balanceHistory,
         accountGroup,
-        startDate,
+        dateRangeFilter === DateRangeFilter.AllTime ? startDate : filterStartDate,
         selectedEndDate ?? today,
         true,
         accountGroup == null
       ),
-    [balanceHistory, startDate, selectedEndDate, accountGroup]
+    [balanceHistory, filterStartDate, selectedEndDate, accountGroup]
   )
 
   const netWorthData = useMemo(
@@ -151,7 +151,7 @@ export const NetWorthGraph: React.FC<Props> = ({
         <Text variant="bodyMedium" style={{ marginLeft: 5, color: colors.outline }}>
           {selectedEndDate == null
             ? mapDateRangeFilterFull(dateRangeFilter)
-            : `${formatDateInUtc(startDate, 'MMM d, yyyy')} - ${formatDateInUtc(selectedEndDate, 'MMM d, yyyy')}`}
+            : `${formatDateInUtc(filterStartDate, 'MMM d, yyyy')} - ${formatDateInUtc(selectedEndDate, 'MMM d, yyyy')}`}
         </Text>
       </View>
       <View style={{ marginLeft: -10 }}>

@@ -25,6 +25,7 @@ export type AccountFormFields = {
   hideFromAccountsList: boolean
   hideFromNetWorth: boolean
   hideFromBudget: boolean
+  convertBalanceCurrency?: boolean
 }
 
 type Props = {
@@ -45,7 +46,8 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
     accountGroupId: Yup.number().defined().nullable(),
     hideFromAccountsList: Yup.boolean().required('Hide from accounts list is required'),
     hideFromNetWorth: Yup.boolean().required('Hide from net worth is required'),
-    hideFromBudget: Yup.boolean().required('Hide from budget is required')
+    hideFromBudget: Yup.boolean().required('Hide from budget is required'),
+    convertBalanceCurrency: Yup.boolean().required('Convert balance currency is required')
   })
 
   const {
@@ -64,7 +66,8 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
       accountGroupId: accountInfo?.accountGroupId ?? null,
       hideFromAccountsList: accountInfo?.hideFromAccountsList ?? false,
       hideFromNetWorth: accountInfo?.hideFromNetWorth ?? false,
-      hideFromBudget: accountInfo?.hideFromBudget ?? false
+      hideFromBudget: accountInfo?.hideFromBudget ?? false,
+      convertBalanceCurrency: true
     }
   })
 
@@ -114,7 +117,7 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
     []
   )
 
-  const currencyCurrencyCode = watch('currencyCode')
+  const accountCurrencyCode = watch('currencyCode')
 
   return (
     <View>
@@ -171,7 +174,7 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
           marginHorizontal: 5
         }}
         error={errors.currentBalance}
-        currencyCode={currencyCurrencyCode}
+        currencyCode={accountCurrencyCode}
       />
       <PaperPickerField
         label="Currency"
@@ -184,6 +187,19 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
         }}
         error={errors.currencyCode}
       />
+      {accountInfo && accountCurrencyCode != accountInfo.currencyCode && (
+        <PaperPickerField
+          label="Convert balance & transactions amount to new currency"
+          name="convertBalanceCurrency"
+          control={control}
+          items={yesNoItems}
+          style={{
+            marginTop: 5,
+            marginHorizontal: 5
+          }}
+          error={errors.convertBalanceCurrency}
+        />
+      )}
       <PaperPickerField
         label="Hide from accounts list"
         name="hideFromAccountsList"

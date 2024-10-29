@@ -1,9 +1,8 @@
-import { Account, Bill, BillPayment, Connection, User, dataSource } from 'database'
+import { Account, Bill, BillPayment, Connection, User, dataSource, getExchangeRate } from 'database'
 import { startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
-import { getExchangeRate } from '../../utils/exchange-rate.utils'
 
 export const getBill = async (request: Request<{ id: number }, {}, {}, {}>, response: Response<HTTPResponseBody>) => {
   const { householdId, userId } = request

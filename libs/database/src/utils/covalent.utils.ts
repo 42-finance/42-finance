@@ -2,7 +2,16 @@ import { Transaction as CovalentTransaction, GoldRushClient } from '@covalenthq/
 import { startOfDay } from 'date-fns'
 import { CurrencyCode, SystemCategory, TransactionType, WalletType } from 'shared-types'
 
-import { Account, Rule, Transaction, applyRules, dataSource, getCategory, getOrCreateMerchant } from '..'
+import {
+  Account,
+  Rule,
+  Transaction,
+  applyRules,
+  dataSource,
+  getCategory,
+  getExchangeRate,
+  getOrCreateMerchant
+} from '..'
 
 const getChain = (walletType: WalletType) => {
   switch (walletType) {
@@ -22,7 +31,7 @@ const getTokenSymbol = (walletType: WalletType) => {
   }
 }
 
-export const getWalletBalance = async (walletAddress: string, walletType: WalletType) => {
+export const getWalletBalance = async (walletAddress: string, walletType: WalletType, currencyCode: CurrencyCode) => {
   const client = new GoldRushClient(process.env.COVALENT_API_KEY!)
   const chain = getChain(walletType)
   const response = await client.BalanceService.getTokenBalancesForWalletAddress(chain, walletAddress)
@@ -48,8 +57,11 @@ export const getWalletBalance = async (walletAddress: string, walletType: Wallet
     ? balanceItem.balance / BigInt(balanceItem.contract_decimals)
     : balanceItem.balance
 
+  const currentBalance = balanceItem.quote
+  const exchangeRate = await getExchangeRate(CurrencyCode.USD, currencyCode)
+
   return {
-    currentBalance: balanceItem.quote,
+    currentBalance: currentBalance != null ? currentBalance * exchangeRate : null,
     walletTokenBalance: Number(walletTokenBalance)
   }
 }

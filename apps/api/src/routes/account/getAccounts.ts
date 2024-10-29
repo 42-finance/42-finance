@@ -1,8 +1,7 @@
-import { Account, AccountGroup, Connection, User, dataSource } from 'database'
+import { Account, AccountGroup, Connection, User, dataSource, getExchangeRate } from 'database'
 import { Request, Response } from 'express'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
-import { getExchangeRate } from '../../utils/exchange-rate.utils'
 
 type AccountsQuery = {
   hideFromAccountsList?: boolean
