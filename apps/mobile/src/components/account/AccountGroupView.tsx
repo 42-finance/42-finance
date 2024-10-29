@@ -46,9 +46,12 @@ export const AccountGroupView: React.FC<Props> = ({
   const { currencyCode } = useUserTokenContext()
 
   const { data: balanceHistory = [] } = useQuery({
-    queryKey: [ApiQuery.AccountGroupBalanceHistory, showHiddenAccounts],
+    queryKey: [ApiQuery.AccountGroupBalanceHistory, showHiddenAccounts, accountGroup.accounts],
     queryFn: async () => {
-      const res = await getBalanceHistory(showHiddenAccounts ? {} : { hideFromAccountsList: false })
+      const res = await getBalanceHistory({
+        hideFromAccountsList: showHiddenAccounts ? undefined : false,
+        accountIds: accountGroup.accounts.map((a) => a.id)
+      })
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }
@@ -63,14 +66,16 @@ export const AccountGroupView: React.FC<Props> = ({
 
   const type = useMemo(
     () =>
-      accountGroup.type === AccountGroupType.CreditCards || accountGroup.type === AccountGroupType.Loans
+      accountGroup.type === AccountGroupType.CreditCards ||
+      accountGroup.type === AccountGroupType.Loans ||
+      accountGroup.type === AccountGroupType.OtherLiabilities
         ? AccountType.Liability
         : AccountType.Asset,
     [accountGroup]
   )
 
   const valueChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, accountGroup, filterStartDate, today, true, false),
+    () => getMonthlyValueChange(balanceHistory, null, filterStartDate, today, true, false),
     [balanceHistory, filterStartDate, today]
   )
 

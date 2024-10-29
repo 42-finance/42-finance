@@ -6,7 +6,7 @@ import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { Chip, ProgressBar, useTheme } from 'react-native-paper'
-import { AccountGroupType, DateRangeFilter } from 'shared-types'
+import { AccountGroupType, AccountType, DateRangeFilter } from 'shared-types'
 
 import { AccountGroupView } from '../components/account/AccountGroupView'
 import { DateRangePicker } from '../components/common/DateRangePicker'
@@ -97,22 +97,46 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
 
   useRefetchOnFocus(refetchAccountGroups)
 
-  const ungroupedAccounts = useMemo(
-    () => accounts.filter((a) => a.accountGroupId == null).map((a) => ({ ...a, accountGroupId: 0 })),
+  const ungroupedAssetAccounts = useMemo(
+    () =>
+      accounts
+        .filter((a) => a.accountGroupId == null && a.type === AccountType.Asset)
+        .map((a) => ({ ...a, accountGroupId: 0 })),
     [accounts]
   )
 
-  const ungroupedAccountGroup = useMemo(
+  const ungroupedLiabilityAccounts = useMemo(
+    () =>
+      accounts
+        .filter((a) => a.accountGroupId == null && a.type === AccountType.Liability)
+        .map((a) => ({ ...a, accountGroupId: 0 })),
+    [accounts]
+  )
+
+  const ungroupedAssetsAccountGroup = useMemo(
     () => ({
       id: 0,
-      name: 'Ungrouped',
-      type: AccountGroupType.Other,
+      name: 'Ungrouped Assets',
+      type: AccountGroupType.OtherAssets,
       hideFromAccountsList: false,
       hideFromNetWorth: false,
       hideFromBudget: false,
-      accounts: ungroupedAccounts
+      accounts: ungroupedAssetAccounts
     }),
-    [ungroupedAccounts]
+    [ungroupedAssetAccounts]
+  )
+
+  const ungroupedLiabilitiesAccountGroup = useMemo(
+    () => ({
+      id: 0,
+      name: 'Ungrouped Liabilities',
+      type: AccountGroupType.OtherLiabilities,
+      hideFromAccountsList: false,
+      hideFromNetWorth: false,
+      hideFromBudget: false,
+      accounts: ungroupedLiabilityAccounts
+    }),
+    [ungroupedLiabilityAccounts]
   )
 
   const filteredAccountGroups = useMemo(
@@ -170,9 +194,17 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
             showHiddenAccounts={showHiddenAccounts}
           />
         ))}
-        {ungroupedAccounts.length > 0 && (
+        {ungroupedAssetAccounts.length > 0 && (
           <AccountGroupView
-            accountGroup={ungroupedAccountGroup}
+            accountGroup={ungroupedAssetsAccountGroup}
+            allAccounts={accounts}
+            dateRangeFilter={selectedDateRangeFilter}
+            showHiddenAccounts={showHiddenAccounts}
+          />
+        )}
+        {ungroupedLiabilityAccounts.length > 0 && (
+          <AccountGroupView
+            accountGroup={ungroupedLiabilitiesAccountGroup}
             allAccounts={accounts}
             dateRangeFilter={selectedDateRangeFilter}
             showHiddenAccounts={showHiddenAccounts}

@@ -107,7 +107,9 @@ export const NetWorthGraph: React.FC<Props> = ({
 
   const type = useMemo(
     () =>
-      accountGroup?.type === AccountGroupType.CreditCards || accountGroup?.type === AccountGroupType.Loans
+      accountGroup?.type === AccountGroupType.CreditCards ||
+      accountGroup?.type === AccountGroupType.Loans ||
+      accountGroup?.type === AccountGroupType.OtherLiabilities
         ? AccountType.Liability
         : AccountType.Asset,
     [accountGroup]

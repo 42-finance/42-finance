@@ -16,7 +16,7 @@ import { sumBy } from 'lodash'
 import { useMemo, useState } from 'react'
 import { FiArrowDownLeft, FiArrowUpRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
-import { AccountGroupType, AccountType } from 'shared-types'
+import { AccountGroupType, AccountType, DateRangeFilter } from 'shared-types'
 
 import { useUserTokenContext } from '../../contexts/user-token.context'
 import { AccountIcon } from './account-icon'
@@ -24,17 +24,28 @@ import { AccountIcon } from './account-icon'
 type Props = {
   accountGroup: AccountGroup
   allAccounts: Account[]
+  dateRangeFilter: DateRangeFilter
+  showHiddenAccounts: boolean
   onSelected: () => void
 }
 
-export const AccountGroupView: React.FC<Props> = ({ accountGroup, allAccounts, onSelected }) => {
+export const AccountGroupView: React.FC<Props> = ({
+  accountGroup,
+  allAccounts,
+  dateRangeFilter,
+  showHiddenAccounts,
+  onSelected
+}) => {
   const navigate = useNavigate()
   const { currencyCode } = useUserTokenContext()
 
   const { data: balanceHistory = [] } = useQuery({
-    queryKey: [ApiQuery.BalanceHistory],
+    queryKey: [ApiQuery.AccountGroupBalanceHistory, showHiddenAccounts, accountGroup.accounts],
     queryFn: async () => {
-      const res = await getBalanceHistory()
+      const res = await getBalanceHistory({
+        hideFromAccountsList: showHiddenAccounts ? undefined : false,
+        accountIds: accountGroup.accounts.map((a) => a.id)
+      })
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }
@@ -49,15 +60,17 @@ export const AccountGroupView: React.FC<Props> = ({ accountGroup, allAccounts, o
 
   const type = useMemo(
     () =>
-      accountGroup.type === AccountGroupType.CreditCards || accountGroup.type === AccountGroupType.Loans
+      accountGroup.type === AccountGroupType.CreditCards ||
+      accountGroup.type === AccountGroupType.Loans ||
+      accountGroup.type === AccountGroupType.OtherLiabilities
         ? AccountType.Liability
         : AccountType.Asset,
     [accountGroup]
   )
 
   const valueChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, accountGroup, filterStartDate, today, true, false),
-    [balanceHistory, accountGroup, filterStartDate, today]
+    () => getMonthlyValueChange(balanceHistory, null, filterStartDate, today, true, false),
+    [balanceHistory, filterStartDate, today]
   )
 
   const balance = useMemo(() => sumBy(accountGroup.accounts, 'convertedBalance'), [accountGroup])

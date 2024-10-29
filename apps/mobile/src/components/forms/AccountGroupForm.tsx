@@ -41,7 +41,7 @@ export const AccountGroupForm: React.FC<Props> = ({ accountGroupInfo, onSubmit, 
     resolver: yupResolver(schema),
     defaultValues: {
       name: accountGroupInfo?.name ?? '',
-      type: accountGroupInfo?.type ?? AccountGroupType.Other,
+      type: accountGroupInfo?.type ?? AccountGroupType.OtherAssets,
       hideFromAccountsList: accountGroupInfo?.hideFromAccountsList ?? false,
       hideFromNetWorth: accountGroupInfo?.hideFromNetWorth ?? false,
       hideFromBudget: accountGroupInfo?.hideFromBudget ?? false

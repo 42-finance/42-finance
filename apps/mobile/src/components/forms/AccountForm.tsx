@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getAccountGroups } from 'frontend-api'
+import { mapAccountTypeToAccountGroupTypes } from 'frontend-utils'
 import { mapAccountSubType } from 'frontend-utils/src/mappers/map-account-sub-type'
 import { mapAccountType } from 'frontend-utils/src/mappers/map-account-type'
 import React, { useMemo } from 'react'
@@ -71,6 +72,9 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
     }
   })
 
+  const accountType = watch('type')
+  const accountCurrencyCode = watch('currencyCode')
+
   const { data: accountGroups = [] } = useQuery({
     queryKey: [ApiQuery.AccountGroups],
     queryFn: async () => {
@@ -104,9 +108,14 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
     []
   )
 
+  const accountGroupTypes = useMemo(() => mapAccountTypeToAccountGroupTypes(accountType), [accountType])
+
   const accountGroupItems = useMemo(
-    () => [{ label: 'None', value: null }, ...accountGroups.map((a) => ({ label: a.name, value: a.id }))],
-    []
+    () => [
+      { label: 'None', value: null },
+      ...accountGroups.filter((a) => accountGroupTypes.includes(a.type)).map((a) => ({ label: a.name, value: a.id }))
+    ],
+    [accountGroups, accountGroupTypes]
   )
 
   const yesNoItems = useMemo(
@@ -116,8 +125,6 @@ export const AccountForm: React.FC<Props> = ({ accountInfo, onSubmit, submitting
     ],
     []
   )
-
-  const accountCurrencyCode = watch('currencyCode')
 
   return (
     <View>

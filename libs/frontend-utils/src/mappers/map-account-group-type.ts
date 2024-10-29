@@ -12,22 +12,27 @@ export const mapAccountGroupType = (accountGroupType: AccountGroupType | null) =
       return 'Investments'
     case AccountGroupType.Loans:
       return 'Loans'
-    case AccountGroupType.Other:
-      return 'Other'
+    case AccountGroupType.OtherAssets:
+      return 'Other Assets'
+    case AccountGroupType.OtherLiabilities:
+      return 'Other Liabilities'
     case AccountGroupType.Vehicles:
       return 'Vehicles'
   }
 }
 
-export const mapAccountGroupTypeToAccountSubTypes = (accountGroupType: AccountGroupType | null) => {
+export const mapAccountGroupTypeToAccountSubTypes = (
+  accountGroupType: AccountGroupType | null,
+  accountType: AccountType
+) => {
   const allTypes = Object.values(AccountSubType)
   if (accountGroupType == null) {
     return allTypes
   }
-  return allTypes.filter((s) => mapAccountSubTypeToAccountGroupType(s) === accountGroupType)
+  return allTypes.filter((t) => mapAccountSubTypeToAccountGroupType(t, accountType) === accountGroupType)
 }
 
-export const mapAccountSubTypeToAccountGroupType = (accountSubType: AccountSubType) => {
+export const mapAccountSubTypeToAccountGroupType = (accountSubType: AccountSubType, accountType: AccountType) => {
   switch (accountSubType) {
     case AccountSubType.Paypal:
     case AccountSubType.CD:
@@ -113,7 +118,7 @@ export const mapAccountSubTypeToAccountGroupType = (accountSubType: AccountSubTy
       return AccountGroupType.Loans
 
     case AccountSubType.Other:
-      return AccountGroupType.Other
+      return accountType === AccountType.Asset ? AccountGroupType.OtherAssets : AccountGroupType.OtherLiabilities
 
     case AccountSubType.Vehicle:
       return AccountGroupType.Vehicles
@@ -123,9 +128,14 @@ export const mapAccountSubTypeToAccountGroupType = (accountSubType: AccountSubTy
 export const mapAccountTypeToAccountGroupTypes = (accountType: AccountType) => {
   switch (accountType) {
     case AccountType.Asset:
-      return [AccountGroupType.Cash, AccountGroupType.Investments, AccountGroupType.Other, AccountGroupType.Vehicles]
+      return [
+        AccountGroupType.Cash,
+        AccountGroupType.Investments,
+        AccountGroupType.OtherAssets,
+        AccountGroupType.Vehicles
+      ]
     case AccountType.Liability:
-      return [AccountGroupType.CreditCards, AccountGroupType.Loans]
+      return [AccountGroupType.CreditCards, AccountGroupType.Loans, AccountGroupType.OtherLiabilities]
   }
 }
 
@@ -133,7 +143,7 @@ export const mapAccountTypeToAccountSubTypes = (accountType: AccountType) => {
   const subTypes: AccountSubType[] = []
   const groupTypes = mapAccountTypeToAccountGroupTypes(accountType)
   for (const groupType of groupTypes) {
-    subTypes.push(...mapAccountGroupTypeToAccountSubTypes(groupType))
+    subTypes.push(...mapAccountGroupTypeToAccountSubTypes(groupType, accountType))
   }
   return subTypes
 }

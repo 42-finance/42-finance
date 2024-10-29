@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { ApiQuery, getAccountGroups, getAccounts } from 'frontend-api'
-import { useMemo } from 'react'
-import { AccountGroupType } from 'shared-types'
+import { useMemo, useState } from 'react'
+import { AccountGroupType, AccountType, DateRangeFilter } from 'shared-types'
 
 import { AccountGroupView } from './account-group-view'
 
@@ -10,6 +10,9 @@ type Props = {
 }
 
 export const AccountList: React.FC<Props> = ({ onSelected }) => {
+  const [selectedDateRangeFilter, setSelectedDateRangeFilter] = useState<DateRangeFilter>(DateRangeFilter.OneMonth)
+  const [showHiddenAccounts, setShowHiddenAccounts] = useState(true)
+
   const { data: accounts = [] } = useQuery({
     queryKey: [ApiQuery.Accounts],
     queryFn: async () => {
@@ -32,22 +35,46 @@ export const AccountList: React.FC<Props> = ({ onSelected }) => {
     }
   })
 
-  const ungroupedAccounts = useMemo(
-    () => accounts.filter((a) => a.accountGroupId == null).map((a) => ({ ...a, accountGroupId: 0 })),
+  const ungroupedAssetAccounts = useMemo(
+    () =>
+      accounts
+        .filter((a) => a.accountGroupId == null && a.type === AccountType.Asset)
+        .map((a) => ({ ...a, accountGroupId: 0 })),
     [accounts]
   )
 
-  const ungroupedAccountGroup = useMemo(
+  const ungroupedLiabilityAccounts = useMemo(
+    () =>
+      accounts
+        .filter((a) => a.accountGroupId == null && a.type === AccountType.Liability)
+        .map((a) => ({ ...a, accountGroupId: 0 })),
+    [accounts]
+  )
+
+  const ungroupedAssetsAccountGroup = useMemo(
     () => ({
       id: 0,
-      name: 'Ungrouped',
-      type: AccountGroupType.Other,
+      name: 'Ungrouped Assets',
+      type: AccountGroupType.OtherAssets,
       hideFromAccountsList: false,
       hideFromNetWorth: false,
       hideFromBudget: false,
-      accounts: ungroupedAccounts
+      accounts: ungroupedAssetAccounts
     }),
-    [ungroupedAccounts]
+    [ungroupedAssetAccounts]
+  )
+
+  const ungroupedLiabilitiesAccountGroup = useMemo(
+    () => ({
+      id: 0,
+      name: 'Ungrouped Liabilities',
+      type: AccountGroupType.OtherLiabilities,
+      hideFromAccountsList: false,
+      hideFromNetWorth: false,
+      hideFromBudget: false,
+      accounts: ungroupedLiabilityAccounts
+    }),
+    [ungroupedLiabilityAccounts]
   )
 
   return (
@@ -57,11 +84,28 @@ export const AccountList: React.FC<Props> = ({ onSelected }) => {
           key={accountGroup.id}
           accountGroup={accountGroup}
           allAccounts={accounts}
+          dateRangeFilter={selectedDateRangeFilter}
+          showHiddenAccounts={showHiddenAccounts}
           onSelected={onSelected}
         />
       ))}
-      {ungroupedAccounts.length > 0 && (
-        <AccountGroupView accountGroup={ungroupedAccountGroup} allAccounts={accounts} onSelected={onSelected} />
+      {ungroupedAssetAccounts.length > 0 && (
+        <AccountGroupView
+          accountGroup={ungroupedAssetsAccountGroup}
+          allAccounts={accounts}
+          dateRangeFilter={selectedDateRangeFilter}
+          showHiddenAccounts={showHiddenAccounts}
+          onSelected={onSelected}
+        />
+      )}
+      {ungroupedLiabilityAccounts.length > 0 && (
+        <AccountGroupView
+          accountGroup={ungroupedLiabilitiesAccountGroup}
+          allAccounts={accounts}
+          dateRangeFilter={selectedDateRangeFilter}
+          showHiddenAccounts={showHiddenAccounts}
+          onSelected={onSelected}
+        />
       )}
     </div>
   )

@@ -3,6 +3,7 @@ export enum AccountGroupType {
   CreditCards = 'creditCards',
   Investments = 'investments',
   Loans = 'loans',
-  Other = 'other',
+  OtherAssets = 'otherAssets',
+  OtherLiabilities = 'otherLiabilities',
   Vehicles = 'vehicles'
 }

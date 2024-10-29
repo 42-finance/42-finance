@@ -13,7 +13,7 @@ export class AccountGroup {
   name: string = ''
 
   @Column({ type: 'enum', enum: AccountGroupType })
-  type: AccountGroupType = AccountGroupType.Other
+  type: AccountGroupType = AccountGroupType.OtherAssets
 
   @Column({ default: false })
   hideFromAccountsList: boolean = false

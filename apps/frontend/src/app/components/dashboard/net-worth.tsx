@@ -98,7 +98,9 @@ export const NetWorth: React.FC<Props> = ({ accountGroup = null }) => {
             style={{
               color: valueChangeColor(
                 netWorthChange.value,
-                accountGroup?.type === AccountGroupType.CreditCards || accountGroup?.type === AccountGroupType.Loans
+                accountGroup?.type === AccountGroupType.CreditCards ||
+                  accountGroup?.type === AccountGroupType.Loans ||
+                  accountGroup?.type === AccountGroupType.OtherLiabilities
                   ? AccountType.Liability
                   : AccountType.Asset
               )

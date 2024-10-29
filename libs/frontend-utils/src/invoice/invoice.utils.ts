@@ -36,6 +36,7 @@ export const formatDollarsSigned = (value: number | null, currencyCode: Currency
 
 export const formatPercentage = (value: number | null, decimals: number = 1) => {
   if (value == null) return '0.0%'
+  if (value > 100) return '100.0%'
   return (
     Number(value.toFixed(2)).toLocaleString('en', {
       minimumFractionDigits: decimals,

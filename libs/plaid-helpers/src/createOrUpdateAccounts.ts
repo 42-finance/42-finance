@@ -15,7 +15,7 @@ export const createOrUpdateAccounts = async (connection: Connection, accounts: A
   for (const account of accounts) {
     const type = mapPlaidAccountType(account.type)
     const subType = mapPlaidAccountSubType(account.subtype)
-    const accountGroupType = mapAccountSubTypeToAccountGroupType(subType)
+    const accountGroupType = mapAccountSubTypeToAccountGroupType(subType, type)
     const accountGroup = accountGroups.find((a) => a.type === accountGroupType)
 
     const savedAccount = {
