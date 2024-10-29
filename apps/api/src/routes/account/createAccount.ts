@@ -19,6 +19,9 @@ type CreateAccountRequest = {
   vehicleVin: string | null
   vehicleMileage: number | null
   propertyAddress: string | null
+  hideFromAccountsList: boolean
+  hideFromNetWorth: boolean
+  hideFromBudget: boolean
 }
 
 export const createAccount = async (
@@ -37,7 +40,10 @@ export const createAccount = async (
     walletAddress,
     vehicleVin,
     vehicleMileage,
-    propertyAddress
+    propertyAddress,
+    hideFromAccountsList = false,
+    hideFromNetWorth = false,
+    hideFromBudget = false
   } = request.body
 
   let vehicleMake: string | null = null
@@ -82,6 +88,9 @@ export const createAccount = async (
     vehicleTrim,
     vehicleState,
     propertyAddress,
+    hideFromAccountsList,
+    hideFromNetWorth,
+    hideFromBudget,
     householdId
   })
 

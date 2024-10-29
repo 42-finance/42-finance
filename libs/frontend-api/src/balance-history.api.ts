@@ -7,6 +7,9 @@ import { HTTPResponseBody } from './http-response-body.type'
 type BalanceHistoryQuery = {
   accountIds?: string[] | null
   startDate?: Date | null
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
 }
 
 export const getBalanceHistory = async (query: BalanceHistoryQuery = {}) => {
@@ -17,6 +20,15 @@ export const getBalanceHistory = async (query: BalanceHistoryQuery = {}) => {
   }
   if (query.startDate) {
     searchParams.append('startDate', query.startDate.toISOString())
+  }
+  if (query.hideFromAccountsList != null) {
+    searchParams.append('hideFromAccountsList', query.hideFromAccountsList.toString())
+  }
+  if (query.hideFromNetWorth != null) {
+    searchParams.append('hideFromNetWorth', query.hideFromNetWorth.toString())
+  }
+  if (query.hideFromBudget != null) {
+    searchParams.append('hideFromBudget', query.hideFromBudget.toString())
   }
   url.search = searchParams.toString()
   return get<HTTPResponseBody<BalanceHistory[]>>(url.toString())

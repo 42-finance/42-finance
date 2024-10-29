@@ -44,7 +44,7 @@ export const BudgetProgress: React.FC<Props> = ({ type, backgroundColor }) => {
     queryFn: async () => {
       const startDate = dateToUtc(startOfMonth(new Date()))
       const endDate = dateToUtc(endOfMonth(new Date()))
-      const res = await getTransactions({ startDate, endDate })
+      const res = await getTransactions({ startDate, endDate, hideFromBudget: false })
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }

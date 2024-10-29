@@ -29,7 +29,10 @@ export const AddCryptoScreen = ({ navigation }: RootStackScreenProps<'AddCrypto'
       currentBalance: 0,
       walletType: values.walletType,
       walletAddress: values.walletAddress,
-      currencyCode: CurrencyCode.USD
+      currencyCode: CurrencyCode.USD,
+      hideFromAccountsList: false,
+      hideFromNetWorth: false,
+      hideFromBudget: false
     })
   }
 

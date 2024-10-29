@@ -20,8 +20,9 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
   const { colors } = useTheme()
 
   const showActionSheet = useActionSheet()
-  const [selectedFilter, setSelectedFilter] = useState<AccountGroup | null>(null)
+  const [selectedAccountGroup, setSelectedAccountGroup] = useState<AccountGroup | null>(null)
   const [selectedDateRangeFilter, setSelectedDateRangeFilter] = useState<DateRangeFilter>(DateRangeFilter.OneMonth)
+  const [showHiddenAccounts, setShowHiddenAccounts] = useState(false)
 
   useEffect(() => {
     navigation.setOptions({
@@ -31,25 +32,34 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {
-            showActionSheet([
-              {
-                label: 'Add account',
-                onSelected: () => navigation.navigate('AddAsset')
-              },
-              {
-                label: 'Add account group',
-                onSelected: () => navigation.navigate('AddAccountGroup')
-              }
-            ])
-          }}
-        >
-          <FontAwesome5 name="plus" size={24} color={colors.onSurface} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowHiddenAccounts((s) => !s)
+            }}
+          >
+            <Feather name={showHiddenAccounts ? 'eye' : 'eye-off'} size={24} color={colors.onSurface} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              showActionSheet([
+                {
+                  label: 'Add account',
+                  onSelected: () => navigation.navigate('AddAsset')
+                },
+                {
+                  label: 'Add account group',
+                  onSelected: () => navigation.navigate('AddAccountGroup')
+                }
+              ])
+            }}
+          >
+            <FontAwesome5 name="plus" size={24} color={colors.onSurface} />
+          </TouchableOpacity>
+        </View>
       )
     })
-  }, [colors, navigation])
+  }, [colors, navigation, showHiddenAccounts])
 
   const {
     data: accounts = [],
@@ -97,13 +107,21 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
       id: 0,
       name: 'Ungrouped',
       type: AccountGroupType.Other,
+      hideFromAccountsList: false,
+      hideFromNetWorth: false,
+      hideFromBudget: false,
       accounts: ungroupedAccounts
     }),
     [ungroupedAccounts]
   )
 
+  const filteredAccountGroups = useMemo(
+    () => (showHiddenAccounts ? accountGroups : accountGroups.filter((a) => !a.hideFromAccountsList)),
+    [accountGroups, showHiddenAccounts]
+  )
+
   const getChipStyle = (accountGroup: AccountGroup | null) => {
-    if (accountGroup?.id === selectedFilter?.id) {
+    if (accountGroup?.id === selectedAccountGroup?.id) {
       return {}
     }
 
@@ -118,10 +136,10 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
       <ScrollView style={{ marginTop: 5 }}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{ flexDirection: 'row', marginBottom: 15, marginLeft: 10 }}>
-            {[null, ...accountGroups].map((accountGroup) => (
+            {[null, ...filteredAccountGroups].map((accountGroup) => (
               <Chip
                 key={accountGroup?.id ?? 'netWorth'}
-                onPress={() => setSelectedFilter(accountGroup)}
+                onPress={() => setSelectedAccountGroup(accountGroup)}
                 theme={{ roundness: 20 }}
                 style={{
                   padding: 2,
@@ -134,17 +152,22 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
             ))}
           </View>
         </ScrollView>
-        <NetWorthGraph accountGroup={selectedFilter} dateRangeFilter={selectedDateRangeFilter} />
+        <NetWorthGraph
+          accountGroup={selectedAccountGroup}
+          dateRangeFilter={selectedDateRangeFilter}
+          onlyVisibleAccounts
+        />
         <DateRangePicker
           selectedDateRangeFilter={selectedDateRangeFilter}
           onSelected={(type) => setSelectedDateRangeFilter(type)}
         />
-        {accountGroups.map((accountGroup) => (
+        {filteredAccountGroups.map((accountGroup) => (
           <AccountGroupView
             key={accountGroup.id}
             accountGroup={accountGroup}
             allAccounts={accounts}
             dateRangeFilter={selectedDateRangeFilter}
+            showHiddenAccounts={showHiddenAccounts}
           />
         ))}
         {ungroupedAccounts.length > 0 && (
@@ -152,6 +175,7 @@ export const AccountsScreen = ({ navigation }: RootStackScreenProps<'Accounts'>)
             accountGroup={ungroupedAccountGroup}
             allAccounts={accounts}
             dateRangeFilter={selectedDateRangeFilter}
+            showHiddenAccounts={showHiddenAccounts}
           />
         )}
       </ScrollView>

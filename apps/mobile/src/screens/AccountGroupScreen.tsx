@@ -72,7 +72,7 @@ export const AccountGroupScreen = ({ route, navigation }: RootStackScreenProps<'
           <Ionicons name="ellipsis-horizontal" size={24} color={colors.onSurface} />
         </TouchableOpacity>
       ),
-      title: accountGroup?.name
+      title: accountGroup?.name ?? 'Loading...'
     })
   }, [accountGroup, accountGroupId, colors, navigation, showActionSheet])
 

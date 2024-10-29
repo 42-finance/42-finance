@@ -29,7 +29,10 @@ export const AddPropertyScreen = ({ navigation }: RootStackScreenProps<'AddPrope
       currentBalance: values.currentBalance,
       type: AccountType.Asset,
       subType: AccountSubType.Property,
-      currencyCode: values.currencyCode
+      currencyCode: values.currencyCode,
+      hideFromAccountsList: false,
+      hideFromNetWorth: false,
+      hideFromBudget: false
     })
   }
 

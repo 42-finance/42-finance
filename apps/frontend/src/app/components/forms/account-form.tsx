@@ -15,6 +15,9 @@ export type AccountFormFields = {
   subType: AccountSubType
   currentBalance: number
   currencyCode: CurrencyCode
+  hideFromAccountsList: boolean
+  hideFromNetWorth: boolean
+  hideFromBudget: boolean
 }
 
 type Props = {
@@ -31,7 +34,10 @@ export const AccountForm: React.FC<Props> = ({ onSubmit, accountInfo, canChangeC
     type: Yup.mixed<AccountType>().required('Type is required'),
     subType: Yup.mixed<AccountSubType>().required('Subtype is required'),
     currentBalance: Yup.number().required('Balance is required'),
-    currencyCode: Yup.mixed<CurrencyCode>().required('Currency is required')
+    currencyCode: Yup.mixed<CurrencyCode>().required('Currency is required'),
+    hideFromAccountsList: Yup.boolean().required('Hide from accounts list is required'),
+    hideFromNetWorth: Yup.boolean().required('Hide from net worth is required'),
+    hideFromBudget: Yup.boolean().required('Hide from budget is required')
   })
 
   const {
@@ -45,7 +51,10 @@ export const AccountForm: React.FC<Props> = ({ onSubmit, accountInfo, canChangeC
       type: accountInfo?.type ?? AccountType.Asset,
       subType: accountInfo?.subType ?? AccountSubType.Other,
       currentBalance: accountInfo?.currentBalance ?? 0,
-      currencyCode: accountInfo?.currencyCode ?? currencyCode
+      currencyCode: accountInfo?.currencyCode ?? currencyCode,
+      hideFromAccountsList: accountInfo?.hideFromAccountsList ?? false,
+      hideFromNetWorth: accountInfo?.hideFromNetWorth ?? false,
+      hideFromBudget: accountInfo?.hideFromBudget ?? false
     }
   })
 

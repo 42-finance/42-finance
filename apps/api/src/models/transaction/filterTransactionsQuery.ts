@@ -26,7 +26,8 @@ export const filterTransactionsQuery = (
     amountFilter,
     amountValue,
     amountValue2,
-    tagIds
+    tagIds,
+    hideFromBudget
   } = query
 
   if (startDate) {
@@ -128,6 +129,10 @@ export const filterTransactionsQuery = (
 
   if (needsReview != null) {
     queryBuilder = queryBuilder.andWhere('transaction.needsReview = :needsReview', { needsReview })
+  }
+
+  if (hideFromBudget != null) {
+    queryBuilder = queryBuilder.andWhere('account.hideFromBudget = :hideFromBudget', { hideFromBudget })
   }
 
   if (limit) {

@@ -6,5 +6,8 @@ export type AccountGroup = {
   id: number
   name: string
   type: AccountGroupType
+  hideFromAccountsList: boolean
+  hideFromNetWorth: boolean
+  hideFromBudget: boolean
   accounts: Account[]
 }

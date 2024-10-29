@@ -29,7 +29,10 @@ export const AddVehicleScreen = ({ navigation }: RootStackScreenProps<'AddVehicl
       currentBalance: values.currentBalance,
       vehicleVin: values.vehicleVin,
       vehicleMileage: values.vehicleMileage,
-      currencyCode: values.currencyCode
+      currencyCode: values.currencyCode,
+      hideFromAccountsList: false,
+      hideFromNetWorth: false,
+      hideFromBudget: false
     })
   }
 

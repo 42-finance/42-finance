@@ -78,6 +78,15 @@ export class Account extends BaseEntity {
   @Column({ type: String, nullable: true })
   propertyAddress: string | null = null
 
+  @Column({ default: false })
+  hideFromAccountsList: boolean = false
+
+  @Column({ default: false })
+  hideFromNetWorth: boolean = false
+
+  @Column({ default: false })
+  hideFromBudget: boolean = false
+
   @Index()
   @Column({ type: String, nullable: true })
   connectionId: string | null = null

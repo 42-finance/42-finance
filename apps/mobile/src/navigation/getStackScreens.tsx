@@ -88,12 +88,12 @@ export const getStackScreens = (
   >
 ) => {
   return [
-    <Stack.Screen key="Account" name="Account" component={AccountScreen} options={{ title: 'Account' }} />,
+    <Stack.Screen key="Account" name="Account" component={AccountScreen} options={{ title: 'Loading...' }} />,
     <Stack.Screen
       key="AccountGroup"
       name="AccountGroup"
       component={AccountGroupScreen}
-      options={{ title: 'Account Group' }}
+      options={{ title: 'Loading...' }}
     />,
     <Stack.Screen
       key="AccountRule"

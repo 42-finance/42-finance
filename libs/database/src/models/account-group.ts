@@ -15,6 +15,15 @@ export class AccountGroup {
   @Column({ type: 'enum', enum: AccountGroupType })
   type: AccountGroupType = AccountGroupType.Other
 
+  @Column({ default: false })
+  hideFromAccountsList: boolean = false
+
+  @Column({ default: false })
+  hideFromNetWorth: boolean = false
+
+  @Column({ default: false })
+  hideFromBudget: boolean = false
+
   @Index()
   @Column({ nullable: false })
   householdId: number = 0

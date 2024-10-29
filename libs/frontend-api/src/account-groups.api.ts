@@ -13,6 +13,9 @@ export const getAccountGroups = async () => get<HTTPResponseBody<AccountGroup[]>
 export type AddAccountGroupRequest = {
   name: string
   type: AccountGroupType
+  hideFromAccountsList: boolean
+  hideFromNetWorth: boolean
+  hideFromBudget: boolean
 }
 
 export const addAccountGroup = async (body: AddAccountGroupRequest) =>
@@ -21,6 +24,9 @@ export const addAccountGroup = async (body: AddAccountGroupRequest) =>
 export type EditAccountGroupRequest = {
   name?: string
   type?: AccountGroupType
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
 }
 
 export const editAccountGroup = async (accountGroupId: number, body: EditAccountGroupRequest) =>

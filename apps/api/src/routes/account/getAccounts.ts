@@ -4,10 +4,20 @@ import { Request, Response } from 'express'
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 import { getExchangeRate } from '../../utils/exchange-rate.utils'
 
-export const getAccounts = async (request: Request, response: Response<HTTPResponseBody>) => {
-  const { householdId, userId } = request
+type AccountsQuery = {
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
+}
 
-  const accounts = await dataSource
+export const getAccounts = async (
+  request: Request<object, object, object, AccountsQuery>,
+  response: Response<HTTPResponseBody>
+) => {
+  const { householdId, userId } = request
+  const { hideFromAccountsList, hideFromNetWorth, hideFromBudget } = request.query
+
+  let accountsQuery = dataSource
     .getRepository(Account)
     .createQueryBuilder('account')
     .leftJoinAndMapOne('account.connection', Connection, 'connection', 'connection.id = account.connectionId')
@@ -16,7 +26,24 @@ export const getAccounts = async (request: Request, response: Response<HTTPRespo
     .addOrderBy('account.subType')
     .addOrderBy('account.name')
     .addOrderBy('account.id')
-    .getMany()
+
+  if (hideFromAccountsList != null) {
+    accountsQuery = accountsQuery.andWhere('account.hideFromAccountsList = :hideFromAccountsList', {
+      hideFromAccountsList
+    })
+  }
+  if (hideFromNetWorth != null) {
+    accountsQuery = accountsQuery.andWhere('account.hideFromNetWorth = :hideFromNetWorth', {
+      hideFromNetWorth
+    })
+  }
+  if (hideFromBudget != null) {
+    accountsQuery = accountsQuery.andWhere('account.hideFromBudget = :hideFromBudget', {
+      hideFromBudget
+    })
+  }
+
+  const accounts = await accountsQuery.getMany()
 
   const user = await dataSource.getRepository(User).findOneOrFail({ where: { id: userId } })
 

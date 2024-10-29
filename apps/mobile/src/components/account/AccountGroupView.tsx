@@ -31,22 +31,24 @@ import { AccountIcon } from './AccountIcon'
 type Props = {
   accountGroup: AccountGroup
   allAccounts: Account[]
-  dateRangeFilter?: DateRangeFilter
+  dateRangeFilter: DateRangeFilter
+  showHiddenAccounts: boolean
 }
 
 export const AccountGroupView: React.FC<Props> = ({
   accountGroup,
   allAccounts,
-  dateRangeFilter = DateRangeFilter.AllTime
+  dateRangeFilter,
+  showHiddenAccounts
 }) => {
   const { colors } = useTheme()
   const navigation = useNavigation()
   const { currencyCode } = useUserTokenContext()
 
   const { data: balanceHistory = [] } = useQuery({
-    queryKey: [ApiQuery.BalanceHistory],
+    queryKey: [ApiQuery.AccountGroupBalanceHistory, showHiddenAccounts],
     queryFn: async () => {
-      const res = await getBalanceHistory()
+      const res = await getBalanceHistory(showHiddenAccounts ? {} : { hideFromAccountsList: false })
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }
@@ -72,14 +74,19 @@ export const AccountGroupView: React.FC<Props> = ({
     [balanceHistory, filterStartDate, today]
   )
 
-  const balance = useMemo(() => sumBy(accountGroup.accounts, 'convertedBalance'), [accountGroup])
+  const filteredAccounts = useMemo(
+    () => (showHiddenAccounts ? accountGroup.accounts : accountGroup.accounts.filter((a) => !a.hideFromAccountsList)),
+    [accountGroup.accounts, showHiddenAccounts]
+  )
+
+  const balance = useMemo(() => sumBy(filteredAccounts, 'convertedBalance'), [filteredAccounts])
 
   const isAsset = useMemo(() => type === AccountType.Asset, [type])
 
   const totalValue = useMemo(
     () =>
       getNetWorth(
-        allAccounts.filter((a) => a.type === type),
+        allAccounts.filter((a) => a.type === type && !a.hideFromAccountsList),
         null,
         true,
         false
@@ -104,7 +111,11 @@ export const AccountGroupView: React.FC<Props> = ({
               paddingHorizontal: 15,
               paddingBottom: 15
             }}
-            onPress={() => navigation.navigate('AccountGroup', { accountGroupId: accountGroup.id })}
+            onPress={() => {
+              if (accountGroup.id > 0) {
+                navigation.navigate('AccountGroup', { accountGroupId: accountGroup.id })
+              }
+            }}
           >
             <View
               style={{
@@ -144,7 +155,7 @@ export const AccountGroupView: React.FC<Props> = ({
               </Text>
             </View>
           </TouchableOpacity>
-          {accountGroup.accounts.map((account) => (
+          {filteredAccounts.map((account) => (
             <TouchableOpacity
               key={account.id}
               onPress={() => navigation.navigate('Account', { accountId: account.id })}

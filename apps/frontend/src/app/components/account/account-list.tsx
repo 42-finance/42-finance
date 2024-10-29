@@ -42,6 +42,9 @@ export const AccountList: React.FC<Props> = ({ onSelected }) => {
       id: 0,
       name: 'Ungrouped',
       type: AccountGroupType.Other,
+      hideFromAccountsList: false,
+      hideFromNetWorth: false,
+      hideFromBudget: false,
       accounts: ungroupedAccounts
     }),
     [ungroupedAccounts]

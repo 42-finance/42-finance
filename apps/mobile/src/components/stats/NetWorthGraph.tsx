@@ -21,12 +21,14 @@ type Props = {
   accountGroup?: AccountGroup | null
   dateRangeFilter?: DateRangeFilter
   widthReduction?: number
+  onlyVisibleAccounts?: boolean
 }
 
 export const NetWorthGraph: React.FC<Props> = ({
   accountGroup = null,
   dateRangeFilter = DateRangeFilter.AllTime,
-  widthReduction = 0
+  widthReduction = 0,
+  onlyVisibleAccounts = false
 }) => {
   const { dark, colors } = useTheme()
   const { currencyCode } = useUserTokenContext()
@@ -38,9 +40,9 @@ export const NetWorthGraph: React.FC<Props> = ({
   const filterStartDate = useMemo(() => mapDateRangeToDate(dateRangeFilter), [dateRangeFilter])
 
   const { data: accounts = [], refetch } = useQuery({
-    queryKey: [ApiQuery.Accounts],
+    queryKey: [ApiQuery.NetWorthAccounts, onlyVisibleAccounts],
     queryFn: async () => {
-      const res = await getAccounts()
+      const res = await getAccounts(onlyVisibleAccounts ? { hideFromNetWorth: false } : {})
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }
@@ -52,9 +54,9 @@ export const NetWorthGraph: React.FC<Props> = ({
   useRefetchOnFocus(refetch)
 
   const { data: balanceHistory = [], refetch: refetchBalanceHistory } = useQuery({
-    queryKey: [ApiQuery.BalanceHistory],
+    queryKey: [ApiQuery.NetWorthBalanceHistory, onlyVisibleAccounts],
     queryFn: async () => {
-      const res = await getBalanceHistory()
+      const res = await getBalanceHistory(onlyVisibleAccounts ? { hideFromNetWorth: false } : {})
       if (res.ok && res.parsedBody?.payload) {
         return res.parsedBody.payload
       }

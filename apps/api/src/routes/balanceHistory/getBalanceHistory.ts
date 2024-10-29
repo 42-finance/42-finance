@@ -8,6 +8,9 @@ type BalanceHistoryQuery = {
   startDate?: string
   endDate?: string
   accountIds?: string
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
 }
 
 export const getBalanceHistory = async (
@@ -15,7 +18,7 @@ export const getBalanceHistory = async (
   response: Response<HTTPResponseBody>
 ) => {
   const { householdId, userId } = request
-  const { startDate, endDate, accountIds } = request.query
+  const { startDate, endDate, accountIds, hideFromAccountsList, hideFromNetWorth, hideFromBudget } = request.query
 
   let balanceHistoryQuery = dataSource
     .getRepository(BalanceHistory)
@@ -34,6 +37,21 @@ export const getBalanceHistory = async (
   if (accountIds) {
     balanceHistoryQuery = balanceHistoryQuery.andWhere('balanceHistory.accountId IN (:...accountIds)', {
       accountIds: accountIds.split(',')
+    })
+  }
+  if (hideFromAccountsList != null) {
+    balanceHistoryQuery = balanceHistoryQuery.andWhere('account.hideFromAccountsList = :hideFromAccountsList', {
+      hideFromAccountsList
+    })
+  }
+  if (hideFromNetWorth != null) {
+    balanceHistoryQuery = balanceHistoryQuery.andWhere('account.hideFromNetWorth = :hideFromNetWorth', {
+      hideFromNetWorth
+    })
+  }
+  if (hideFromBudget != null) {
+    balanceHistoryQuery = balanceHistoryQuery.andWhere('account.hideFromBudget = :hideFromBudget', {
+      hideFromBudget
     })
   }
 

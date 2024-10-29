@@ -7,6 +7,9 @@ import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 type UpdateAccountGroupRequest = {
   name?: string
   type?: AccountGroupType
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
 }
 
 export const updateAccountGroup = async (
@@ -15,7 +18,7 @@ export const updateAccountGroup = async (
 ) => {
   const { householdId } = request
   const { id } = request.params
-  const { name, type } = request.body
+  const { name, type, hideFromAccountsList, hideFromNetWorth, hideFromBudget } = request.body
 
   const accountGroup = await dataSource
     .getRepository(AccountGroup)
@@ -26,7 +29,10 @@ export const updateAccountGroup = async (
 
   const result = await dataSource.getRepository(AccountGroup).update(accountGroup.id, {
     name,
-    type
+    type,
+    hideFromAccountsList,
+    hideFromNetWorth,
+    hideFromBudget
   })
 
   return response.json({

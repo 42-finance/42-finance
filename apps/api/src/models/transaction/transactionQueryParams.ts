@@ -19,4 +19,5 @@ export type TransactionQueryParams = {
   amountFilter?: AmountFilter | null
   amountValue?: number | null
   amountValue2?: number | null
+  hideFromBudget?: boolean
 }

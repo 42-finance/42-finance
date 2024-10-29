@@ -13,7 +13,7 @@ export const NetWorthWidget = () => {
           Net Worth
         </Text>
         <Divider style={{ marginTop: 15 }} />
-        <NetWorthGraph widthReduction={20} dateRangeFilter={DateRangeFilter.OneMonth} />
+        <NetWorthGraph widthReduction={20} dateRangeFilter={DateRangeFilter.OneMonth} onlyVisibleAccounts />
       </Card.Content>
     </Card>
   )

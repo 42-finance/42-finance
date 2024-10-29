@@ -12,6 +12,9 @@ type UpdateAccountRequest = {
   currentBalance?: number
   currencyCode?: CurrencyCode
   accountGroupId?: number | null
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
 }
 
 export const updateAccount = async (
@@ -20,7 +23,17 @@ export const updateAccount = async (
 ) => {
   const { householdId } = request
   const { id } = request.params
-  const { name, type, subType, currentBalance, currencyCode, accountGroupId } = request.body
+  const {
+    name,
+    type,
+    subType,
+    currentBalance,
+    currencyCode,
+    accountGroupId,
+    hideFromAccountsList,
+    hideFromNetWorth,
+    hideFromBudget
+  } = request.body
 
   const account = await dataSource
     .getRepository(Account)
@@ -35,7 +48,10 @@ export const updateAccount = async (
     subType,
     currentBalance,
     currencyCode,
-    accountGroupId
+    accountGroupId,
+    hideFromAccountsList,
+    hideFromNetWorth,
+    hideFromBudget
   })
 
   if (currentBalance !== account.currentBalance) {

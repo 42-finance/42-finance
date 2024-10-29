@@ -17,6 +17,9 @@ export type Account = {
   walletType: WalletType | null
   walletAddress: string | null
   walletTokenBalance: number | null
+  hideFromAccountsList: boolean
+  hideFromNetWorth: boolean
+  hideFromBudget: boolean
   connectionId: string | null
   connection: Connection | null
   accountGroupId: number

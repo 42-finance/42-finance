@@ -7,6 +7,9 @@ import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 type CreateAccountGroupRequest = {
   name: string
   type: AccountGroupType
+  hideFromAccountsList: boolean
+  hideFromNetWorth: boolean
+  hideFromBudget: boolean
 }
 
 export const createAccountGroup = async (
@@ -14,11 +17,14 @@ export const createAccountGroup = async (
   response: Response<HTTPResponseBody>
 ) => {
   const { householdId } = request
-  let { name, type } = request.body
+  let { name, type, hideFromAccountsList = false, hideFromNetWorth = false, hideFromBudget = false } = request.body
 
   const accountGroup = await dataSource.getRepository(AccountGroup).save({
     name,
     type,
+    hideFromAccountsList,
+    hideFromNetWorth,
+    hideFromBudget,
     householdId
   })
 

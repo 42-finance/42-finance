@@ -45,29 +45,21 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
 
   const accountTypes = useMemo(() => Object.values(AccountSubType), [])
 
-  const convertBalance = useMemo(
-    () => account.subType === AccountSubType.CryptoExchange || account.subType === AccountSubType.Vehicle,
-    [account]
-  )
-
-  const netWorth = useMemo(
-    () => getNetWorth([account], null, convertBalance, false),
-    [account, accountTypes, convertBalance]
-  )
+  const netWorth = useMemo(() => getNetWorth([account], null, false, false), [account, accountTypes])
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, null, convertBalance, false, null)
+    const history = getNetWorthHistory(balanceHistory, null, false, false, null)
     if (history.length === 1) {
       history.push(history[0])
     }
     return history
-  }, [balanceHistory, accountTypes, convertBalance])
+  }, [balanceHistory, accountTypes])
 
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
   const netWorthChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, null, startDate, filterDate ?? today, convertBalance, false),
-    [balanceHistory, accountTypes, filterDate, startDate, convertBalance]
+    () => getMonthlyValueChange(balanceHistory, null, startDate, filterDate ?? today, false, false),
+    [balanceHistory, accountTypes, filterDate, startDate]
   )
 
   const netWorthData = useMemo(
@@ -81,7 +73,7 @@ export const AccountBalance: React.FC<Props> = ({ account }) => {
     <div>
       <div className="text-xl text-center mt-4">
         {formatDollarsSigned(netWorth, account.currencyCode)}
-        {account.currencyCode === currencyCode || convertBalance ? '' : ` ${account.currencyCode}`}
+        {account.currencyCode === currencyCode ? '' : ` ${account.currencyCode}`}
       </div>
       <div className="flex items-center justify-center mt-1 mb-4">
         <Avatar>{changeIcon === 'arrow-up-right' ? <FiArrowUpRight /> : <FiArrowDownLeft />}</Avatar>

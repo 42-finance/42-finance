@@ -10,7 +10,7 @@ import { useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { LineChart } from 'react-native-gifted-charts'
 import { Text, useTheme } from 'react-native-paper'
-import { AccountSubType, DateRangeFilter } from 'shared-types'
+import { DateRangeFilter } from 'shared-types'
 
 import { Account } from '../../../../../libs/frontend-types/src/account.type'
 import { useUserTokenContext } from '../../contexts/user-token.context'
@@ -42,15 +42,10 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter 
     }
   })
 
-  const convertBalance = useMemo(
-    () => account.subType === AccountSubType.CryptoExchange || account.subType === AccountSubType.Vehicle,
-    [account]
-  )
-
-  const netWorth = useMemo(() => getNetWorth([account], null, convertBalance, false), [account, convertBalance])
+  const netWorth = useMemo(() => getNetWorth([account], null, false, false), [account])
 
   const netWorthHistory = useMemo(() => {
-    const history = getNetWorthHistory(balanceHistory, null, convertBalance, false, filterStartDate)
+    const history = getNetWorthHistory(balanceHistory, null, false, false, filterStartDate)
     if (history.length === 0) {
       history.push({ date: today, value: netWorth })
     }
@@ -58,13 +53,13 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter 
       history.push(history[0])
     }
     return history
-  }, [balanceHistory, convertBalance, filterStartDate])
+  }, [balanceHistory, filterStartDate])
 
   const startDate = useMemo(() => netWorthHistory[0]?.date, [netWorthHistory])
 
   const netWorthChange = useMemo(
-    () => getMonthlyValueChange(balanceHistory, null, startDate, selectedEndDate ?? today, convertBalance, false),
-    [balanceHistory, selectedEndDate, startDate, convertBalance]
+    () => getMonthlyValueChange(balanceHistory, null, startDate, selectedEndDate ?? today, false, false),
+    [balanceHistory, selectedEndDate, startDate]
   )
 
   const netWorthData = useMemo(
@@ -80,7 +75,7 @@ export const AccountBalanceGraph: React.FC<Props> = ({ account, dateRangeFilter 
     <>
       <Text variant="headlineMedium" style={{ textAlign: 'center', marginLeft: 15, marginTop: 10 }}>
         {formatDollars(netWorthOverride ?? netWorth, account.currencyCode)}
-        {account.currencyCode === currencyCode || convertBalance ? '' : ` ${account.currencyCode}`}
+        {account.currencyCode === currencyCode ? '' : ` ${account.currencyCode}`}
       </Text>
       <View
         style={{

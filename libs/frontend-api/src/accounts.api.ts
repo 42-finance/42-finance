@@ -8,7 +8,27 @@ import { HTTPResponseBody } from './http-response-body.type'
 export const getAccount = async (accountId: string) =>
   get<HTTPResponseBody<Account>>(`${config.apiUrl}/accounts/${accountId}`)
 
-export const getAccounts = async () => get<HTTPResponseBody<Account[]>>(`${config.apiUrl}/accounts`)
+type AccountsQuery = {
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
+}
+
+export const getAccounts = async (query: AccountsQuery = {}) => {
+  const url = new URL(`${config.apiUrl}/accounts`)
+  const searchParams = new URLSearchParams()
+  if (query.hideFromAccountsList != null) {
+    searchParams.append('hideFromAccountsList', query.hideFromAccountsList.toString())
+  }
+  if (query.hideFromNetWorth != null) {
+    searchParams.append('hideFromNetWorth', query.hideFromNetWorth.toString())
+  }
+  if (query.hideFromBudget != null) {
+    searchParams.append('hideFromBudget', query.hideFromBudget.toString())
+  }
+  url.search = searchParams.toString()
+  return get<HTTPResponseBody<Account[]>>(url.toString())
+}
 
 export type AddAccountRequest = {
   name: string
@@ -22,6 +42,9 @@ export type AddAccountRequest = {
   vehicleVin?: string | null
   vehicleMileage?: number | null
   propertyAddress?: string | null
+  hideFromAccountsList: boolean
+  hideFromNetWorth: boolean
+  hideFromBudget: boolean
 }
 
 export const addAccount = async (body: AddAccountRequest) =>
@@ -34,6 +57,9 @@ export type EditAccountRequest = {
   currentBalance?: number | null
   currencyCode?: CurrencyCode
   accountGroupId?: number | null
+  hideFromAccountsList?: boolean
+  hideFromNetWorth?: boolean
+  hideFromBudget?: boolean
 }
 
 export const editAccount = async (accountId: string, body: EditAccountRequest) =>

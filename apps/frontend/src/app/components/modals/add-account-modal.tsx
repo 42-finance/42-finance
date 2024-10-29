@@ -180,7 +180,10 @@ export const AddAccountModal: React.FC<Props> = ({ onClose }) => {
               currentBalance: 0,
               walletType: values.walletType,
               walletAddress: values.walletAddress,
-              currencyCode: CurrencyCode.USD
+              currencyCode: CurrencyCode.USD,
+              hideFromAccountsList: false,
+              hideFromNetWorth: false,
+              hideFromBudget: false
             })
           }
         />
@@ -194,7 +197,10 @@ export const AddAccountModal: React.FC<Props> = ({ onClose }) => {
               currentBalance: 0,
               vehicleVin: values.vehicleVin,
               vehicleMileage: values.vehicleMileage,
-              currencyCode: CurrencyCode.USD
+              currencyCode: CurrencyCode.USD,
+              hideFromAccountsList: false,
+              hideFromNetWorth: false,
+              hideFromBudget: false
             })
           }
         />
@@ -207,7 +213,10 @@ export const AddAccountModal: React.FC<Props> = ({ onClose }) => {
               currentBalance: values.currentBalance,
               type: AccountType.Asset,
               subType: AccountSubType.Property,
-              currencyCode: values.currencyCode
+              currencyCode: values.currencyCode,
+              hideFromAccountsList: false,
+              hideFromNetWorth: false,
+              hideFromBudget: false
             })
           }
         />

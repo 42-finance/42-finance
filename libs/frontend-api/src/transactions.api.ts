@@ -32,6 +32,7 @@ type TransactionQuery = {
   amountFilter?: AmountFilter | null
   amountValue?: number | null
   amountValue2?: number | null
+  hideFromBudget?: boolean
 }
 
 const buildGetTransactionsUrl = (baseUrl: string, query: TransactionQuery) => {

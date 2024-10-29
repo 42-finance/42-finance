@@ -1,6 +1,7 @@
 export enum ApiQuery {
   Account = 'account',
   AccountGroup = 'accountGroup',
+  AccountGroupBalanceHistory = 'accountGroupBalanceHistory',
   Accounts = 'accounts',
   AccountsFilter = 'accountsFilter',
   AccountBalanceHistory = 'accountBalanceHistory',
@@ -41,6 +42,8 @@ export enum ApiQuery {
   MerchantsFilter = 'merchantsFilter',
   Merchant = 'merchant',
   MerchantTransactions = 'merchantTransactions',
+  NetWorthAccounts = 'netWorthAccounts',
+  NetWorthBalanceHistory = 'netWorthBalanceHistory',
   NotificationSettings = 'notificationSettings',
   PlaidLinkToken = 'plaidLinkToken',
   Properties = 'properties',

@@ -7,7 +7,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { Button, Dialog, Divider, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
-import { AccountSubType, DateRangeFilter } from 'shared-types'
+import { DateRangeFilter } from 'shared-types'
 
 import { DateRangePicker } from '../components/common/DateRangePicker'
 import { NoData } from '../components/common/NoData'
@@ -16,7 +16,6 @@ import { BillItem } from '../components/list-items/BillItem'
 import { TransactionItem } from '../components/list-items/TransactionItem'
 import { AccountBalanceGraph } from '../components/stats/AccountBalanceGraph'
 import { useTransactionsFilterContext } from '../contexts/transactions-filter.context'
-import { useUserTokenContext } from '../contexts/user-token.context'
 import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { usePlaid } from '../hooks/use-plaid.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
@@ -28,7 +27,6 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
   const { colors } = useTheme()
   const queryClient = useQueryClient()
   const { createLink, openLink, loading } = usePlaid()
-  const { currencyCode } = useUserTokenContext()
   const { setAccounts, reset } = useTransactionsFilterContext()
 
   const [showPlaid, setShowPlaid] = useState(false)
@@ -130,7 +128,7 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
           <Ionicons name="ellipsis-horizontal" size={24} color={colors.onSurface} />
         </TouchableOpacity>
       ),
-      title: account?.name
+      title: account?.name ?? 'Loading...'
     })
   }, [account, accountId, colors, navigation, refreshMutation, showActionSheet])
 
@@ -306,11 +304,7 @@ export const AccountScreen = ({ route, navigation }: RootStackScreenProps<'Accou
           >
             Currency
           </Text>
-          <Text variant="titleMedium">
-            {account.subType === AccountSubType.CryptoExchange || account.subType === AccountSubType.Vehicle
-              ? currencyCode
-              : account.currencyCode}
-          </Text>
+          <Text variant="titleMedium">{account.currencyCode}</Text>
         </View>
         <Divider />
         <View style={{ flexDirection: 'row', padding: 15, backgroundColor: colors.elevation.level2 }}>

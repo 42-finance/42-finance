@@ -172,17 +172,8 @@ export const formatAccountName = (account: Account) => {
 }
 
 export const formatAccountBalance = (account: Account, currencyCode: CurrencyCode) => {
-  let balance = formatDollars(
-    account.subType === AccountSubType.CryptoExchange || account.subType === AccountSubType.Vehicle
-      ? account.convertedBalance
-      : account.currentBalance,
-    account.currencyCode
-  )
-  if (
-    account.currencyCode !== currencyCode &&
-    account.subType !== AccountSubType.CryptoExchange &&
-    account.subType !== AccountSubType.Vehicle
-  ) {
+  let balance = formatDollars(account.currentBalance, account.currencyCode)
+  if (account.currencyCode !== currencyCode) {
     balance += ` ${account.currencyCode}`
   }
   return balance
