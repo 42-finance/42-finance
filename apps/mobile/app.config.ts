@@ -65,6 +65,9 @@ export default (): ExpoConfig => {
         usesNonExemptEncryption: false
       },
       icon: './src/assets/images/icon-ios.png',
+      infoPlist: {
+        LSMinimumSystemVersion: '12.0'
+      },
       privacyManifests: {
         NSPrivacyAccessedAPITypes: [
           {
