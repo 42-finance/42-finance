@@ -1,3 +1,4 @@
+import { getCurrencySymbol } from 'frontend-utils'
 import { useState } from 'react'
 import CurrencyInput from 'react-native-currency-input'
 import { Divider, TextInput, useTheme } from 'react-native-paper'
@@ -42,7 +43,7 @@ export const SplitTransaction: React.FC<Props> = ({ transaction, onPress, onEdit
                 value={amount}
                 onChangeValue={(value) => setAmount(value)}
                 keyboardType="number-pad"
-                prefix="$"
+                prefix={getCurrencySymbol(transaction.account.currencyCode)}
                 delimiter=","
                 separator="."
                 precision={2}

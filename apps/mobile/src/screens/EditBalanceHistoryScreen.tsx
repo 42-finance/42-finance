@@ -11,7 +11,7 @@ import {
 } from 'frontend-api'
 import { BalanceHistory } from 'frontend-types'
 import * as React from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import { ActivityIndicator, Button, Dialog, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
 
@@ -54,7 +54,7 @@ export const EditBalanceHistoryScreen = ({ route, navigation }: RootStackScreenP
     }
   })
 
-  const { data: balanceHistory = [] } = useQuery({
+  const { data: balanceHistory = [], isFetching } = useQuery({
     queryKey: [ApiQuery.AccountBalanceHistory, accountId],
     queryFn: async () => {
       const res = await getBalanceHistory({ accountIds: [accountId] })
@@ -93,16 +93,15 @@ export const EditBalanceHistoryScreen = ({ route, navigation }: RootStackScreenP
     }
   })
 
+  const sortedBalanceHistory = useMemo(() => balanceHistory.slice().reverse(), [balanceHistory])
+
   const onPress = useCallback((history: BalanceHistory) => {
     setEditingBalanceHistory((b) => (b?.date.getTime() === history.date.getTime() ? null : history))
     setAddingBalanceHistory(false)
   }, [])
 
   const onEdit = useCallback((values: BalanceHistoryFormFields) => {
-    mutate({
-      date: values.date,
-      currentBalance: values.currentBalance.length === 0 ? 0 : parseFloat(values.currentBalance)
-    })
+    mutate(values)
   }, [])
 
   const onDelete = useCallback((history: BalanceHistory) => {
@@ -147,11 +146,16 @@ export const EditBalanceHistoryScreen = ({ route, navigation }: RootStackScreenP
       </Portal>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+          <ProgressBar indeterminate visible={isPending || isPendingDelete || isFetching} />
+          {addingBalanceHistory && (
+            <BalanceHistoryForm currencyCode={account.currencyCode} onSubmit={onEdit} submitting={isPending} />
+          )}
           <ScrollView>
-            {balanceHistory.map((history) => (
+            {sortedBalanceHistory.map((history) => (
               <BalanceHistoryEntry
                 key={history.date.toISOString()}
                 history={history}
+                currencyCode={account.currencyCode}
                 onPress={onPress}
                 onEdit={onEdit}
                 onDelete={onDelete}
@@ -160,7 +164,6 @@ export const EditBalanceHistoryScreen = ({ route, navigation }: RootStackScreenP
               />
             ))}
           </ScrollView>
-          {addingBalanceHistory && <BalanceHistoryForm onSubmit={onEdit} submitting={isPending} />}
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </>

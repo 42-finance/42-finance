@@ -1,67 +1,88 @@
+import { format } from 'date-fns'
 import { BalanceHistory } from 'frontend-types'
-import { dateToLocal, todayInUtc } from 'frontend-utils'
-import { useForm } from 'react-hook-form'
-import { Button, useTheme } from 'react-native-paper'
+import { dateToLocal, getCurrencySymbol, todayInUtc } from 'frontend-utils'
+import { useState } from 'react'
+import { TouchableOpacity } from 'react-native'
+import CurrencyInput from 'react-native-currency-input'
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
+import { Button, TextInput, useTheme } from 'react-native-paper'
+import { CurrencyCode } from 'shared-types'
 
-import { useUserTokenContext } from '../../contexts/user-token.context'
-import { dollarCentMask } from '../../utils/mask.utils'
-import { DateField } from '../common/DateField'
-import { TextInput } from '../common/TextInput'
 import { View } from '../common/View'
 
 export type BalanceHistoryFormFields = {
   date: Date
-  currentBalance: string
+  currentBalance: number
 }
 
 type Props = {
   history?: BalanceHistory
+  currencyCode: CurrencyCode
   onSubmit: (values: BalanceHistoryFormFields) => void
   submitting: boolean
 }
 
-export const BalanceHistoryForm: React.FC<Props> = ({ history, onSubmit, submitting }) => {
+export const BalanceHistoryForm: React.FC<Props> = ({ history, currencyCode, onSubmit, submitting }) => {
   const { colors } = useTheme()
-  const { currencyCode } = useUserTokenContext()
 
-  const { control, setValue, handleSubmit, watch } = useForm<BalanceHistoryFormFields>({
-    defaultValues: {
-      date: history ? dateToLocal(history.date) : dateToLocal(todayInUtc()),
-      currentBalance: (history?.currentBalance ?? 0).toFixed(2)
-    }
-  })
-
-  const date = watch('date')
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [date, setDate] = useState(history ? dateToLocal(history.date) : dateToLocal(todayInUtc()))
+  const [currentBalance, setCurrentBalance] = useState<number | null>(history?.currentBalance ?? 0)
 
   return (
     <View style={{ backgroundColor: colors.background, padding: 10 }}>
       <View style={{ position: 'relative' }}>
         {history == null && (
-          <DateField
-            label="Date"
-            name="date"
-            control={control}
-            value={date ?? undefined}
-            setValue={(value) => {
-              setValue('date', value)
-            }}
-            style={{
-              marginBottom: 5
-            }}
-          />
+          <>
+            <TouchableOpacity
+              onPress={() => setShowDatePicker(true)}
+              activeOpacity={1}
+              style={{ position: 'relative', marginBottom: 5 }}
+            >
+              <View pointerEvents="box-only">
+                <TextInput label="Date" editable={false} value={format(date, 'MMMM d, yyyy')} />
+              </View>
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={showDatePicker}
+              date={date}
+              mode="date"
+              display="inline"
+              onConfirm={(date) => {
+                setShowDatePicker(false)
+                setDate(date)
+              }}
+              onCancel={() => {
+                setShowDatePicker(false)
+              }}
+            />
+          </>
         )}
         <TextInput
-          label="Amount"
-          name="currentBalance"
-          control={control}
-          mask={dollarCentMask(currencyCode)}
-          keyboardType="decimal-pad"
+          render={(props) => (
+            <CurrencyInput
+              {...props}
+              value={currentBalance}
+              onChangeValue={(value) => setCurrentBalance(value)}
+              keyboardType="number-pad"
+              prefix={getCurrencySymbol(currencyCode)}
+              delimiter=","
+              separator="."
+              precision={2}
+            />
+          )}
         />
         <Button
           mode="contained"
           style={{ marginTop: 5, alignSelf: 'stretch' }}
           disabled={submitting}
-          onPress={handleSubmit(onSubmit)}
+          onPress={() => {
+            const value = Number(currentBalance)
+            onSubmit({
+              date,
+              currentBalance: value
+            })
+          }}
           loading={submitting}
         >
           Save Balance History

@@ -3,13 +3,14 @@ import { BalanceHistory } from 'frontend-types'
 import { formatDateInUtc, formatDollarsSigned } from 'frontend-utils'
 import { TouchableOpacity } from 'react-native'
 import { Divider, Text, useTheme } from 'react-native-paper'
+import { CurrencyCode } from 'shared-types'
 
-import { useUserTokenContext } from '../../contexts/user-token.context'
 import { View } from '../common/View'
 import { BalanceHistoryForm, BalanceHistoryFormFields } from '../forms/BalanceHistoryForm'
 
 type Props = {
   history: BalanceHistory
+  currencyCode: CurrencyCode
   isEditing: boolean
   isLoading: boolean
   onPress: (history: BalanceHistory) => void
@@ -17,9 +18,16 @@ type Props = {
   onDelete: (history: BalanceHistory) => void
 }
 
-export const BalanceHistoryEntry: React.FC<Props> = ({ history, isEditing, isLoading, onPress, onEdit, onDelete }) => {
+export const BalanceHistoryEntry: React.FC<Props> = ({
+  history,
+  currencyCode,
+  isEditing,
+  isLoading,
+  onPress,
+  onEdit,
+  onDelete
+}) => {
   const { colors } = useTheme()
-  const { currencyCode } = useUserTokenContext()
 
   return (
     <View>
@@ -45,7 +53,9 @@ export const BalanceHistoryEntry: React.FC<Props> = ({ history, isEditing, isLoa
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
-      {isEditing && <BalanceHistoryForm history={history} onSubmit={onEdit} submitting={isLoading} />}
+      {isEditing && (
+        <BalanceHistoryForm history={history} currencyCode={currencyCode} onSubmit={onEdit} submitting={isLoading} />
+      )}
     </View>
   )
 }
