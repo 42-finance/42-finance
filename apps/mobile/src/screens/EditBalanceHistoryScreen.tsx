@@ -12,7 +12,7 @@ import {
 import { BalanceHistory } from 'frontend-types'
 import * as React from 'react'
 import { useCallback, useEffect, useState } from 'react'
-import { Keyboard, KeyboardAvoidingView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import { ActivityIndicator, Button, Dialog, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
 
 import { BalanceHistoryEntry } from '../components/balance-history/BalanceHistoryEntry'
@@ -94,12 +94,15 @@ export const EditBalanceHistoryScreen = ({ route, navigation }: RootStackScreenP
   })
 
   const onPress = useCallback((history: BalanceHistory) => {
-    setEditingBalanceHistory(history)
+    setEditingBalanceHistory((b) => (b?.date.getTime() === history.date.getTime() ? null : history))
     setAddingBalanceHistory(false)
   }, [])
 
   const onEdit = useCallback((values: BalanceHistoryFormFields) => {
-    mutate(values)
+    mutate({
+      date: values.date,
+      currentBalance: values.currentBalance.length === 0 ? 0 : parseFloat(values.currentBalance)
+    })
   }, [])
 
   const onDelete = useCallback((history: BalanceHistory) => {
@@ -144,17 +147,19 @@ export const EditBalanceHistoryScreen = ({ route, navigation }: RootStackScreenP
       </Portal>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-          {balanceHistory.map((history) => (
-            <BalanceHistoryEntry
-              key={history.date.toISOString()}
-              history={history}
-              onPress={onPress}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              isEditing={editingBalanceHistory?.date === history.date}
-              isLoading={isPending}
-            />
-          ))}
+          <ScrollView>
+            {balanceHistory.map((history) => (
+              <BalanceHistoryEntry
+                key={history.date.toISOString()}
+                history={history}
+                onPress={onPress}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                isEditing={editingBalanceHistory?.date === history.date}
+                isLoading={isPending}
+              />
+            ))}
+          </ScrollView>
           {addingBalanceHistory && <BalanceHistoryForm onSubmit={onEdit} submitting={isPending} />}
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

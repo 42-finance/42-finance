@@ -35,7 +35,7 @@ export const BalanceHistoryEntry: React.FC<Props> = ({ history, isEditing, isLoa
           }}
         >
           <Text variant="titleMedium" style={{ flex: 1 }}>
-            {formatDateInUtc(history.date, 'MMM dd, yyyy')}
+            {formatDateInUtc(history.date, 'MMMM dd, yyyy')}
           </Text>
           <Text variant="titleMedium" style={{ width: 90, textAlign: 'right', marginEnd: 10 }}>
             {formatDollarsSigned(history.currentBalance, currencyCode)}
@@ -45,7 +45,7 @@ export const BalanceHistoryEntry: React.FC<Props> = ({ history, isEditing, isLoa
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
-      {isEditing && <BalanceHistoryForm historyInfo={history} onSubmit={onEdit} submitting={isLoading} />}
+      {isEditing && <BalanceHistoryForm history={history} onSubmit={onEdit} submitting={isLoading} />}
     </View>
   )
 }
