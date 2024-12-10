@@ -1,6 +1,7 @@
 import { Account, Bill, BillPayment, Connection, User, dataSource, getExchangeRate } from 'database'
 import { startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
+import { isNil } from 'lodash'
 
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
@@ -52,6 +53,8 @@ export const getBills = async (
   const convertedBills: Bill[] = []
 
   for (const bill of bills) {
+    if (isNil(bill.account)) continue
+
     let convertedBalance = bill.balance
 
     if (convertedBalance && user.currencyCode !== bill.account.currencyCode) {
