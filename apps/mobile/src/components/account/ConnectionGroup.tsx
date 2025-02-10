@@ -1,6 +1,6 @@
 import { FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ApiQuery, deleteConnection } from 'frontend-api'
+import { ApiQuery, DeleteConnectionRequest, deleteConnection } from 'frontend-api'
 import { mapAccountSubType } from 'frontend-utils'
 import { formatAccountName } from 'frontend-utils/src/account/account.utils'
 import { formatDateDifference } from 'frontend-utils/src/date/date.utils'
@@ -27,8 +27,8 @@ export const ConnectionGroup: React.FC<Props> = ({ connection }) => {
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false)
 
   const { mutate: deleteMutation, isPending: loadingDelete } = useMutation({
-    mutationFn: async () => {
-      const res = await deleteConnection(connection.id)
+    mutationFn: async (request: DeleteConnectionRequest) => {
+      const res = await deleteConnection(connection.id, request)
       if (res.ok && res.parsedBody?.payload) {
         queryClient.invalidateQueries({ queryKey: [ApiQuery.Connections] })
       }
@@ -58,7 +58,8 @@ export const ConnectionGroup: React.FC<Props> = ({ connection }) => {
               <Dialog.Title>Delete Connection</Dialog.Title>
               <Dialog.Content>
                 <Text>
-                  Are you sure you want to delete this connection? All accounts and transaction data will be removed.
+                  Are you sure you want to delete this connection? You can choose to keep your existing accounts and
+                  transaction data or completely remove all data.
                 </Text>
               </Dialog.Content>
               <Dialog.Actions>
@@ -66,10 +67,18 @@ export const ConnectionGroup: React.FC<Props> = ({ connection }) => {
                 <Button
                   onPress={() => {
                     setDeleteDialogVisible(false)
-                    deleteMutation()
+                    deleteMutation({ keepData: false })
                   }}
                 >
-                  Ok
+                  Delete Data
+                </Button>
+                <Button
+                  onPress={() => {
+                    setDeleteDialogVisible(false)
+                    deleteMutation({ keepData: true })
+                  }}
+                >
+                  Keep Data
                 </Button>
               </Dialog.Actions>
             </Dialog>

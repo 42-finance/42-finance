@@ -84,10 +84,11 @@ const App: React.FC = () => {
       setToken(cachedToken)
       const res = await getUser()
       if (res.ok && res.parsedBody?.payload) {
-        const { id, currencyCode } = res.parsedBody.payload
+        const { id, email, currencyCode } = res.parsedBody.payload
         setCurrencyCode(currencyCode)
         if (Platform.OS === 'ios') {
           await Purchases.logIn(id.toString())
+          await Purchases.setEmail(email)
         }
         await mixpanel.identify(`user-${id}`)
       } else {

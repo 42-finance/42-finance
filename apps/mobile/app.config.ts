@@ -92,6 +92,7 @@ export default (): ExpoConfig => {
       usesAppleSignIn: true
     },
     android: {
+      blockedPermissions: ['android.permission.READ_MEDIA_IMAGES', 'android.permission.READ_MEDIA_VIDEO'],
       googleServicesFile: process.env.GOOGLE_SERVICES,
       icon: './src/assets/images/icon.png',
       package: bundleIdentifier

@@ -4,9 +4,17 @@ import { Request, Response } from 'express'
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 import { deletePlaidConnection } from '../../utils/connection.utils'
 
-export const deleteConnection = async (request: Request<{ id: string }>, response: Response<HTTPResponseBody>) => {
+type DeleteConnectionRequest = {
+  keepData: boolean
+}
+
+export const deleteConnection = async (
+  request: Request<{ id: string }, {}, DeleteConnectionRequest>,
+  response: Response<HTTPResponseBody>
+) => {
   const { householdId } = request
   const { id } = request.params
+  const { keepData } = request.body
 
   const connection = await dataSource
     .getRepository(Connection)
@@ -16,7 +24,7 @@ export const deleteConnection = async (request: Request<{ id: string }>, respons
     .getOneOrFail()
 
   return await dataSource.transaction(async (entityManager) => {
-    const result = await deletePlaidConnection(connection, entityManager)
+    const result = await deletePlaidConnection(connection, keepData, entityManager)
 
     return response.json({
       errors: [],

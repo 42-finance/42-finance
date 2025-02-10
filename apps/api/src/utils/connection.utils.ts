@@ -2,26 +2,32 @@ import { Account, Connection, Transaction } from 'database'
 import { plaidClient } from 'plaid-helpers'
 import { EntityManager } from 'typeorm'
 
-export const deletePlaidConnection = async (connection: Connection, entityManager: EntityManager) => {
+export const deletePlaidConnection = async (
+  connection: Connection,
+  keepData: boolean,
+  entityManager: EntityManager
+) => {
   const result = await entityManager.getRepository(Connection).softDelete(connection.id)
 
-  const accounts = await entityManager
-    .getRepository(Account)
-    .createQueryBuilder('account')
-    .where('account.connectionId = :connectionId', { connectionId: connection.id })
-    .getMany()
+  if (!keepData) {
+    const accounts = await entityManager
+      .getRepository(Account)
+      .createQueryBuilder('account')
+      .where('account.connectionId = :connectionId', { connectionId: connection.id })
+      .getMany()
 
-  const accountIds = accounts.map((a) => a.id)
+    const accountIds = accounts.map((a) => a.id)
 
-  if (accountIds.length > 0) {
-    await entityManager.getRepository(Account).delete(accountIds)
+    if (accountIds.length > 0) {
+      await entityManager.getRepository(Account).delete(accountIds)
 
-    await entityManager
-      .getRepository(Transaction)
-      .createQueryBuilder()
-      .where('accountId IN (:...accountIds)', { accountIds })
-      .delete()
-      .execute()
+      await entityManager
+        .getRepository(Transaction)
+        .createQueryBuilder()
+        .where('accountId IN (:...accountIds)', { accountIds })
+        .delete()
+        .execute()
+    }
   }
 
   if (connection.accessToken) {

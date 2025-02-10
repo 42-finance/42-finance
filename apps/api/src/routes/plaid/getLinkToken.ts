@@ -12,6 +12,7 @@ import { getStripeSubscription } from '../../utils/stripe.utils'
 type LinkTokenQuery = {
   connectionId?: string
   platform?: string
+  product?: Products
 }
 
 export const getLinkToken = async (
@@ -24,7 +25,7 @@ export const getLinkToken = async (
   }
 
   const { householdId } = request
-  const { connectionId, platform } = request.query
+  const { connectionId, platform, product } = request.query
 
   const { subscriptionType, activeConnections } = await getStripeSubscription(householdId)
 
@@ -39,15 +40,31 @@ export const getLinkToken = async (
   }
 
   let accessToken: string | undefined = undefined
-  let products = [Products.Transactions]
-  let optionalProducts = [Products.Liabilities]
+  let products: Products[]
+  let additionalConsentedProducts: Products[] = []
+
+  if (product === Products.Investments) {
+    products = [Products.Investments]
+    additionalConsentedProducts = [Products.Transactions, Products.Liabilities]
+  } else {
+    products = [Products.Transactions]
+    additionalConsentedProducts = [Products.Investments, Products.Liabilities]
+  }
 
   if (connectionId) {
     const connection = await dataSource.getRepository(Connection).findOne({ where: { id: connectionId } })
     if (connection?.accessToken) {
       accessToken = connection.accessToken
       products = []
-      optionalProducts = []
+      additionalConsentedProducts = []
+      const itemRes = await plaidClient.itemGet({ access_token: connection.accessToken })
+      const item = itemRes.data.item
+      if (!item.billed_products.includes(Products.Liabilities)) {
+        additionalConsentedProducts.push(Products.Liabilities)
+      }
+      if (!item.billed_products.includes(Products.Investments)) {
+        additionalConsentedProducts.push(Products.Investments)
+      }
     }
   }
 
@@ -72,7 +89,7 @@ export const getLinkToken = async (
       client_user_id: String(householdId)
     },
     products,
-    optional_products: optionalProducts,
+    additional_consented_products: additionalConsentedProducts,
     access_token: accessToken,
     webhook: `${config.express.apiUrl}/webhook/plaid`,
     transactions: {

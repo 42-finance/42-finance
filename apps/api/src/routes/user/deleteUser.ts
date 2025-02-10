@@ -20,7 +20,7 @@ export default async (request: Request, response: Response<HTTPResponseBody>) =>
   return await dataSource.transaction(async (entityManager) => {
     for (const household of households) {
       for (const connection of household.connections) {
-        await deletePlaidConnection(connection, entityManager)
+        await deletePlaidConnection(connection, false, entityManager)
       }
     }
 

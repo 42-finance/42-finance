@@ -21,6 +21,7 @@ import { forgotPasswordRouter } from './forgotPassword'
 import { goalRouter } from './goal'
 import { groupRouter } from './group'
 import { householdRouter } from './household'
+import { institutionsRouter } from './institutions'
 import invoiceRouter from './invoice/invoiceRouter'
 import { loginRouter } from './login'
 import { merchantRouter } from './merchant'
@@ -77,6 +78,7 @@ router.use('/finicity', authenticateToken, finicityRouter)
 router.use('/goals', authenticateToken, goalRouter)
 router.use('/groups', authenticateToken, groupRouter)
 router.use('/household', authenticateToken, householdRouter)
+router.use('/institutions', authenticateToken, institutionsRouter)
 router.use('/invoices', authenticateToken, invoiceRouter)
 router.use('/login', loginRouter)
 router.use('/merchants', authenticateToken, merchantRouter)

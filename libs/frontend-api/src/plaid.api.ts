@@ -1,3 +1,5 @@
+import { PlaidProduct } from 'shared-types'
+
 import { config } from './config'
 import { get, post } from './http'
 import { HTTPResponseBody } from './http-response-body.type'
@@ -5,6 +7,7 @@ import { HTTPResponseBody } from './http-response-body.type'
 type LinkTokenQuery = {
   connectionId?: string
   platform?: string
+  product?: PlaidProduct
 }
 
 type LinkTokenResponse = {
@@ -20,6 +23,9 @@ export const getLinkToken = async (query: LinkTokenQuery = {}) => {
   }
   if (query.platform) {
     searchParams.append('platform', query.platform)
+  }
+  if (query.product) {
+    searchParams.append('product', query.product)
   }
   url.search = searchParams.toString()
   return get<HTTPResponseBody<LinkTokenResponse>>(url.toString())

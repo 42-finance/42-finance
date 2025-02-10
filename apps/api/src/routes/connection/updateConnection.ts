@@ -1,5 +1,7 @@
 import { Connection, dataSource } from 'database'
 import { Request, Response } from 'express'
+import { updateLiabilities, updateTransactions } from 'plaid-helpers'
+
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
 type UpdateConnectionRequest = {
@@ -28,18 +30,15 @@ export const updateConnection = async (
     })
   }
 
-  try {
-    const result = await dataSource.getRepository(Connection).update(connection.id, {
-      needsTokenRefresh
-    })
-    return response.json({
-      errors: [],
-      payload: result
-    })
-  } catch (error: any) {
-    return response.status(500).json({
-      errors: [error.message],
-      payload: {}
-    })
-  }
+  const result = await dataSource.getRepository(Connection).update(connection.id, {
+    needsTokenRefresh
+  })
+
+  response.json({
+    errors: [],
+    payload: result
+  })
+
+  await updateTransactions(connection.id)
+  await updateLiabilities(connection.id)
 }

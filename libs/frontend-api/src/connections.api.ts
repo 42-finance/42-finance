@@ -20,5 +20,9 @@ type DeleteConnectionResponse = {
   affected: number
 }
 
-export const deleteConnection = async (connectionId: string) =>
-  del<HTTPResponseBody<DeleteConnectionResponse>>(`${config.apiUrl}/connections/${connectionId}`)
+export type DeleteConnectionRequest = {
+  keepData?: boolean
+}
+
+export const deleteConnection = async (connectionId: string, body: DeleteConnectionRequest) =>
+  del<HTTPResponseBody<DeleteConnectionResponse>>(`${config.apiUrl}/connections/${connectionId}`, body)
