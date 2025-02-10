@@ -81,7 +81,7 @@ export const TransactionAmountFilter: React.FC<Props> = ({
       <CurrencyInput
         onChange={(e) => onChange(amountType, amountFilter, Number(e.target.value), amountValue2)}
         placeholder={amountFilter === AmountFilter.Between ? 'Minimum' : 'Amount'}
-        className={`${amountFilter === AmountFilter.Between ? '' : 'rounded-r-sm'} border text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30`}
+        className={`${amountFilter === AmountFilter.Between ? '' : 'rounded-r-sm'} border text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30`}
         value={amountValue?.toString() ?? ''}
         currencyCode={currencyCode}
       />
@@ -89,7 +89,7 @@ export const TransactionAmountFilter: React.FC<Props> = ({
         <CurrencyInput
           onChange={(e) => onChange(amountType, amountFilter, amountValue, Number(e.target.value))}
           placeholder="Maximum"
-          className={`rounded-r-sm border border-l-0 focus:border-l focus:-ml-[1px] text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30`}
+          className={`rounded-r-sm border border-l-0 focus:border-l focus:-ml-[1px] text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30`}
           value={amountValue2?.toString() ?? ''}
           currencyCode={currencyCode}
         />

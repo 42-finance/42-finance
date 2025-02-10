@@ -2,7 +2,7 @@ import { Card } from '../common/card/card'
 
 export const PrivacyPolicyTermly = () => {
   return (
-    <Card title="42 Finance Privacy Policy" className="mx-auto max-w-screen-lg m-8">
+    <Card title="42 Finance Privacy Policy" className="mx-auto max-w-(--breakpoint-lg) m-8">
       <div className="m-8">
         <div className="font-bold">Last updated April 27, 2024</div>
 

@@ -1,22 +1,95 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@font-face {
-  font-family: Barlow;
-  src: url('./assets/fonts/Barlow-Medium.ttf');
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-midnight-blue: #0c1c2a;
+  --color-lighter-green: rgb(0, 95, 175);
+  --color-dark-greyish-blue: #798996;
+  --color-cool-grey: #dde5ed;
+  --color-capstone-purple: #37055b;
+  --color-capstone-light-purple: #5e089c;
+  --color-capstone-pink: #d600bf;
+  --color-capstone-orange: #fba300;
+  --color-capstone-dark-blue: #1f0caa;
+  --color-capstone-blue: #21409a;
+  --color-capstone-yellow: #efc700;
+  --color-expense: #f0648c;
+  --color-income: #19d2a5;
+  --color-primary: rgb(0, 95, 175);
+  --color-primary-dark: #a5c8ff;
+  --color-on-primary: rgb(255, 255, 255);
+  --color-primary-container: rgb(212, 227, 255);
+  --color-on-primary-container: rgb(0, 28, 58);
+  --color-secondary: rgb(84, 95, 113);
+  --color-on-secondary: rgb(255, 255, 255);
+  --color-secondary-container: rgb(216, 227, 248);
+  --color-on-secondary-container: rgb(17, 28, 43);
+  --color-tertiary: rgb(0, 104, 116);
+  --color-on-tertiary: rgb(255, 255, 255);
+  --color-tertiary-container: rgb(151, 240, 255);
+  --color-on-tertiary-container: rgb(0, 31, 36);
+  --color-error: rgb(186, 26, 26);
+  --color-on-error: rgb(255, 255, 255);
+  --color-error-container: rgb(255, 218, 214);
+  --color-on-error-container: rgb(65, 0, 2);
+  --color-background: rgb(253, 252, 255);
+  --color-on-background: rgb(26, 28, 30);
+  --color-surface: rgb(253, 252, 255);
+  --color-on-surface: rgb(26, 28, 30);
+  --color-surface-variant: rgb(224, 226, 236);
+  --color-on-surface-variant: rgb(67, 71, 78);
+  --color-outline: rgb(116, 119, 127);
+  --color-outline-variant: rgb(195, 198, 207);
+  --color-shadow: rgb(0, 0, 0);
+  --color-scrim: rgb(0, 0, 0);
+  --color-inverse-surface: rgb(47, 48, 51);
+  --color-inverse-on-surface: rgb(241, 240, 244);
+  --color-inverse-primary: rgb(165, 200, 255);
+  --color-elevation-level0: transparent;
+  --color-elevation-level1: rgb(240, 244, 251);
+  --color-elevation-level2: rgb(233, 239, 249);
+  --color-elevation-level3: rgb(225, 235, 246);
+  --color-elevation-level4: rgb(223, 233, 245);
+  --color-elevation-level5: rgb(218, 230, 244);
+  --color-surface-disabled: rgba(26, 28, 30, 0.12);
+  --color-on-surface-disabled: rgba(26, 28, 30, 0.38);
+  --color-backdrop: rgba(45, 49, 56, 0.4);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@layer utilities {
+  @font-face {
+    font-family: Barlow;
+    src: url('./assets/fonts/Barlow-Medium.ttf');
+  }
 }
 
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
     font-family: Barlow, ui-sans-serif;
-  }
-}
-
-@layer utilities {
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
@@ -52,7 +125,7 @@ body {
  * React Date Picker
  */
 .react-datepicker__input-container input {
-  @apply h-[40px] block w-full min-w-[230px] text-sm py-[5px] pl-3 pr-8 bg-white border border-gray-300 text-gray-900 placeholder:text-gray-300 rounded-[4px] focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30;
+  @apply h-[40px] block w-full min-w-[230px] text-sm py-[5px] pl-3 pr-8 bg-white border border-gray-300 text-gray-900 placeholder:text-gray-300 rounded-[4px] focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30;
 }
 
 form .react-datepicker__input-container input {
@@ -60,19 +133,19 @@ form .react-datepicker__input-container input {
 }
 
 .react-datepicker-popper {
-  @apply z-50 w-72 text-sm bg-white shadow-lg px-3 py-2 border border-gray-300 rounded-sm;
+  @apply z-50 w-72 text-sm bg-white shadow-lg px-3 py-2 border border-gray-300 rounded-xs;
 }
 
 .react-datepicker-popper[data-placement^='top'] {
-  @apply bottom-1.5 !important;
+  @apply bottom-1.5!;
 }
 
 .react-datepicker-popper[data-placement^='bottom'] {
-  @apply top-1.5 !important;
+  @apply top-1.5!;
 }
 
 .react-datepicker__portal {
-  @apply absolute z-10 w-72 text-sm transform-none bg-white shadow px-3 py-2 top-12 right-0 border-2 border-gray-300 rounded;
+  @apply absolute z-10 w-72 text-sm transform-none bg-white shadow-sm px-3 py-2 top-12 right-0 border-2 border-gray-300 rounded-sm;
 }
 
 .react-datepicker__month-container {
@@ -104,11 +177,11 @@ form .react-datepicker__input-container input {
 }
 
 .react-datepicker__navigation--previous {
-  @apply right-12 w-8 h-8 rounded transition flex items-center justify-center hover:bg-gray-200;
+  @apply right-12 w-8 h-8 rounded-sm transition flex items-center justify-center hover:bg-gray-200;
 }
 
 .react-datepicker__navigation--next {
-  @apply right-4 w-8 h-8 rounded transition flex items-center justify-center hover:bg-gray-200;
+  @apply right-4 w-8 h-8 rounded-sm transition flex items-center justify-center hover:bg-gray-200;
 }
 
 .react-datepicker__day {
@@ -172,82 +245,82 @@ form .react-datepicker__input-container input {
  */
 
 .react-select__control {
-  @apply bg-white border border-cool-grey rounded-[4px] min-h-[40px] !important;
+  @apply bg-white! border! border-cool-grey! rounded-[4px]! min-h-[40px]!;
 }
 
 .form-select .react-select__control {
-  @apply min-h-[38px] !important;
+  @apply min-h-[38px]!;
 }
 
 .form-select-errors .react-select__control {
-  @apply border-red-500 !important;
+  @apply border-red-500!;
 }
 
 .react-select__control--is-focused {
-  @apply border-midnight-blue ring-1 ring-midnight-blue/30 shadow-none !important;
+  @apply border-midnight-blue! ring-1! ring-midnight-blue/30! shadow-none!;
 }
 
 .react-select__value-container {
-  @apply py-0 !important;
+  @apply py-0!;
 }
 
 .react-select__input {
-  @apply ring-0 border-none caret-transparent !important;
+  @apply ring-0! border-none! caret-transparent!;
 }
 
 .react-select__placeholder {
-  @apply text-midnight-blue !important;
+  @apply text-midnight-blue!;
 }
 
 .react-select__single-value {
-  @apply text-sm !important;
+  @apply text-sm!;
 }
 
 .react-select__indicator {
-  @apply p-1 !important;
+  @apply p-1!;
 }
 
 .react-select__menu {
-  @apply bg-white border border-gray-300 rounded-sm shadow-lg mt-1 z-50 !important;
+  @apply bg-white! border! border-gray-300! rounded-xs! shadow-lg! mt-1! z-50!;
 }
 
 .react-select__option--is-selected {
-  @apply bg-midnight-blue text-white !important;
+  @apply bg-midnight-blue! text-white!;
 }
 
 .react-select__option--is-focused {
-  @apply bg-midnight-blue/20 text-inherit !important;
+  @apply bg-midnight-blue/20! text-inherit!;
 }
 
 .react-select-addon-before .react-select__control {
-  @apply bg-gray-100 rounded-r-none border-r-0 !important;
+  @apply bg-gray-100! rounded-r-none! border-r-0!;
 }
 
 .react-select-addon-before .react-select__control--is-focused {
-  @apply border-midnight-blue border-r z-10 !important;
+  @apply border-midnight-blue! border-r! z-10!;
 }
 
 .react-select-addon-middle .react-select__control {
-  @apply bg-gray-100 rounded-none border-r-0 !important;
+  @apply bg-gray-100! rounded-none! border-r-0!;
 }
 
 .react-select-addon-middle .react-select__control--is-focused {
-  @apply border-midnight-blue border-r z-10 !important;
+  @apply border-midnight-blue! border-r! z-10!;
 }
 
 .react-select-addon-after .react-select__control {
-  @apply rounded-l-none !important;
+  @apply rounded-l-none!;
 }
 
 .react-select--is-disabled .react-select__control {
-  @apply bg-gray-100 !important;
+  @apply bg-gray-100!;
 }
 
 /**
   * React-Carousel
   */
 .carousel .carousel-status {
-  @apply top-auto bottom-0.5 left-0 right-0 text-base text-center !important;
+  @apply top-auto! bottom-0.5! left-0! right-0! text-base! text-center!;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

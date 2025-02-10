@@ -69,7 +69,7 @@ export const Features = () => {
 
   return (
     <section id="features" className="border-t pt-16 mt-16">
-      <div className="flex flex-col max-w-screen-xl mx-auto justify-center items-center">
+      <div className="flex flex-col max-w-(--breakpoint-xl) mx-auto justify-center items-center">
         <div className="flex justify-center">
           <div className="bg-black rounded-lg text-white py-3 px-4 lg:px-12 text-xl">Features</div>
         </div>

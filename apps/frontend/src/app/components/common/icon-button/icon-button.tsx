@@ -36,8 +36,8 @@ export const IconButton: React.FC<Props> = ({
   return (
     <button
       className={`flex text-base items-center justify-center w-[32px] h-[32px] ${
-        shape === 'circle' ? ' rounded-full' : 'rounded-sm'
-      } focus:outline-none focus:ring-2 focus:border-midnight-blue focus:ring-midnight-blue/30  ${color} ${
+        shape === 'circle' ? ' rounded-full' : 'rounded-xs'
+      } focus:outline-hidden focus:ring-2 focus:border-midnight-blue focus:ring-midnight-blue/30  ${color} ${
         className || ''
       }`}
       data-testid={dataTestId}

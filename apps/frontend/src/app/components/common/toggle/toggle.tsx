@@ -41,7 +41,7 @@ export const Toggle: React.FC<Props> = ({
       disabled={disabled}
       onChange={handleChange}
       className={`${enabled ? bgColorEnabled : bgColorNotEnabled}
-          relative flex ${height} ${width} ${marginRight} shrink-0 ${cursor} rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-midnight-blue/30`}
+          relative flex ${height} ${width} ${marginRight} shrink-0 ${cursor} rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus-visible:ring-2 focus-visible:ring-midnight-blue/30`}
     >
       <span className="sr-only">{children}</span>
       <span

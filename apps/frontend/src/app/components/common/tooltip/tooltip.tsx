@@ -25,7 +25,7 @@ export const Tooltip: React.FC<Props> = ({
         placement={placement}
         render={(attrs) => (
           <div
-            className={`tooltip p-2 leading-tight font-normal text-white ${color} rounded-sm shadow-[0px_1px_7px_2px_rgba(0,0,0,0.2)] max-w-sm`}
+            className={`tooltip p-2 leading-tight font-normal text-white ${color} rounded-xs shadow-[0px_1px_7px_2px_rgba(0,0,0,0.2)] max-w-sm`}
             {...attrs}
           >
             {body}

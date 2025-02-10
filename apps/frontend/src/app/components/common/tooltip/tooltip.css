@@ -1,3 +1,5 @@
+@reference "../../../../index.css";
+
 .tooltip .arrow,
 .tooltip .arrow::before {
   @apply absolute w-2.5 h-2.5 bg-inherit;

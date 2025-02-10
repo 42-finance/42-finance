@@ -99,7 +99,7 @@ export const Navigation: React.FC = () => {
               <div className="py-6">
                 <a
                   href="https://app.42f.io"
-                  className="rounded-md bg-neutral-900 px-5 py-3 text-base text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500"
+                  className="rounded-md bg-neutral-900 px-5 py-3 text-base text-white shadow-xs hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500"
                 >
                   Go To App
                 </a>

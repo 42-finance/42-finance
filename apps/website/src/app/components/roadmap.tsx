@@ -9,7 +9,7 @@ const iconSize = 32
 export const Roadmap = () => {
   return (
     <section id="roadmap" className="border-t pt-16 mt-16">
-      <div className="max-w-screen-lg mx-auto">
+      <div className="max-w-(--breakpoint-lg) mx-auto">
         <div className="gap-[24px] text-center flex flex-col justify-center items-center">
           <div className="bg-black rounded-lg text-white py-3 px-12 text-xl">Roadmap</div>
         </div>

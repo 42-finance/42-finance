@@ -32,9 +32,9 @@ export const FormDateInput: React.FC<Props> = (props) => {
         }
 
         const monthBtn =
-          'inline-flex p-1 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-sm hover:border-lighter-green focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30'
+          'inline-flex p-1 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-xs hover:border-lighter-green focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30'
         const monthBtnDisabled =
-          'inline-flex p-1 text-sm font-medium text-gray-100 bg-white border border-gray-200 rounded-sm cursor-not-allowed opacity-50'
+          'inline-flex p-1 text-sm font-medium text-gray-100 bg-white border border-gray-200 rounded-xs cursor-not-allowed opacity-50'
 
         return (
           <div data-testid={`form-item-${inputName}`}>

@@ -124,7 +124,7 @@ export const Button: React.FC<Props> = ({
 
   return (
     <button
-      className={`h-[40px] pt-[6px] inline-flex items-center justify-center drop-shadow-sm whitespace-nowrap ${rounded} ${color} ${width} ${
+      className={`h-[40px] pt-[6px] inline-flex items-center justify-center drop-shadow-xs whitespace-nowrap ${rounded} ${color} ${width} ${
         className || ''
       }`}
       data-testid={dataTestId}

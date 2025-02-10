@@ -22,7 +22,7 @@ export const SearchInput: React.FC<Props> = ({ 'data-testid': dataTestId, defaul
     <div className="relative">
       <input
         ref={ref}
-        className="h-[40px] pl-7 pr-7 py-[5px] text-sm w-full sm:w-60 bg-white text-gray-900 placeholder:text-gray-300 border border-gray-300 rounded-[4px] focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30"
+        className="h-[40px] pl-7 pr-7 py-[5px] text-sm w-full sm:w-60 bg-white text-gray-900 placeholder:text-gray-300 border border-gray-300 rounded-[4px] focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30"
         data-testid={dataTestId}
         onChange={onChange}
         placeholder={placeholder}

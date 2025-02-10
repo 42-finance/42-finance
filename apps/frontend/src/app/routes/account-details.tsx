@@ -98,7 +98,7 @@ export const AccountDetails: React.FC = () => {
           }
           type="error"
           showIcon
-          className="!mb-0"
+          className="mb-0!"
         />
       )}
       <Card

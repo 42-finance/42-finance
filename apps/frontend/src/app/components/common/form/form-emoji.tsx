@@ -17,7 +17,7 @@ export const FormEmoji: React.FC<Props> = (props) => {
   const { addonAfter, control, errors, label, name, onChange } = props
 
   const [showEmojiBoard, setShowEmojiBoard] = useState(false)
-  const ref = useRef<any>()
+  const ref = useRef<any>(null)
 
   useEffect(() => {
     const onMouseDown = (event: any) => {
@@ -57,7 +57,7 @@ export const FormEmoji: React.FC<Props> = (props) => {
               <div className="relative w-full">
                 <div
                   onClick={() => setShowEmojiBoard((s) => !s)}
-                  className={`h-[38px] block w-full text-base px-2 pt-1.5 bg-white text-gray-900 placeholder:text-dark-greyish-blue border ${borderColor} ${rounded} focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30 disabled:bg-gray-100`}
+                  className={`h-[38px] block w-full text-base px-2 pt-1.5 bg-white text-gray-900 placeholder:text-dark-greyish-blue border ${borderColor} ${rounded} focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30 disabled:bg-gray-100`}
                 >
                   {value}
                 </div>

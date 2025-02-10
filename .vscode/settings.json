@@ -22,6 +22,5 @@
   "prettier.prettierPath": "node_modules/prettier/index.cjs",
   "workbench.editor.enablePreview": false,
   "files.eol": "\n",
-  "vitest.disableWorkspaceWarning": true,
   "window.title": "42 Finance"
 }

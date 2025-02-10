@@ -72,7 +72,7 @@ export const NotificationSettingItem: React.FC<Props> = ({ type, value }) => {
           </div>
         )}
       </div>
-      <div className="flex items-center bg-gray-50 p-2.5 border border-gray-200 rounded-sm mt-2 md:mt-0">
+      <div className="flex items-center bg-gray-50 p-2.5 border border-gray-200 rounded-xs mt-2 md:mt-0">
         <Checkbox
           className="text-xs leading-6 whitespace-nowrap"
           checked={sendPushNotification}

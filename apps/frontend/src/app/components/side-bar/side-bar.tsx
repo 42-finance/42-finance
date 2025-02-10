@@ -34,7 +34,7 @@ export const SideBar = () => {
         <label
           htmlFor="menu-open"
           id="mobile-menu-button"
-          className="m-2 p-2 focus:outline-none cursor-pointer hover:opacity-75 rounded-sm text-black dark:text-white"
+          className="m-2 p-2 focus:outline-hidden cursor-pointer hover:opacity-75 rounded-xs text-black dark:text-white"
         >
           <svg
             id="menu-open-icon"

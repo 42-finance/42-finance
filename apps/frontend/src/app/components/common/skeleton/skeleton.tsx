@@ -22,7 +22,7 @@ export const Skeleton: SkeletonSubComponents = {
   Button: ({ className, width = 'w-full', height = 'h-10' }) => {
     return (
       <div
-        className={`skeleton skeleton-button bg-gray-300 rounded-sm animate-pulse ${width} ${height} ${className}`}
+        className={`skeleton skeleton-button bg-gray-300 rounded-xs animate-pulse ${width} ${height} ${className}`}
       />
     )
   },

@@ -1,6 +1,3 @@
 {
-  "extends": "shared-tsconfig",
-  "compilerOptions": {
-    "jsx": "react-jsx"
-  }
+  "extends": "shared-tsconfig"
 }

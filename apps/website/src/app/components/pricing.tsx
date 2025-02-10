@@ -3,7 +3,7 @@ import { PricingItem } from './pricing-item'
 export const Pricing = () => {
   return (
     <section id="pricing" className="border-t pt-16 mt-16">
-      <div className="flex flex-col max-w-screen-lg mx-auto gap-12 px-4">
+      <div className="flex flex-col max-w-(--breakpoint-lg) mx-auto gap-12 px-4">
         <div className="gap-[24px] text-center flex flex-col justify-center items-center">
           <div className="bg-black rounded-lg text-white py-3 px-12 text-xl">Pricing</div>
         </div>

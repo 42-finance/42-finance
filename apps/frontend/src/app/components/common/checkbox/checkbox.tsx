@@ -17,7 +17,7 @@ export const Checkbox: React.FC<Props> = ({
     <label className={`inline-flex items-center ${className}`}>
       <input
         checked={checked}
-        className={`w-4 h-4 accent-lighter-green bg-white rounded border-gray-300 focus:outline-none focus:ring-offset-0 focus:border-midnight-blue focus:ring-midnight-blue/30`}
+        className={`w-4 h-4 accent-lighter-green bg-white rounded-sm border-gray-300 focus:outline-hidden focus:ring-offset-0 focus:border-midnight-blue focus:ring-midnight-blue/30`}
         disabled={disabled}
         onChange={onChange}
         type="checkbox"

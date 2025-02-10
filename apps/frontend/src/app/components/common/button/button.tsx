@@ -110,7 +110,7 @@ export const Button: React.FC<Props> = ({
       <a
         href={href}
         download={download}
-        className={`h-[40px] inline-flex items-center ${width} ${className} ${color} ${rounded} hover:no-underline`}
+        className={`h-[40px] inline-flex items-center cursor-pointer ${width} ${className} ${color} ${rounded} hover:no-underline`}
         data-testid={dataTestId}
         aria-label={ariaLabel}
         rel={rel}
@@ -124,7 +124,7 @@ export const Button: React.FC<Props> = ({
 
   return (
     <button
-      className={`h-[40px] pt-[6px] inline-flex items-center justify-center drop-shadow-sm whitespace-nowrap ${rounded} ${color} ${width} ${
+      className={`h-[40px] pt-[6px] inline-flex items-center justify-center cursor-pointer drop-shadow-xs whitespace-nowrap ${rounded} ${color} ${width} ${
         className || ''
       }`}
       data-testid={dataTestId}

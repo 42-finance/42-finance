@@ -42,7 +42,7 @@ export const FormTextArea: React.FC<Props> = (props) => {
             </label>
             <div className="relative flex">
               <textarea
-                className={`block w-full text-sm p-2 text-gray-900 placeholder:text-gray-300 bg-white border ${borderColor} rounded-sm focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30`}
+                className={`block w-full text-sm p-2 text-gray-900 placeholder:text-gray-300 bg-white border ${borderColor} rounded-xs focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30`}
                 data-testid={inputName}
                 disabled={disabled ?? false}
                 id={inputName}

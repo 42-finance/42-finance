@@ -179,7 +179,7 @@ export const TransactionInfo: React.FC<Props> = ({ transaction }) => {
         }
         ContentProps={{
           classes: {
-            root: '!bg-white !text-black'
+            root: 'bg-white! text-black!'
           }
         }}
       />

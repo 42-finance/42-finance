@@ -12,7 +12,7 @@ type Props = {
 export const FormInputReadOnly: React.FC<Props> = (props) => {
   const { addonAfter, tooltip, label, value } = props
 
-  const rounded = addonAfter ? 'rounded-none rounded-l-sm' : 'rounded-sm'
+  const rounded = addonAfter ? 'rounded-none rounded-l-sm' : 'rounded-xs'
 
   return (
     <div>
@@ -27,7 +27,7 @@ export const FormInputReadOnly: React.FC<Props> = (props) => {
       <div className="flex">
         <div className="relative w-full">
           <input
-            className={`block w-full text-sm p-2 bg-gray-100 text-gray-500 border border-gray-300 ${rounded} focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30`}
+            className={`block w-full text-sm p-2 bg-gray-100 text-gray-500 border border-gray-300 ${rounded} focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30`}
             data-lpignore="true"
             disabled
             readOnly

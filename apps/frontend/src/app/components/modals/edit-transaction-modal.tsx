@@ -129,14 +129,14 @@ export const EditTransactionModal: React.FC = () => {
             {transaction?.splitTransactionId ? (
               <>
                 <MenuItem onClick={onSplit}>Edit transaction splits</MenuItem>
-                <MenuItem onClick={() => setShowDeleteSplitsDialog(true)} className="!text-red-600">
+                <MenuItem onClick={() => setShowDeleteSplitsDialog(true)} className="text-red-600!">
                   Delete transaction splits
                 </MenuItem>
               </>
             ) : (
               <MenuItem onClick={onSplit}>Split transaction</MenuItem>
             )}
-            <MenuItem onClick={onDelete} className="!text-red-600">
+            <MenuItem onClick={onDelete} className="text-red-600!">
               Delete transaction
             </MenuItem>
           </Menu>

@@ -62,7 +62,7 @@ export const FilterPicker: React.FC<Props> = ({ filters, onChange }) => {
   return (
     <Listbox value={selectedFilters} onChange={handleChange} multiple>
       <div className="relative min-w-[160px]">
-        <Listbox.Button className="h-[40px] relative w-full text-left cursor-default whitespace-nowrap text-gray-900 pl-1 pr-7 pt-1.5 pb-1 rounded-[4px] bg-white border border-gray-300  transition-all group focus:outline-none focus:ring-1 focus:border-midnight-blue focus:ring-midnight-blue/30">
+        <Listbox.Button className="h-[40px] relative w-full text-left cursor-default whitespace-nowrap text-gray-900 pl-1 pr-7 pt-1.5 pb-1 rounded-[4px] bg-white border border-gray-300  transition-all group focus:outline-hidden focus:ring-1 focus:border-midnight-blue focus:ring-midnight-blue/30">
           <div className="flex items-center px-1.5">
             <BiFilterAlt className="mr-1 text-lg text-gray-600" />
             <div className="flex w-full justify-between">
@@ -77,7 +77,7 @@ export const FilterPicker: React.FC<Props> = ({ filters, onChange }) => {
             </div>
           </div>
         </Listbox.Button>
-        <Listbox.Options className="absolute z-50 max-h-72 left-0 mt-1 py-1 w-full overflow-auto bg-white border border-gray-300 rounded-sm shadow-lg focus:outline-none">
+        <Listbox.Options className="absolute z-50 max-h-72 left-0 mt-1 py-1 w-full overflow-auto bg-white border border-gray-300 rounded-xs shadow-lg focus:outline-hidden">
           {Object.keys(filters).map((f, i) => (
             <Listbox.Option
               key={i}

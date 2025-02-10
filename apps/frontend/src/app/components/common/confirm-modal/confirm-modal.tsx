@@ -26,7 +26,7 @@ const ConfirmModal: React.FC<ConfirmDialogProps<Props, boolean>> = ({
       <div className="fixed z-40 inset-0 bg-black/40" aria-hidden="true" />
       <div className="fixed overflow-auto z-50 inset-0 p-4">
         <Dialog.Panel
-          className={`modal relative mx-auto top-20 rounded-sm w-full max-w-md`}
+          className={`modal relative mx-auto top-20 rounded-xs w-full max-w-md`}
         >
           <div className="mb-5 bg-white">
             <div className="p-6 flex items-center">

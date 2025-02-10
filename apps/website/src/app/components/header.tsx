@@ -10,7 +10,7 @@ import transactions from '../../assets/images/transactions.png'
 export const Header: React.FC = () => {
   return (
     <section className="pt-[100px] md:pt-[160px] lg:pt-[200px] relative overflow-hidden">
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-12 gap-6 grid lg:grid-cols-2">
+      <div className="max-w-(--breakpoint-2xl) mx-auto px-4 md:px-12 gap-6 grid lg:grid-cols-2">
         <div className="">
           <div className="my-8 mr-0 lg:mr-5 text-center lg:text-left text-3xl md:text-[64px] font-semibold leading-[1.25] tracking-wide">
             Empower Your Money. Simplify Your Future.
@@ -28,14 +28,14 @@ export const Header: React.FC = () => {
             <a
               href="https://apps.apple.com/us/app/42finance/id6498875911"
               target="_blank"
-              className="rounded-md bg-transparent p-0 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500 dark:text-neutral-900 dark:focus-visible:outline-neutral-400"
+              className="rounded-md bg-transparent p-0 text-sm font-semibold text-white shadow-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500 dark:text-neutral-900 dark:focus-visible:outline-neutral-400"
             >
               <img src={appStore} className="h-16" />
             </a>
             <a
               href="https://play.google.com/store/apps/details?id=com.fortytwofinance.app"
               target="_blank"
-              className="rounded-md bg-transparent p-0 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500 dark:text-neutral-900 dark:focus-visible:outline-neutral-400"
+              className="rounded-md bg-transparent p-0 text-sm font-semibold text-white shadow-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500 dark:text-neutral-900 dark:focus-visible:outline-neutral-400"
             >
               <img src={googlePlay} className="h-16" />
             </a>

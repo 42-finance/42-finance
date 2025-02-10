@@ -57,7 +57,7 @@ export const FormInput: React.FC<Props> = (props) => {
             <div className="flex">
               <div className="relative w-full">
                 <input
-                  className={`${heightClass} block w-full text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue border ${borderColor} ${rounded} focus:outline-none focus:border-midnight-blue focus:ring-midnight-blue/30 disabled:bg-gray-100`}
+                  className={`${heightClass} block w-full text-sm p-2 bg-white text-gray-900 placeholder:text-dark-greyish-blue border ${borderColor} ${rounded} focus:outline-hidden focus:border-midnight-blue focus:ring-midnight-blue/30 disabled:bg-gray-100`}
                   data-lpignore={autoComplete ? 'false' : true}
                   data-testid={inputName}
                   disabled={disabled ?? false}

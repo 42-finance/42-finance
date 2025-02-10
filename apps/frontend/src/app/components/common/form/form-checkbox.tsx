@@ -33,7 +33,7 @@ export const FormCheckbox: React.FC<Props> = (props) => {
             <div className="flex items-center">
               <input
                 checked={value}
-                className={`w-4 h-4 ${borderColor} text-midnight-blue bg-white rounded border-gray-300 focus:outline-none focus:ring-offset-0 focus:border-midnight-blue focus:ring-midnight-blue/30`}
+                className={`w-4 h-4 ${borderColor} text-midnight-blue bg-white rounded-sm border-gray-300 focus:outline-hidden focus:ring-offset-0 focus:border-midnight-blue focus:ring-midnight-blue/30`}
                 data-testid={inputName}
                 disabled={disabled ?? false}
                 id={inputName}

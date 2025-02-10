@@ -8,10 +8,12 @@
     "start": "vite"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.6",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router-dom": "7.1.5",
+    "tailwindcss": "^4.0.6",
     "vite": "^6.1.0",
     "vite-plugin-checker": "^0.8.0",
     "vite-tsconfig-paths": "^5.1.4"
@@ -20,13 +22,7 @@
     "@types/react": "~19.0.8",
     "@types/react-dom": "^19.0.3",
     "@types/react-router-dom": "5.3.3",
-    "autoprefixer": "^10.4.20",
-    "cross-env": "^7.0.3",
-    "postcss": "^8.5.2",
-    "prettier": "^3.5.0",
-    "prettier-plugin-organize-imports": "^4.1.0",
-    "tailwindcss": "^4.0.6",
-    "typescript": "^5.7.3"
+    "cross-env": "^7.0.3"
   },
   "eslintConfig": {
     "extends": [

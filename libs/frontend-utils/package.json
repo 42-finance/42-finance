@@ -10,6 +10,5 @@
     "eventemitter3": "^5.0.1",
     "shared-types": "^1.0.0"
   },
-  "devDependencies": {},
-  "license": "Proprietary"
+  "devDependencies": {}
 }

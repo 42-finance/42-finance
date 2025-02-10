@@ -1,3 +1,5 @@
+@reference "../../../index.css";
+
 #sidebar {
   @apply -translate-x-full;
 }

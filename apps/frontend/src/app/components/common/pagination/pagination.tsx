@@ -41,11 +41,11 @@ export const Pagination: React.FC<Props> = ({
     return null
   }
   const btnClass =
-    'flex items-center justify-center min-w-[40px] h-[40px] px-0.5 bg-white border border-gray-300 rounded-sm hover:text-lighter-green hover:border-lighter-green transition-all'
+    'flex items-center justify-center min-w-[40px] h-[40px] px-0.5 bg-white border border-gray-300 rounded-xs hover:text-lighter-green hover:border-lighter-green transition-all'
   const btnClassActive =
-    'flex items-center justify-center min-w-[40px] h-[40px] px-0.5 text-lighter-green font-semibold bg-white border border-lighter-green rounded-sm'
+    'flex items-center justify-center min-w-[40px] h-[40px] px-0.5 text-lighter-green font-semibold bg-white border border-lighter-green rounded-xs'
   const btnClassDisabled =
-    'flex items-center justify-center min-w-[40px] h-[40px] px-0.5 bg-white border border-gray-300 rounded-sm text-gray-200 cursor-not-allowed'
+    'flex items-center justify-center min-w-[40px] h-[40px] px-0.5 bg-white border border-gray-300 rounded-xs text-gray-200 cursor-not-allowed'
   const skipBtnClass =
     'flex items-center justify-center text-xl text-gray-300 w-[40px] h-[40px] bg-white hover:text-lighter-green transition-all'
   const pages = totalRows != null ? Math.ceil(totalRows / limit) : 0

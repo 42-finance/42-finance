@@ -53,7 +53,7 @@ export const Alert: React.FC<Props> = ({ className, closable, message, onClose, 
 
   return (
     <div
-      className={`relative alert px-3 py-2 mb-5 text-sm ${textColor} ${bgColor} border ${borderColor} rounded-sm ${className}`}
+      className={`relative alert px-3 py-2 mb-5 text-sm ${textColor} ${bgColor} border ${borderColor} rounded-xs ${className}`}
       role="alert"
     >
       <div className="flex items-center">

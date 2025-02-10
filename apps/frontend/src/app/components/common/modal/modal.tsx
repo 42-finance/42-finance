@@ -42,7 +42,7 @@ export const Modal: React.FC<Props> = ({
     <Dialog data-testid={dataTestId} open onClose={() => handleClose} className={visible ? '' : 'hidden'}>
       <div className="fixed z-40 inset-0 bg-black/40" aria-hidden="true" />
       <div className="fixed overflow-auto z-50 inset-0 p-4">
-        <Dialog.Panel className={`modal relative mx-auto ${topPosition} rounded-sm w-full ${maxWidth}`}>
+        <Dialog.Panel className={`modal relative mx-auto ${topPosition} rounded-xs w-full ${maxWidth}`}>
           <div className="mb-5 bg-white">
             <div className="bg-lighter-green font-semibold text-white text-base py-3 pl-5 pr-3 flex justify-between items-center">
               {title}

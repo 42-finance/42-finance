@@ -29,7 +29,7 @@ export const ConnectionGroup: React.FC<Props> = ({ connection }) => {
 
   const { mutate: deleteMutation, isPending: loadingDelete } = useMutation({
     mutationFn: async () => {
-      const res = await deleteConnection(connection.id)
+      const res = await deleteConnection(connection.id, { keepData: false })
       if (res.ok && res.parsedBody?.payload) {
         queryClient.invalidateQueries({ queryKey: [ApiQuery.Connections] })
         queryClient.invalidateQueries({ queryKey: [ApiQuery.Accounts] })
