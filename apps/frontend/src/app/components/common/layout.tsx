@@ -1,5 +1,3 @@
-import { getUser } from 'frontend-api'
-import mixpanel from 'mixpanel-browser'
 import { useEffect } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { CurrencyCode } from 'shared-types'
@@ -38,18 +36,6 @@ export const Layout = () => {
       setCurrencyCodeParam(undefined)
     }
   }, [currencyCodeParam])
-
-  useEffect(() => {
-    const loadUser = async () => {
-      if (token) {
-        const res = await getUser()
-        if (res.ok && res.parsedBody?.payload) {
-          mixpanel.identify(`user-${res.parsedBody.payload.id}`)
-        }
-      }
-    }
-    loadUser()
-  }, [token])
 
   if (tokenParam && !token) {
     return null

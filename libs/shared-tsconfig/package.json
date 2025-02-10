@@ -3,9 +3,5 @@
   "version": "1.0.0",
   "author": "42 Finance <dev@42f.io>",
   "private": true,
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.2"
-  },
-  "license": "Proprietary"
+  "devDependencies": {}
 }

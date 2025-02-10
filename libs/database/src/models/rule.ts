@@ -9,6 +9,9 @@ export class Rule {
   @PrimaryGeneratedColumn()
   id: number = 0
 
+  @Column({ default: 1 })
+  priority: number = 1
+
   @Column({ type: 'enum', enum: NameFilter, nullable: true })
   merchantValueFilter: NameFilter | null = null
 

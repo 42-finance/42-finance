@@ -1,5 +1,4 @@
 import './index.css'
-import 'react-toastify/dist/ReactToastify.css'
 
 import { createBrowserHistory } from 'history'
 import React, { useState } from 'react'

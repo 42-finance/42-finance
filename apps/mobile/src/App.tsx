@@ -25,7 +25,6 @@ import { Message } from './components/common/Message'
 import { TransactionsFilterProvider } from './contexts/transactions-filter.context'
 import { UserTokenProvider } from './contexts/user-token.context'
 import { Navigation } from './navigation/Navigation'
-import { mixpanel } from './utils/mixpanel.utils'
 
 const App: React.FC = () => {
   const colorScheme = useColorScheme()
@@ -58,8 +57,6 @@ const App: React.FC = () => {
     Purchases.configure({ apiKey: process.env.EXPO_PUBLIC_REVENUE_CAT_API_KEY as string })
   }
 
-  mixpanel.init()
-
   Sentry.init({
     dsn: config.sentryDsn
   })
@@ -90,7 +87,6 @@ const App: React.FC = () => {
           await Purchases.logIn(id.toString())
           await Purchases.setEmail(email)
         }
-        await mixpanel.identify(`user-${id}`)
       } else {
         setToken(null)
         await SecureStore.deleteItemAsync('token')

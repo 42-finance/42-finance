@@ -7,11 +7,8 @@
   "main": "src/index.ts",
   "dependencies": {
     "database": "^1.0.0",
-    "date-fns": "^3.5.0",
+    "date-fns": "^4.1.0",
     "notifications": "^1.0.0"
   },
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.2"
-  }
+  "devDependencies": {}
 }

@@ -17,13 +17,13 @@ import Purchases from 'react-native-purchases'
 import { CurrencyCode } from 'shared-types'
 import * as Yup from 'yup'
 
+import { User } from 'frontend-types'
 import { AppleSignIn } from '../components/common/AppleSignIn'
 import { FlexLogo } from '../components/common/FlexLogo'
 import { TextInput } from '../components/common/TextInput'
 import { View } from '../components/common/View'
 import { useUserTokenContext } from '../contexts/user-token.context'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
-import { mixpanel } from '../utils/mixpanel.utils'
 import { registerForPushNotifications } from '../utils/notification.utils'
 
 type LoginFormFields = {
@@ -46,14 +46,14 @@ export default ({ navigation }: RootStackScreenProps<'Login'>) => {
     }
   })
 
-  const onLogin = async (userId: number, token: string, currencyCode: CurrencyCode) => {
+  const onLogin = async (user: User, token: string, currencyCode: CurrencyCode) => {
     await SecureStore.setItemAsync('token', token)
     setToken(token)
     setCurrencyCode(currencyCode)
     if (Platform.OS === 'ios') {
-      await Purchases.logIn(userId.toString())
+      await Purchases.logIn(user.id.toString())
+      await Purchases.setEmail(user.email)
     }
-    await mixpanel.identify(`user-${userId}`)
     navigation.replace('RootTabs')
     const pushToken = await registerForPushNotifications()
     if (pushToken) {
@@ -67,7 +67,7 @@ export default ({ navigation }: RootStackScreenProps<'Login'>) => {
       const res = await login(request)
       if (res.ok && res.parsedBody?.payload) {
         const { user, token, currencyCode } = res.parsedBody.payload
-        onLogin(user.id, token, currencyCode)
+        onLogin(user, token, currencyCode)
       }
     }
   })
@@ -78,7 +78,7 @@ export default ({ navigation }: RootStackScreenProps<'Login'>) => {
       const res = await loginWithApple(request)
       if (res.ok && res.parsedBody?.payload) {
         const { user, token, currencyCode } = res.parsedBody.payload
-        onLogin(user.id, token, currencyCode)
+        onLogin(user, token, currencyCode)
       }
     }
   })

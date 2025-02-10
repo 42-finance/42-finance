@@ -8,13 +8,10 @@
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "database": "^1.0.0",
-    "date-fns": "^3.5.0",
-    "mx-platform-node": "^0.25.0",
+    "date-fns": "^4.1.0",
+    "mx-platform-node": "^1.2.0",
     "notifications": "^1.0.0",
     "shared-types": "^1.0.0"
   },
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.2"
-  }
+  "devDependencies": {}
 }

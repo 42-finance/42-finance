@@ -110,7 +110,7 @@ export default (): ExpoConfig => {
         'expo-build-properties',
         {
           ios: {
-            deploymentTarget: '14.0'
+            deploymentTarget: '15.1'
           }
         }
       ],

@@ -137,12 +137,6 @@ export const mapPlaidAccountSubType = (accountSubType: PlaidAccountSubType | nul
       return AccountSubType.Keogh
     case PlaidAccountSubType.MutualFund:
       return AccountSubType.MutualFund
-    case PlaidAccountSubType.Recurring:
-      return AccountSubType.Recurring
-    case PlaidAccountSubType.Rewards:
-      return AccountSubType.Rewards
-    case PlaidAccountSubType.SafeDeposit:
-      return AccountSubType.SafeDeposit
     case PlaidAccountSubType.Sarsep:
       return AccountSubType.Sarsep
     case PlaidAccountSubType.Payroll:
