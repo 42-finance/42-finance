@@ -10,6 +10,9 @@
     "apps/*",
     "libs/*"
   ],
+  "dependencies": {
+    "expo-asset": "~11.0.3"
+  },
   "devDependencies": {
     "@types/node": "^22.13.1",
     "eslint": "^9.20.0",
