@@ -1,7 +1,6 @@
 name: Deploy - Frontend - Dev
 
 env:
-  CI: true
   VITE_API_URL: 'https://api-dev.42f.io'
   GENERATE_SOURCEMAP: false
   S3_BUCKET_NAME: 'app-dev.42f.io'

@@ -1,7 +1,6 @@
 name: Deploy - Privacy
 
 env:
-  CI: true
   GENERATE_SOURCEMAP: false
   S3_BUCKET_NAME: 'privacy.42f.io'
   AWS_REGION_NAME: 'ca-central-1'

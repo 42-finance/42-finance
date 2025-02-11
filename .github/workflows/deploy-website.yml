@@ -1,7 +1,6 @@
 name: Deploy - Website - Production
 
 env:
-  CI: true
   VITE_API_URL: 'https://api.42f.io'
   GENERATE_SOURCEMAP: false
   S3_BUCKET_NAME: '42f.io'

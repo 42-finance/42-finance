@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "cross-env CI=true vite build",
+    "build": "vite build",
     "start": "vite"
   },
   "dependencies": {
@@ -72,7 +72,6 @@
     "@types/react-datepicker": "^7.0.0",
     "@types/react-dom": "^19.0.3",
     "@types/react-router-dom": "5.3.3",
-    "cross-env": "^7.0.3",
     "resize-observer-polyfill": "^1.5.1"
   },
   "eslintConfig": {

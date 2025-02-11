@@ -1,8 +1,5 @@
 name: Pull Request
 
-env:
-  CI: true
-
 on:
   workflow_dispatch:
   pull_request:

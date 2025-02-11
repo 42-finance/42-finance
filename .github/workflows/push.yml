@@ -1,8 +1,5 @@
 name: Push
 
-env:
-  CI: true
-
 on:
   push:
     branches:
