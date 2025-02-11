@@ -21,7 +21,7 @@
         "simulator": true,
         "image": "latest"
       },
-      "node": ">=20.0.0"
+      "node": "23.7.0"
     },
     "development": {
       "android": {
@@ -38,7 +38,7 @@
       "ios": {
         "image": "latest"
       },
-      "node": ">=20.0.0"
+      "node": "23.7.0"
     },
     "preview": {
       "android": {
@@ -54,7 +54,7 @@
       "ios": {
         "image": "latest"
       },
-      "node": ">=20.0.0"
+      "node": "23.7.0"
     },
     "production": {
       "android": {
@@ -70,7 +70,7 @@
       "ios": {
         "image": "latest"
       },
-      "node": ">=20.0.0"
+      "node": "23.7.0"
     }
   },
   "submit": {
