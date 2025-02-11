@@ -32,25 +32,47 @@ export const saveTransaction = async (transaction: PlaidTransaction, householdId
       .findOneBy({ id: transaction.pending_transaction_id })
   }
 
-  const savedTransaction = await dataSource.getRepository(Transaction).save({
-    id: transaction.transaction_id,
-    name: transaction.name,
-    date: transaction.authorized_datetime ?? transaction.authorized_date ?? transaction.datetime ?? transaction.date,
-    amount: transaction.amount,
-    currencyCode:
-      pendingTransaction?.currencyCode ??
-      (transaction.iso_currency_code as CurrencyCode) ??
-      (transaction.unofficial_currency_code as CurrencyCode) ??
-      CurrencyCode.USD,
-    pending: transaction.pending,
-    type: TransactionType.Plaid,
-    needsReview: pendingTransaction?.needsReview ?? needsReviewOverride ?? true,
-    hidden: pendingTransaction?.hidden ?? hideOverride ?? false,
-    accountId: transaction.account_id,
-    categoryId: pendingTransaction?.categoryId ?? categoryIdOverride ?? category.id,
-    merchantId: merchantIdOverride ?? merchant.id,
-    householdId
-  })
+  const date =
+    transaction.authorized_datetime ?? transaction.authorized_date ?? transaction.datetime ?? transaction.date
+  const currencyCode =
+    pendingTransaction?.currencyCode ??
+    (transaction.iso_currency_code as CurrencyCode) ??
+    (transaction.unofficial_currency_code as CurrencyCode) ??
+    account.currencyCode
+  const merchantId = merchantIdOverride ?? merchant.id
+
+  const existingTransaction = await dataSource.getRepository(Transaction).findOneBy({ id: transaction.transaction_id })
+  let savedTransaction: Transaction
+
+  if (existingTransaction) {
+    savedTransaction = await dataSource.getRepository(Transaction).save({
+      id: transaction.transaction_id,
+      name: transaction.name,
+      date,
+      amount: transaction.amount,
+      currencyCode,
+      pending: transaction.pending,
+      type: TransactionType.Plaid,
+      accountId: transaction.account_id,
+      merchantId
+    })
+  } else {
+    savedTransaction = await dataSource.getRepository(Transaction).save({
+      id: transaction.transaction_id,
+      name: transaction.name,
+      date,
+      amount: transaction.amount,
+      currencyCode,
+      pending: transaction.pending,
+      type: TransactionType.Plaid,
+      needsReview: pendingTransaction?.needsReview ?? needsReviewOverride ?? true,
+      hidden: pendingTransaction?.hidden ?? hideOverride ?? false,
+      accountId: transaction.account_id,
+      categoryId: pendingTransaction?.categoryId ?? categoryIdOverride ?? category.id,
+      merchantId,
+      householdId
+    })
+  }
 
   await createOrUpdateRecurringTransaction(savedTransaction, householdId)
 

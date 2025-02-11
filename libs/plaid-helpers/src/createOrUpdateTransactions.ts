@@ -12,6 +12,7 @@ export const createOrUpdateTransactions = async (
     .getRepository(Rule)
     .createQueryBuilder('rule')
     .where('rule.householdId = :householdId', { householdId })
+    .orderBy('rule.priority', 'DESC')
     .getMany()
 
   const newTransactions: Transaction[] = []
