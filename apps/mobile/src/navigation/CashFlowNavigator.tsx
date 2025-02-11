@@ -17,7 +17,7 @@ export const CashFlowNavigator = () => {
       initialRouteName="CashFlow"
       screenOptions={{
         headerBackButtonMenuEnabled: false,
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerTintColor: colors.onSurface
       }}
     >

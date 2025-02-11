@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AddAccountRequest, ApiQuery, addAccount } from 'frontend-api'
 import * as React from 'react'
-import { Keyboard } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Keyboard, KeyboardAvoidingView } from 'react-native'
 import { AccountSubType, AccountType } from 'shared-types'
 
 import { PropertyForm, PropertyFormFields } from '../components/forms/PropertyForm'
@@ -37,8 +36,8 @@ export const AddPropertyScreen = ({ navigation }: RootStackScreenProps<'AddPrope
   }
 
   return (
-    <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" style={{ marginTop: 5 }}>
+    <KeyboardAvoidingView behavior="padding" style={{ marginTop: 5 }}>
       <PropertyForm onSubmit={onSubmit} submitting={submitting} />
-    </KeyboardAwareScrollView>
+    </KeyboardAvoidingView>
   )
 }

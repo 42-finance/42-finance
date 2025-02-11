@@ -17,7 +17,7 @@ export const HomeNavigator = () => {
       initialRouteName="Dashboard"
       screenOptions={{
         headerBackButtonMenuEnabled: false,
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerTintColor: colors.onSurface
       }}
     >

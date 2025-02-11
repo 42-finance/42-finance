@@ -17,7 +17,7 @@ export const RecurringTransactionsNavigator = () => {
       initialRouteName="RecurringTransactions"
       screenOptions={{
         headerBackButtonMenuEnabled: false,
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerTintColor: colors.onSurface
       }}
     >

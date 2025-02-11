@@ -1,6 +1,5 @@
 import { FontAwesome } from '@expo/vector-icons'
-import { ParamListBase, StackNavigationState, TypedNavigator } from '@react-navigation/native'
-import { NativeStackNavigationEventMap, NativeStackNavigationOptions } from '@react-navigation/native-stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import { AccountGroupScreen } from '../screens/AccountGroupScreen'
 import { AccountRuleScreen } from '../screens/AccountRuleScreen'
@@ -78,15 +77,7 @@ import { TransactionsFilterScreen } from '../screens/TransactionsFilterScreen'
 import { TransactionsScreen } from '../screens/TransactionsScreen'
 import { RootStackParamList } from '../types/root-stack-params'
 
-export const getStackScreens = (
-  Stack: TypedNavigator<
-    RootStackParamList,
-    StackNavigationState<ParamListBase>,
-    NativeStackNavigationOptions,
-    NativeStackNavigationEventMap,
-    any
-  >
-) => {
+export const getStackScreens = (Stack: ReturnType<typeof createNativeStackNavigator<RootStackParamList>>) => {
   return [
     <Stack.Screen key="Account" name="Account" component={AccountScreen} options={{ title: 'Loading...' }} />,
     <Stack.Screen

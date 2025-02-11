@@ -61,7 +61,6 @@
     "react-native-gesture-handler": "~2.20.2",
     "react-native-gifted-charts": "1.4.56",
     "react-native-input-style": "^1.0.2",
-    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-mask-input": "^1.2.3",
     "react-native-modal-datetime-picker": "^18.0.0",

@@ -19,7 +19,7 @@ export const RootNavigator = () => {
       initialRouteName={token ? 'RootTabs' : 'Login'}
       screenOptions={{
         headerBackButtonMenuEnabled: false,
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerTintColor: colors.onSurface
       }}
     >

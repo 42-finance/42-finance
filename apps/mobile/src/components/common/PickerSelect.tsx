@@ -29,7 +29,7 @@ type PickerStyle = {
   doneDark?: StyleProp<TextStyle>
   doneDepressed?: StyleProp<TextStyle>
   headlessAndroidContainer?: StyleProp<ViewStyle>
-  headlessAndroidPicker?: StyleProp<ViewStyle>
+  headlessAndroidPicker?: StyleProp<TextStyle>
   iconContainer?: StyleProp<ViewStyle>
   inputAndroid?: StyleProp<TextStyle>
   inputAndroidContainer?: StyleProp<ViewStyle>

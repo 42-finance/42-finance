@@ -17,7 +17,7 @@ export const AccountsNavigator = () => {
       initialRouteName="Accounts"
       screenOptions={{
         headerBackButtonMenuEnabled: false,
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerTintColor: colors.onSurface
       }}
     >

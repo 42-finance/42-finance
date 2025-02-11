@@ -17,7 +17,7 @@ export const SettingsNavigator = () => {
       initialRouteName="Settings"
       screenOptions={{
         headerBackButtonMenuEnabled: false,
-        headerBackTitleVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
         headerTintColor: colors.onSurface
       }}
     >

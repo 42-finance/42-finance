@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import * as React from 'react'
 import { useTheme } from 'react-native-paper'
 
@@ -7,7 +7,7 @@ import { RootNavigator } from './RootNavigator'
 export const Navigation = () => {
   const { colors, dark } = useTheme()
 
-  const navTheme = {
+  const navTheme: ReactNavigation.Theme = {
     dark,
     colors: {
       primary: colors.primary,
@@ -16,7 +16,8 @@ export const Navigation = () => {
       text: colors.onSurface,
       border: colors.outline,
       notification: colors.error
-    }
+    },
+    fonts: DefaultTheme.fonts
   }
 
   return (
