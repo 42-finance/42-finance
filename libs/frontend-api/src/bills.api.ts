@@ -2,7 +2,7 @@ import { Bill } from 'frontend-types'
 import _ from 'lodash'
 
 import { config } from './config'
-import { get } from './http'
+import { del, get, patch, post } from './http'
 import { HTTPResponseBody } from './http-response-body.type'
 
 export const getBill = async (billId: number) => get<HTTPResponseBody<Bill>>(`${config.apiUrl}/bills/${billId}`)
@@ -28,3 +28,31 @@ export const getBills = async (query: BillsQuery = {}) => {
   url.search = searchParams.toString()
   return get<HTTPResponseBody<Bill[]>>(url.toString())
 }
+
+export type AddBillRequest = {
+  balance: number | null
+  issueDate: Date
+  dueDate: Date | null
+  minimumPaymentAmount: number | null
+  accountId: string
+}
+
+export const addBill = async (body: AddBillRequest) => post<HTTPResponseBody<Bill>>(`${config.apiUrl}/bills`, body)
+
+export type EditBillRequest = {
+  balance?: number | null
+  issueDate?: Date
+  dueDate?: Date | null
+  minimumPaymentAmount?: number | null
+  accountId?: string
+}
+
+export const editBill = async (billId: number, body: EditBillRequest) =>
+  patch<HTTPResponseBody<Bill>>(`${config.apiUrl}/bills/${billId}`, body)
+
+type DeleteBillResponse = {
+  affected: number
+}
+
+export const deleteBill = async (billId: number) =>
+  del<HTTPResponseBody<DeleteBillResponse>>(`${config.apiUrl}/bills/${billId}`)
