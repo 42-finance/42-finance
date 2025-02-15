@@ -1,20 +1,26 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { ApiQuery, getBill } from 'frontend-api'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { ApiQuery, deleteBill, getBill } from 'frontend-api'
 import { formatAccountName, formatDateInUtc, formatDollars } from 'frontend-utils'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
-import { Divider, ProgressBar, Text, useTheme } from 'react-native-paper'
+import { Button, Dialog, Divider, Portal, ProgressBar, Text, useTheme } from 'react-native-paper'
 
+import { Ionicons } from '@expo/vector-icons'
 import { View } from '../components/common/View'
 import { expenseColor, incomeColor } from '../constants/theme'
 import { useUserTokenContext } from '../contexts/user-token.context'
+import { useActionSheet } from '../hooks/use-action-sheet.hook'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
 
 export const BillScreen: React.FC<RootStackScreenProps<'Bill'>> = ({ route, navigation }) => {
   const { billId } = route.params
 
+  const queryClient = useQueryClient()
+  const showActionSheet = useActionSheet()
   const { colors } = useTheme()
   const { currencyCode } = useUserTokenContext()
+
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false)
 
   const { data: bill } = useQuery({
     queryKey: [ApiQuery.Bill, billId],
@@ -28,11 +34,40 @@ export const BillScreen: React.FC<RootStackScreenProps<'Bill'>> = ({ route, navi
     placeholderData: keepPreviousData
   })
 
+  const { mutate: deleteMutation, isPending: loadingDelete } = useMutation({
+    mutationFn: async () => {
+      const res = await deleteBill(billId)
+      if (res.ok && res.parsedBody?.payload) {
+        queryClient.invalidateQueries({ queryKey: [ApiQuery.Bills] })
+        navigation.pop()
+      }
+    }
+  })
+
   useEffect(() => {
     navigation.setOptions({
-      title: bill ? `${bill.account.name} - ${formatDateInUtc(bill.issueDate, 'MMM dd, yyyy')}` : 'Loading...'
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            showActionSheet([
+              {
+                label: 'Edit bill',
+                onSelected: () => navigation.navigate('EditBill', { billId })
+              },
+              {
+                label: 'Delete bill',
+                onSelected: () => setDeleteDialogVisible(true),
+                isDestructive: true
+              }
+            ])
+          }}
+        >
+          <Ionicons name="ellipsis-horizontal" size={24} color={colors.onSurface} />
+        </TouchableOpacity>
+      ),
+      title: bill ? `${formatDateInUtc(bill.issueDate, 'MMMM d, yyyy')}` : 'Loading...'
     })
-  }, [navigation, bill])
+  }, [navigation, bill, colors, showActionSheet])
 
   const styles = StyleSheet.create({
     infoView: {
@@ -43,12 +78,24 @@ export const BillScreen: React.FC<RootStackScreenProps<'Bill'>> = ({ route, navi
     }
   })
 
-  if (!bill) {
+  if (!bill || loadingDelete) {
     return <ProgressBar indeterminate />
   }
 
   return (
     <View style={{ flex: 1 }}>
+      <Portal>
+        <Dialog visible={deleteDialogVisible} onDismiss={() => setDeleteDialogVisible(false)}>
+          <Dialog.Title>Delete Bill</Dialog.Title>
+          <Dialog.Content>
+            <Text>Are you sure you want to delete this bill?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setDeleteDialogVisible(false)}>Cancel</Button>
+            <Button onPress={() => deleteMutation()}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <ScrollView>
         <View>
           <Text

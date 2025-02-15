@@ -8,6 +8,7 @@ import { AccountsScreen } from '../screens/AccountsScreen'
 import { AddAccountGroupScreen } from '../screens/AddAccountGroupScreen'
 import { AddAccountScreen } from '../screens/AddAccountScreen'
 import { AddAssetScreen } from '../screens/AddAssetScreen'
+import { AddBillScreen } from '../screens/AddBillScreen'
 import { AddCategoryScreen } from '../screens/AddCategoryScreen'
 import { AddCryptoScreen } from '../screens/AddCryptoScreen'
 import { AddGoalScreen } from '../screens/AddGoalScreen'
@@ -35,6 +36,7 @@ import { DataScreen } from '../screens/DataScreen'
 import { EditAccountGroupScreen } from '../screens/EditAccountGroupScreen'
 import { EditAccountScreen } from '../screens/EditAccountScreen'
 import { EditBalanceHistoryScreen } from '../screens/EditBalanceHistoryScreen'
+import { EditBillScreen } from '../screens/EditBillScreen'
 import { EditCategoryScreen } from '../screens/EditCategoryScreen'
 import { EditGoalScreen } from '../screens/EditGoalScreen'
 import { EditGroupScreen } from '../screens/EditGroupScreen'
@@ -101,6 +103,7 @@ export const getStackScreens = (Stack: ReturnType<typeof createNativeStackNaviga
       options={{ title: 'Add account group' }}
     />,
     <Stack.Screen key="AddAsset" name="AddAsset" component={AddAssetScreen} options={{ title: 'Add account' }} />,
+    <Stack.Screen key="AddBill" name="AddBill" component={AddBillScreen} options={{ title: 'Add bill' }} />,
     <Stack.Screen
       key="AddCategory"
       name="AddCategory"
@@ -196,6 +199,7 @@ export const getStackScreens = (Stack: ReturnType<typeof createNativeStackNaviga
       component={EditBalanceHistoryScreen}
       options={{ title: 'Edit balance history' }}
     />,
+    <Stack.Screen key="EditBill" name="EditBill" component={EditBillScreen} options={{ title: 'Edit bill' }} />,
     <Stack.Screen
       key="EditCategory"
       name="EditCategory"

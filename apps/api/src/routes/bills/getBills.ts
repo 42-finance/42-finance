@@ -62,7 +62,9 @@ export const getBills = async (
       convertedBalance *= exchangeRate
     }
 
-    const billPayment = billPayments.find((p) => p.date.getTime() >= bill.issueDate.getTime())
+    const billPayment = billPayments.find(
+      (p) => p.accountId === bill.accountId && p.date.getTime() >= bill.issueDate.getTime()
+    )
     const today = startOfDay(new Date())
     const isPaid = billPayment != null || bill.balance == 0
     const isOverdue = !isPaid && bill.dueDate && today.getTime() > bill.dueDate.getTime()

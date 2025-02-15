@@ -28,6 +28,7 @@ export type RootStackParamList = {
   AddAccount: undefined
   AddAccountGroup: undefined
   AddAsset: undefined
+  AddBill: undefined
   AddCategory: undefined
   AddCrypto: undefined
   AddExpense: { propertyId?: number; rentalUnitId?: number }
@@ -69,6 +70,7 @@ export type RootStackParamList = {
   EditAccount: { accountId: string }
   EditAccountGroup: { accountGroupId: number }
   EditBalanceHistory: { accountId: string }
+  EditBill: { billId: number }
   EditCategory: { categoryId: number }
   EditGoal: { goalId: number }
   EditGroup: { groupId: number }

@@ -16,7 +16,7 @@ export const getBill = async (request: Request<{ id: number }, {}, {}, {}>, resp
     .leftJoinAndMapOne('bill.account', Account, 'account', 'account.id = bill.accountId')
     .leftJoinAndMapOne('account.connection', Connection, 'connection', 'connection.id = account.connectionId')
     .where('bill.householdId = :householdId', { householdId })
-    .where('bill.id = :id', { id })
+    .andWhere('bill.id = :id', { id })
     .getOneOrFail()
 
   const allBillPayments = await dataSource
@@ -24,6 +24,7 @@ export const getBill = async (request: Request<{ id: number }, {}, {}, {}>, resp
     .createQueryBuilder('billPayment')
     .leftJoinAndMapOne('billPayment.account', Account, 'account', 'account.id = billPayment.accountId')
     .where('billPayment.householdId = :householdId', { householdId })
+    .andWhere('billPayment.accountId = :accountId', { accountId: bill.accountId })
     .addOrderBy('billPayment.date')
     .getMany()
 

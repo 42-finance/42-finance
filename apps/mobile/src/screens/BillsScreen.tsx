@@ -1,10 +1,11 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ApiQuery, getBills } from 'frontend-api'
 import * as React from 'react'
-import { useState } from 'react'
-import { FlatList } from 'react-native'
+import { useEffect, useState } from 'react'
+import { FlatList, TouchableOpacity } from 'react-native'
 import { ProgressBar, Searchbar, useTheme } from 'react-native-paper'
 
+import { FontAwesome5 } from '@expo/vector-icons'
 import { View } from '../components/common/View'
 import { BillItem } from '../components/list-items/BillItem'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
@@ -25,6 +26,16 @@ export const BillsScreen = ({ navigation }: RootStackScreenProps<'Bills'>) => {
     },
     placeholderData: keepPreviousData
   })
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('AddBill')}>
+          <FontAwesome5 name="plus" size={24} color={colors.onSurface} />
+        </TouchableOpacity>
+      )
+    })
+  }, [navigation, colors])
 
   return (
     <View

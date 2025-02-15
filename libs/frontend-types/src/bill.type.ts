@@ -3,9 +3,9 @@ import { BillPayment } from './bill-payment.type'
 
 export type Bill = {
   id: number
-  balance: number | null
+  balance: number
   issueDate: Date
-  dueDate: Date | null
+  dueDate: Date
   minimumPaymentAmount: number | null
   isOverdue: boolean | null
   accountId: string

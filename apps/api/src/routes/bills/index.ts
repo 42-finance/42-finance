@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { createBill } from '../goal/createGoal'
+import { createBill } from './createBill'
 import { deleteBill } from './deleteBill'
 import { getBill } from './getBill'
 import { getBills } from './getBills'

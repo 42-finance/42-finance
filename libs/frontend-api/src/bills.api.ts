@@ -30,9 +30,9 @@ export const getBills = async (query: BillsQuery = {}) => {
 }
 
 export type AddBillRequest = {
-  balance: number | null
+  balance: number
   issueDate: Date
-  dueDate: Date | null
+  dueDate: Date
   minimumPaymentAmount: number | null
   accountId: string
 }
@@ -40,9 +40,9 @@ export type AddBillRequest = {
 export const addBill = async (body: AddBillRequest) => post<HTTPResponseBody<Bill>>(`${config.apiUrl}/bills`, body)
 
 export type EditBillRequest = {
-  balance?: number | null
+  balance?: number
   issueDate?: Date
-  dueDate?: Date | null
+  dueDate?: Date
   minimumPaymentAmount?: number | null
   accountId?: string
 }
