@@ -1,8 +1,7 @@
 import { Account, BalanceHistory, Connection, Household, dataSource, getWalletBalance } from 'database'
 import { startOfDay } from 'date-fns'
 import { AccountBase } from 'plaid'
-import { plaidClient, setConnectionNeedsRefresh } from 'plaid-helpers'
-import { createOrUpdateAccounts } from 'plaid-helpers/src/createOrUpdateAccounts'
+import { createOrUpdateAccounts, plaidClient, setConnectionNeedsRefresh } from 'plaid-helpers'
 
 export const handler = async () => {
   await dataSource.initialize()
@@ -32,15 +31,15 @@ export const handler = async () => {
         try {
           const { data } = await plaidClient.accountsGet({ access_token: connection.accessToken })
           accounts = data.accounts
-        } catch {
-          console.log(`Failed to fetch accounts for connection ${connection.id}`)
+        } catch (e) {
+          console.log(`Failed to fetch accounts for connection ${connection.id}`, e)
           needsTokenRefresh = true
         }
 
         try {
           await createOrUpdateAccounts(connection, accounts)
-        } catch {
-          console.log(`Failed to update accounts for connection ${connection.id}`)
+        } catch (e) {
+          console.log(`Failed to update accounts for connection ${connection.id}`, e)
         }
 
         if (needsTokenRefresh) {
@@ -87,8 +86,8 @@ export const handler = async () => {
               .orIgnore()
               .execute()
           }
-        } catch {
-          console.log(`Failed to update crypto account ${cryptoAccount.id}`)
+        } catch (e) {
+          console.log(`Failed to update crypto account ${cryptoAccount.id}`, e)
         }
       }
     }

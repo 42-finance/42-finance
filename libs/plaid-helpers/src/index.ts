@@ -1,3 +1,4 @@
+export { createOrUpdateAccounts } from './createOrUpdateAccounts'
 export { createPlaidClient, plaidClient } from './createPlaidClient'
 export { getPlaidAccounts } from './getPlaidAccounts'
 export { getPlaidTransactions } from './getPlaidTransactions'

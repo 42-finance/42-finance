@@ -59,10 +59,10 @@ export const getLinkToken = async (
       additionalConsentedProducts = []
       const itemRes = await plaidClient.itemGet({ access_token: connection.accessToken })
       const item = itemRes.data.item
-      if (!item.billed_products.includes(Products.Liabilities)) {
+      if (item.consented_products && !item.consented_products.includes(Products.Liabilities)) {
         additionalConsentedProducts.push(Products.Liabilities)
       }
-      if (!item.billed_products.includes(Products.Investments)) {
+      if (item.consented_products && !item.consented_products.includes(Products.Investments)) {
         additionalConsentedProducts.push(Products.Investments)
       }
     }
