@@ -1,4 +1,4 @@
-import { Account, Household, HouseholdUser, NotificationToken, Rule, Transaction, User, dataSource } from 'database'
+import { Account, Household, Rule, Transaction, dataSource } from 'database'
 import { updateWalletTransactions } from 'database/src/utils/covalent.utils'
 import { sendNewTransactionNotifications } from 'notifications'
 import { WalletType } from 'shared-types'
@@ -9,21 +9,7 @@ export const handler = async () => {
   const households = await dataSource
     .getRepository(Household)
     .createQueryBuilder('household')
-    .leftJoinAndMapMany(
-      'household.householdUsers',
-      HouseholdUser,
-      'householdUser',
-      'householdUser.householdId = household.id'
-    )
-    .leftJoinAndMapOne('householdUser.user', User, 'user', 'householdUser.userId = user.id')
-    .leftJoinAndMapMany(
-      'user.notificationTokens',
-      NotificationToken,
-      'notificationToken',
-      'notificationToken.userId = user.id'
-    )
-    .addOrderBy('household.id')
-    .addOrderBy('user.id')
+    .addOrderBy('household.updatedAt')
     .getMany()
 
   for (const household of households) {

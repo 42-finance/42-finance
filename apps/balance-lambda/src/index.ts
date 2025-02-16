@@ -19,6 +19,7 @@ export const handler = async () => {
       .getRepository(Connection)
       .createQueryBuilder('connection')
       .where('connection.householdId = :householdId', { householdId: household.id })
+      .andWhere('connection.isValid = true')
       .getMany()
 
     for (const connection of connections) {
