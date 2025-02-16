@@ -1,7 +1,8 @@
-import { Account, Bill, BillPayment, Connection, User, dataSource, getExchangeRate } from 'database'
+import { Account, Bill, Category, Connection, Group, Transaction, User, dataSource, getExchangeRate } from 'database'
 import { startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
 
+import { CategoryType } from 'shared-types'
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
 export const getBill = async (request: Request<{ id: number }, {}, {}, {}>, response: Response<HTTPResponseBody>) => {
@@ -19,13 +20,16 @@ export const getBill = async (request: Request<{ id: number }, {}, {}, {}>, resp
     .andWhere('bill.id = :id', { id })
     .getOneOrFail()
 
-  const allBillPayments = await dataSource
-    .getRepository(BillPayment)
-    .createQueryBuilder('billPayment')
-    .leftJoinAndMapOne('billPayment.account', Account, 'account', 'account.id = billPayment.accountId')
-    .where('billPayment.householdId = :householdId', { householdId })
-    .andWhere('billPayment.accountId = :accountId', { accountId: bill.accountId })
-    .addOrderBy('billPayment.date')
+  const transactions = await dataSource
+    .getRepository(Transaction)
+    .createQueryBuilder('transaction')
+    .leftJoinAndMapOne('transaction.category', Category, 'category', 'category.id = transaction.categoryId')
+    .leftJoinAndMapOne('category.group', Group, 'group', 'group.id = category.groupId')
+    .where('transaction.householdId = :householdId', { householdId })
+    .andWhere('transaction.accountId = :accountId', { accountId: bill.accountId })
+    .andWhere('transaction.amount < 0')
+    .andWhere('group.type = :groupType', { groupType: CategoryType.Transfer })
+    .orderBy('transaction.date')
     .getMany()
 
   let convertedBalance = bill.balance
@@ -35,13 +39,21 @@ export const getBill = async (request: Request<{ id: number }, {}, {}, {}>, resp
     convertedBalance *= exchangeRate
   }
 
-  const billPayment = allBillPayments.find((p) => p.date.getTime() >= bill.issueDate.getTime())
+  const billTransaction = transactions.find((t) => t.date.getTime() >= bill.issueDate.getTime())
   const today = startOfDay(new Date())
-  const isPaid = billPayment != null || bill.balance === 0
+  const isPaid = billTransaction != null || bill.balance === 0
   const isOverdue = !isPaid && bill.dueDate && today.getTime() > bill.dueDate.getTime()
-  const billPayments = allBillPayments.filter(
-    (p) => p.date.getTime() >= bill.issueDate.getTime() && (!bill.dueDate || p.date.getTime() <= bill.dueDate.getTime())
+  const billTransactions = transactions.filter(
+    (t) => t.date.getTime() >= bill.issueDate.getTime() && (!bill.dueDate || t.date.getTime() <= bill.dueDate.getTime())
   )
+  const billPayments = billTransactions.map((t, index) => ({
+    id: index,
+    amount: Math.abs(t.amount),
+    date: t.date,
+    accountId: t.accountId,
+    account: bill.account,
+    householdId: t.householdId
+  }))
 
   const convertedBill = {
     ...bill,

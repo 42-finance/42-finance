@@ -1,8 +1,9 @@
-import { Account, Bill, BillPayment, Connection, User, dataSource, getExchangeRate } from 'database'
+import { Account, Bill, Category, Connection, Group, Transaction, User, dataSource, getExchangeRate } from 'database'
 import { startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
 import { isNil } from 'lodash'
 
+import { CategoryType } from 'shared-types'
 import { HTTPResponseBody } from '../../models/http/httpResponseBody'
 
 type BillsQueryParams = {
@@ -42,12 +43,15 @@ export const getBills = async (
 
   const bills = await billsQuery.getMany()
 
-  const billPayments = await dataSource
-    .getRepository(BillPayment)
-    .createQueryBuilder('billPayment')
-    .leftJoinAndMapOne('billPayment.account', Account, 'account', 'account.id = billPayment.accountId')
-    .where('billPayment.householdId = :householdId', { householdId })
-    .addOrderBy('billPayment.date')
+  const transactions = await dataSource
+    .getRepository(Transaction)
+    .createQueryBuilder('transaction')
+    .leftJoinAndMapOne('transaction.category', Category, 'category', 'category.id = transaction.categoryId')
+    .leftJoinAndMapOne('category.group', Group, 'group', 'group.id = category.groupId')
+    .where('transaction.householdId = :householdId', { householdId })
+    .andWhere('transaction.amount < 0')
+    .andWhere('group.type = :groupType', { groupType: CategoryType.Transfer })
+    .orderBy('transaction.date')
     .getMany()
 
   const convertedBills: Bill[] = []
@@ -62,11 +66,11 @@ export const getBills = async (
       convertedBalance *= exchangeRate
     }
 
-    const billPayment = billPayments.find(
-      (p) => p.accountId === bill.accountId && p.date.getTime() >= bill.issueDate.getTime()
+    const billTransaction = transactions.find(
+      (t) => t.accountId === bill.accountId && t.date.getTime() >= bill.issueDate.getTime()
     )
     const today = startOfDay(new Date())
-    const isPaid = billPayment != null || bill.balance == 0
+    const isPaid = billTransaction != null || bill.balance == 0
     const isOverdue = !isPaid && bill.dueDate && today.getTime() > bill.dueDate.getTime()
 
     convertedBills.push({
