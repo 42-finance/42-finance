@@ -1,4 +1,5 @@
-import { ExchangeRate, dataSource } from 'database'
+import { getExchangeRate } from 'database'
+import { CurrencyCode } from 'shared-types'
 import { ethplorerConfig } from '../common/config'
 
 type EthplorerAddressInfoResponse = {
@@ -10,7 +11,7 @@ type EthplorerAddressInfoResponse = {
   }
 }
 
-export const getEthereumBalance = async (walletAddress: string, currencyCode: string) => {
+export const getEthereumBalance = async (walletAddress: string, currencyCode: CurrencyCode) => {
   const response = await fetch(
     `${ethplorerConfig.apiUrl}/getAddressInfo/${walletAddress}?apiKey=${ethplorerConfig.apiKey}`
   )
@@ -30,15 +31,10 @@ export const getEthereumBalance = async (walletAddress: string, currencyCode: st
   }
 
   const usdBalance = responseBody.ETH.balance * responseBody.ETH.price.rate
-
-  const exchangeRate = await dataSource
-    .getRepository(ExchangeRate)
-    .createQueryBuilder('exchangeRate')
-    .where('exchangeRate.currencyCode = :currencyCode', { currencyCode })
-    .getOneOrFail()
+  const exchangeRate = await getExchangeRate(CurrencyCode.USD, currencyCode)
 
   return {
-    currentBalance: usdBalance * exchangeRate.exchangeRate,
+    currentBalance: usdBalance * exchangeRate,
     walletTokenBalance: responseBody.ETH.balance
   }
 }

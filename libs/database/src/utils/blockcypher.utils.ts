@@ -1,7 +1,7 @@
 import { CurrencyCode } from 'shared-types'
 
-import { dataSource, ExchangeRate } from '..'
 import { blockcypherConfig } from '../common/config'
+import { getExchangeRate } from './exchange-rate.utils'
 
 type BlockcypherAddressInfoResponse = {
   balance: number
@@ -24,23 +24,11 @@ export const getBitcoinBalance = async (walletAddress: string, currencyCode: Cur
     }
   }
 
-  const btcExchangeRate = await dataSource
-    .getRepository(ExchangeRate)
-    .createQueryBuilder('exchangeRate')
-    .where('exchangeRate.currencyCode = :currencyCode', { currencyCode: CurrencyCode.BTC })
-    .getOneOrFail()
-
   const balance = responseBody.balance / 100_000_000
-  const usdBalance = balance / btcExchangeRate.exchangeRate
-
-  const exchangeRate = await dataSource
-    .getRepository(ExchangeRate)
-    .createQueryBuilder('exchangeRate')
-    .where('exchangeRate.currencyCode = :currencyCode', { currencyCode })
-    .getOneOrFail()
+  const exchangeRate = await getExchangeRate(CurrencyCode.BTC, currencyCode)
 
   return {
-    currentBalance: usdBalance * exchangeRate.exchangeRate,
+    currentBalance: balance * exchangeRate,
     walletTokenBalance: balance
   }
 }
