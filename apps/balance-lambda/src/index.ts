@@ -1,7 +1,16 @@
-import { Account, BalanceHistory, Connection, Household, dataSource, getWalletBalance } from 'database'
+import {
+  Account,
+  BalanceHistory,
+  Connection,
+  Household,
+  dataSource,
+  getBitcoinBalance,
+  getEthereumBalance
+} from 'database'
 import { startOfDay } from 'date-fns'
 import { AccountBase } from 'plaid'
 import { createOrUpdateAccounts, plaidClient, setConnectionNeedsRefresh } from 'plaid-helpers'
+import { WalletType } from 'shared-types'
 
 export const handler = async () => {
   await dataSource.initialize()
@@ -54,6 +63,7 @@ export const handler = async () => {
       .createQueryBuilder('account')
       .where('account.householdId = :householdId', { householdId: household.id })
       .andWhere('account.walletType IS NOT NULL')
+      .andWhere('account.walletAddress IS NOT NULL')
       .getMany()
 
     for (const cryptoAccount of cryptoAccounts) {
@@ -61,11 +71,18 @@ export const handler = async () => {
         console.log(`Fetching accounts balance for crypto account ${cryptoAccount.walletAddress}`)
 
         try {
-          const { currentBalance, walletTokenBalance } = await getWalletBalance(
-            cryptoAccount.walletAddress,
-            cryptoAccount.walletType,
-            cryptoAccount.currencyCode
-          )
+          let currentBalance: number | null = null
+          let walletTokenBalance: number | null = null
+
+          if (cryptoAccount.walletType === WalletType.Bitcoin) {
+            const result = await getBitcoinBalance(cryptoAccount.walletAddress, cryptoAccount.currencyCode)
+            currentBalance = result.currentBalance
+            walletTokenBalance = result.walletTokenBalance
+          } else if (cryptoAccount.walletType === WalletType.Ethereum) {
+            const result = await getEthereumBalance(cryptoAccount.walletAddress, cryptoAccount.currencyCode)
+            currentBalance = result.currentBalance
+            walletTokenBalance = result.walletTokenBalance
+          }
 
           if (currentBalance != null && walletTokenBalance != null) {
             await dataSource.getRepository(Account).update(cryptoAccount.id, {

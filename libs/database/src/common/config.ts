@@ -89,3 +89,13 @@ export const config = {
   ],
   ...sslConfig
 }
+
+export const ethplorerConfig = {
+  apiUrl: process.env.ETHPLORER_API_URL as string,
+  apiKey: process.env.ETHPLORER_API_KEY as string
+}
+
+export const blockcypherConfig = {
+  apiUrl: process.env.BLOCKCYPHER_API_URL as string,
+  apiKey: process.env.BLOCKCYPHER_API_KEY as string
+}

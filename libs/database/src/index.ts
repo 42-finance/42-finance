@@ -32,8 +32,11 @@ import { Tenant } from './models/tenant'
 import { Transaction } from './models/transaction'
 import { User } from './models/user'
 import { UserInvite } from './models/user-invite'
+import { getBitcoinBalance } from './utils/blockcypher.utils'
 import { getCategory } from './utils/category.utils'
+import { getCoinPrice } from './utils/coingecko.utils'
 import { getWalletBalance, getWalletTransactions, updateWalletTransactions } from './utils/covalent.utils'
+import { getEthereumBalance } from './utils/ethplorer.utils'
 import { getExchangeRate } from './utils/exchange-rate.utils'
 import { getOrCreateMerchant } from './utils/merchant.utils'
 import { createOrUpdateRecurringTransaction } from './utils/recurring.utils'
@@ -58,7 +61,10 @@ export {
   EntityType,
   ExchangeRate,
   Expense,
+  getBitcoinBalance,
   getCategory,
+  getCoinPrice,
+  getEthereumBalance,
   getExchangeRate,
   getOrCreateMerchant,
   getVehicleValue,

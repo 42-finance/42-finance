@@ -1,6 +1,5 @@
 import { ExchangeRate, dataSource } from 'database'
-import fetch from 'node-fetch'
-import { config } from '../../../../apps/api/src/common/config'
+import { ethplorerConfig } from '../common/config'
 
 type EthplorerAddressInfoResponse = {
   ETH: {
@@ -13,52 +12,33 @@ type EthplorerAddressInfoResponse = {
 
 export const getEthereumBalance = async (walletAddress: string, currencyCode: string) => {
   const response = await fetch(
-    `${config.ethplorer.apiUrl}/getAddressInfo/${walletAddress}?apiKey=${config.ethplorer.apiKey}`,
-    {
-      method: 'GET'
-    }
+    `${ethplorerConfig.apiUrl}/getAddressInfo/${walletAddress}?apiKey=${ethplorerConfig.apiKey}`
   )
 
   let responseBody: EthplorerAddressInfoResponse | null = null
   try {
     responseBody = await response.json()
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 
-  if (responseBody) {
-    const usdBalance = responseBody.ETH.balance * responseBody.ETH.price.rate
-
-    const eurToUsdExchangeRate = await dataSource
-      .getRepository(ExchangeRate)
-      .createQueryBuilder('exchangeRate')
-      .where('exchangeRate.currencyCode = :currencyCode', { currencyCode: 'USD' })
-      .orderBy('exchangeRate.date', 'DESC')
-      .getOne()
-
-    if (eurToUsdExchangeRate) {
-      const eurBalance = usdBalance / eurToUsdExchangeRate.exchangeRate
-
-      const exchangeRate = await dataSource
-        .getRepository(ExchangeRate)
-        .createQueryBuilder('exchangeRate')
-        .where('exchangeRate.currencyCode = :currencyCode', { currencyCode })
-        .getOne()
-
-      if (exchangeRate) {
-        return {
-          currentBalance: eurBalance * exchangeRate.exchangeRate,
-          walletTokenBalance: responseBody.ETH.balance
-        }
-      }
-    }
-
+  if (!responseBody) {
     return {
-      currentBalance: usdBalance,
-      walletTokenBalance: responseBody.ETH.balance
+      currentBalance: null as number | null,
+      walletTokenBalance: null as number | null
     }
   }
 
+  const usdBalance = responseBody.ETH.balance * responseBody.ETH.price.rate
+
+  const exchangeRate = await dataSource
+    .getRepository(ExchangeRate)
+    .createQueryBuilder('exchangeRate')
+    .where('exchangeRate.currencyCode = :currencyCode', { currencyCode })
+    .getOneOrFail()
+
   return {
-    currentBalance: null,
-    walletTokenBalance: null
+    currentBalance: usdBalance * exchangeRate.exchangeRate,
+    walletTokenBalance: responseBody.ETH.balance
   }
 }

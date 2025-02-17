@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { Account, BalanceHistory, dataSource, getVehicleValue, getWalletBalance } from 'database'
+import { Account, BalanceHistory, dataSource, getBitcoinBalance, getEthereumBalance, getVehicleValue } from 'database'
 import { startOfDay } from 'date-fns'
 import { Request, Response } from 'express'
 import { AccountSubType, AccountType, CurrencyCode, WalletType } from 'shared-types'
@@ -53,13 +53,15 @@ export const createAccount = async (
   let vehicleState: string | null = null
 
   if (walletType && walletAddress) {
-    const { currentBalance: balance, walletTokenBalance: tokenBalance } = await getWalletBalance(
-      walletAddress,
-      walletType,
-      currencyCode
-    )
-    currentBalance = balance
-    walletTokenBalance = tokenBalance
+    if (walletType === WalletType.Bitcoin) {
+      const result = await getBitcoinBalance(walletAddress, currencyCode)
+      currentBalance = result.currentBalance
+      walletTokenBalance = result.walletTokenBalance
+    } else if (walletType === WalletType.Ethereum) {
+      const result = await getEthereumBalance(walletAddress, currencyCode)
+      currentBalance = result.currentBalance
+      walletTokenBalance = result.walletTokenBalance
+    }
   } else if (vehicleVin && currentBalance === 0) {
     const { make, model, year, trim, state, value } = await getVehicleValue(vehicleVin, vehicleMileage, null)
     currentBalance = value

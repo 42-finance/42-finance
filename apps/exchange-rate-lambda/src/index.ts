@@ -1,4 +1,4 @@
-import { ExchangeRate, dataSource } from 'database'
+import { ExchangeRate, dataSource, getCoinPrice } from 'database'
 import { startOfDay } from 'date-fns'
 import { CurrencyCode } from 'shared-types'
 
@@ -10,9 +10,7 @@ type ExchangeRateResponse = {
 export const handler = async () => {
   await dataSource.initialize()
 
-  const response = await fetch(`${process.env.EXCHANGE_RATE_API_URL}/${process.env.EXCHANGE_RATE_API_KEY}/latest/USD`, {
-    method: 'GET'
-  })
+  const response = await fetch(`${process.env.EXCHANGE_RATE_API_URL}/${process.env.EXCHANGE_RATE_API_KEY}/latest/USD`)
 
   let responseBody: ExchangeRateResponse | null = null
   try {
@@ -37,6 +35,38 @@ export const handler = async () => {
         .orIgnore()
         .execute()
     }
+  }
+
+  const btcPrice = await getCoinPrice('bitcoin')
+
+  if (btcPrice) {
+    await dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(ExchangeRate)
+      .values({
+        date: startOfDay(new Date()),
+        currencyCode: CurrencyCode.BTC,
+        exchangeRate: 1 / btcPrice
+      })
+      .orIgnore()
+      .execute()
+  }
+
+  const ethPrice = await getCoinPrice('ethereum')
+
+  if (ethPrice) {
+    await dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(ExchangeRate)
+      .values({
+        date: startOfDay(new Date()),
+        currencyCode: CurrencyCode.ETH,
+        exchangeRate: 1 / ethPrice
+      })
+      .orIgnore()
+      .execute()
   }
 
   console.log(`Exchange rate lambda complete`)

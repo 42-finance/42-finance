@@ -38,8 +38,8 @@ export const getWalletBalance = async (walletAddress: string, walletType: Wallet
 
   if (response.error || response.data?.items == null) {
     return {
-      currentBalance: null,
-      walletTokenBalance: null
+      currentBalance: null as number | null,
+      walletTokenBalance: null as number | null
     }
   }
 
@@ -48,8 +48,8 @@ export const getWalletBalance = async (walletAddress: string, walletType: Wallet
 
   if (balanceItem?.balance == null) {
     return {
-      currentBalance: null,
-      walletTokenBalance: null
+      currentBalance: null as number | null,
+      walletTokenBalance: null as number | null
     }
   }
 
