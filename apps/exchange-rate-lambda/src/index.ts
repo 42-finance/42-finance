@@ -40,6 +40,8 @@ export const handler = async () => {
   const btcPrice = await getCoinPrice('bitcoin')
 
   if (btcPrice) {
+    console.log(`Updating exchange rate for ${CurrencyCode.BTC} to ${1 / btcPrice}`)
+
     await dataSource
       .createQueryBuilder()
       .insert()
@@ -56,6 +58,8 @@ export const handler = async () => {
   const ethPrice = await getCoinPrice('ethereum')
 
   if (ethPrice) {
+    console.log(`Updating exchange rate for ${CurrencyCode.ETH} to ${1 / ethPrice}`)
+
     await dataSource
       .createQueryBuilder()
       .insert()

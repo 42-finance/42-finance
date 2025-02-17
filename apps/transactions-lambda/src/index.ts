@@ -1,5 +1,5 @@
 import { Account, Household, Rule, Transaction, dataSource } from 'database'
-import { updateWalletTransactions } from 'database/src/utils/covalent.utils'
+import { updateWalletTransactions } from 'database/src/utils/ethplorer.utils'
 import { sendNewTransactionNotifications } from 'notifications'
 import { WalletType } from 'shared-types'
 
@@ -26,6 +26,7 @@ export const handler = async () => {
       .createQueryBuilder('account')
       .where('account.householdId = :householdId', { householdId: household.id })
       .andWhere('account.walletType = :walletType', { walletType: WalletType.Ethereum })
+      .andWhere('account.walletAddress IS NOT NULL')
       .getMany()
 
     const allTransactions: Transaction[] = []
