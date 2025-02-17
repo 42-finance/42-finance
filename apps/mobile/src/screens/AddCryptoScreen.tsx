@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AddAccountRequest, ApiQuery, addAccount } from 'frontend-api'
 import * as React from 'react'
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native'
-import { AccountSubType, AccountType, CurrencyCode } from 'shared-types'
+import { AccountSubType, AccountType } from 'shared-types'
 
 import { CryptoForm, CryptoFormFields } from '../components/forms/CryptoForm'
 import { RootStackScreenProps } from '../types/root-stack-screen-props'
@@ -29,7 +29,7 @@ export const AddCryptoScreen = ({ navigation }: RootStackScreenProps<'AddCrypto'
       currentBalance: 0,
       walletType: values.walletType,
       walletAddress: values.walletAddress,
-      currencyCode: CurrencyCode.USD,
+      currencyCode: values.currencyCode,
       hideFromAccountsList: false,
       hideFromNetWorth: false,
       hideFromBudget: false

@@ -9,6 +9,7 @@ import {
   Transaction
 } from 'database'
 import { startOfDay } from 'date-fns'
+import { isArray } from 'lodash'
 import { CurrencyCode, SystemCategory, TransactionType } from 'shared-types'
 import { ethplorerConfig } from '../common/config'
 
@@ -28,6 +29,13 @@ type EthplorerTransaction = {
   hash: string
   value: number
   usdValue: number
+}
+
+type EthplorerError = {
+  error: {
+    code: number
+    message: string
+  }
 }
 
 export const getEthereumBalance = async (walletAddress: string, currencyCode: CurrencyCode) => {
@@ -61,14 +69,19 @@ export const getEthereumBalance = async (walletAddress: string, currencyCode: Cu
 export const getWalletTransactions = async (walletAddress: string, startDate: Date | null) => {
   const timestamp = startDate ? Math.round(startDate.getTime() / 1000) : 0
   const response = await fetch(
-    `${ethplorerConfig.apiUrl}/getAddressTransactions/${walletAddress}?limit=1000&timestamp=${timestamp}&apiKey=${ethplorerConfig.apiKey}`
+    `${ethplorerConfig.apiUrl}/getAddressTransactions/${walletAddress}?limit=1000&apiKey=${ethplorerConfig.apiKey}`
   )
 
-  let responseBody: EthplorerTransaction[] = []
+  let responseBody: EthplorerTransaction[] | EthplorerError | null = null
   try {
     responseBody = await response.json()
   } catch (error) {
     console.log(error)
+  }
+
+  if (!responseBody || !isArray(responseBody)) {
+    console.log(responseBody)
+    return []
   }
 
   const transactions: EthplorerTransaction[] = []
