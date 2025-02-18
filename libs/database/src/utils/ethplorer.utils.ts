@@ -50,7 +50,7 @@ export const getEthereumBalance = async (walletAddress: string, currencyCode: Cu
     console.log(error)
   }
 
-  if (!responseBody) {
+  if (!responseBody?.ETH) {
     return {
       currentBalance: null as number | null,
       walletTokenBalance: null as number | null

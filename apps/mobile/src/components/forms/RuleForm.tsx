@@ -39,6 +39,7 @@ export type RuleFormFields = {
   newCategory: Category | null
   hideTransaction: boolean | null
   needsReview: boolean | null
+  priority: number
   applyToExisting?: boolean | null
 }
 
@@ -77,6 +78,7 @@ export const RuleForm: React.FC<Props> = ({ ruleInfo, onSubmit, submitting }) =>
     newCategory: Yup.mixed<Category>().nullable().defined(),
     hideTransaction: Yup.boolean().nullable().defined(),
     needsReview: Yup.boolean().nullable().defined(),
+    priority: Yup.number().required('Priority is required'),
     applyToExisting: Yup.boolean().nullable()
   })
 
@@ -100,6 +102,7 @@ export const RuleForm: React.FC<Props> = ({ ruleInfo, onSubmit, submitting }) =>
       newCategory: ruleInfo?.newCategory ?? null,
       hideTransaction: ruleInfo?.hideTransaction ?? null,
       needsReview: ruleInfo?.needsReview ?? null,
+      priority: ruleInfo?.priority ?? 1,
       applyToExisting: false
     }
   })
@@ -188,7 +191,7 @@ export const RuleForm: React.FC<Props> = ({ ruleInfo, onSubmit, submitting }) =>
     []
   )
 
-  const { data: transactions = [], isFetching: fetchingTransactions } = useQuery({
+  const { data: transactions = [] } = useQuery({
     queryKey: [ApiQuery.RuleTransactions, merchant, amount, category, account],
     queryFn: async () => {
       const res = await getTransactions({
@@ -353,6 +356,16 @@ export const RuleForm: React.FC<Props> = ({ ruleInfo, onSubmit, submitting }) =>
             marginTop: 5,
             marginHorizontal: 5
           }}
+        />
+        <TextInput
+          label="Priority"
+          name="priority"
+          control={control}
+          style={{
+            marginTop: 5,
+            marginHorizontal: 5
+          }}
+          keyboardType="number-pad"
         />
         <PaperPickerField
           label="Apply to existing transactions"

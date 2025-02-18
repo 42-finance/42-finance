@@ -19,6 +19,7 @@ type CreateRuleRequest = {
   newCategoryId: number | null
   hideTransaction: boolean | null
   needsReview: boolean | null
+  priority: number
   applyToExisting: boolean
 }
 
@@ -41,6 +42,7 @@ export const createRule = async (
     newCategoryId,
     hideTransaction,
     needsReview,
+    priority,
     applyToExisting
   } = request.body
 
@@ -59,6 +61,7 @@ export const createRule = async (
       newCategoryId,
       hideTransaction,
       needsReview,
+      priority,
       householdId
     })
 

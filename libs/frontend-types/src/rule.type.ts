@@ -21,4 +21,5 @@ export type Rule = {
   newCategory: Category
   hideTransaction: boolean | null
   needsReview: boolean | null
+  priority: number
 }

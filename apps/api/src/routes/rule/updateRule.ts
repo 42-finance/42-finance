@@ -19,6 +19,7 @@ type UpdateRuleRequest = {
   newCategoryId: number | null
   hideTransaction: boolean | null
   needsReview: boolean | null
+  priority: number
   applyToExisting: boolean
 }
 
@@ -42,6 +43,7 @@ export const updateRule = async (
     newCategoryId,
     hideTransaction,
     needsReview,
+    priority,
     applyToExisting
   } = request.body
 
@@ -66,7 +68,8 @@ export const updateRule = async (
       newMerchantName,
       newCategoryId,
       hideTransaction,
-      needsReview
+      needsReview,
+      priority
     })
 
     if (applyToExisting) {

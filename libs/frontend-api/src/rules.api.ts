@@ -36,6 +36,7 @@ export type AddRuleRequest = {
   newCategoryId: number | null
   hideTransaction: boolean | null
   needsReview: boolean | null
+  priority: number
   applyToExisting: boolean
 }
 
@@ -55,6 +56,7 @@ export type EditRuleRequest = {
   newCategoryId: number | null
   hideTransaction: boolean | null
   needsReview: boolean | null
+  priority: number
   applyToExisting: boolean
 }
 

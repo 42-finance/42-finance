@@ -39,6 +39,7 @@ export const AddRuleScreen = ({ navigation, route }: RootStackScreenProps<'AddRu
       newCategoryId: values.newCategory?.id ?? null,
       hideTransaction: values.hideTransaction,
       needsReview: values.needsReview,
+      priority: values.priority,
       applyToExisting: values.applyToExisting ?? false
     })
   }
